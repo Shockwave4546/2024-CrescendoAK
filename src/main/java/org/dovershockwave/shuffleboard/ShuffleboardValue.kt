@@ -20,23 +20,21 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.shuffleboard
 
-import com.kauailabs.navx.frc.AHRS
-import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.networktables.GenericEntry
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber
 
-class GyroIONavX : GyroIO {
-  private val gyro = AHRS()
+// TODO: remake this class to support shuffleboard better. 
 
-  override fun updateInputs(inputs: GyroIO.GyroIOInputs) {
-    inputs.connected = gyro.isConnected
-    inputs.angle = gyro.angle
-  }
-
-  override fun reset() {
-    gyro.rotation2d
-    gyro.reset()
-  }
-
-  override fun getAngle() = gyro.angle
+/**
+ * The ShuffleboardValue interface represents a shuffleboard value that can be displayed on the Shuffleboard dashboard.
+ */
+abstract class ShuffleboardValue(key: String) : LoggedDashboardNumber(key) {
+  /**
+   * Retrieves the raw GenericEntry object.
+   *
+   * @return The raw GenericEntry object.
+   */
+  abstract fun getRaw(): GenericEntry
 }

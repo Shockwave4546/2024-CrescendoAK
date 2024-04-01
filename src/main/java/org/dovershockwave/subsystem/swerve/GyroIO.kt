@@ -29,8 +29,12 @@ interface GyroIO {
   @AutoLog
   class GyroIOInputs {
     var connected: Boolean = false
-    var rotation: Rotation2d = Rotation2d()
+    var angle: Double = 0.0
   }
 
   fun updateInputs(inputs: GyroIOInputs)
+
+  fun reset()
+
+  fun getAngle(): Double
 }

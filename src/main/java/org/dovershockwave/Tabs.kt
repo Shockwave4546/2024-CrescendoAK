@@ -20,23 +20,13 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave
 
-import com.kauailabs.navx.frc.AHRS
-import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 
-class GyroIONavX : GyroIO {
-  private val gyro = AHRS()
-
-  override fun updateInputs(inputs: GyroIO.GyroIOInputs) {
-    inputs.connected = gyro.isConnected
-    inputs.angle = gyro.angle
+class Tabs {
+  companion object {
+    val MATCH = Shuffleboard.getTab("Match")
   }
-
-  override fun reset() {
-    gyro.rotation2d
-    gyro.reset()
-  }
-
-  override fun getAngle() = gyro.angle
 }

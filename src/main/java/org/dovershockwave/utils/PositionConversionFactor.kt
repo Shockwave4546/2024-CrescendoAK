@@ -34,8 +34,8 @@ class PositionConversionFactor(private val oneRev: Double) {
    * Represents some default supported types for conversion through the Encoders.
    */
   object ConversionType {
-    const val DEGREES: Double = 360.0
-    const val RADIANS: Double = 2 * Math.PI
+    const val DEGREES = 360.0
+    const val RADIANS = 2 * Math.PI
   }
 
   /**
