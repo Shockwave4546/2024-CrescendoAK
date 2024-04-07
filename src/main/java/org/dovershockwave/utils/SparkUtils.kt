@@ -39,18 +39,22 @@ class SparkUtils {
     private const val TIMEOUT = 5;
 
     fun CANSparkMax.runBlockingRel(actions: LinkedHashSet<RelSparkAction>) {
-      performRelWithTimeout(RelSparkAction("Set Blocking") { newSpark, _, _ -> newSpark.setCANTimeout(BLOCKING_TIMEOUT) })
-      actions.forEach { performRelWithTimeout(it) }
-      performRelWithTimeout(RelSparkAction("Set Async") { newSpark, _, _ -> newSpark.setCANTimeout(ASYNC_TIMEOUT) })
+      runRelWithTimeout(RelSparkAction("Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
+      actions.forEach { runRelWithTimeout(it) }
+      runRelWithTimeout(RelSparkAction("Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
     fun CANSparkMax.configureRel(actions: LinkedHashSet<RelSparkAction>) {
-      performRelWithTimeout(RelSparkAction("Restore Factory Default") { newSpark, _, _ -> newSpark.restoreFactoryDefaults() })
-      actions.forEach { performRelWithTimeout(it) }
-      performRelWithTimeout(RelSparkAction("Burn Flash") { newSpark, _, _ -> newSpark.burnFlash() })
+      val configuration = LinkedHashSet<RelSparkAction>().apply {
+        add(RelSparkAction("Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
+        addAll(actions)
+        add(RelSparkAction("Burn Flash") { spark, _, _ -> spark.burnFlash() })
+      }
+
+      runBlockingRel(configuration)
     }
 
-    private fun CANSparkMax.performRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
+    private fun CANSparkMax.runRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
       var count = 0;
       while (action.accept(this, encoder, pidController) != REVLibError.kOk && count < timeout) {
         // TODO: log the output w the name
@@ -61,18 +65,23 @@ class SparkUtils {
     }
 
     fun CANSparkMax.runBlockingAbs(actions: LinkedHashSet<AbsSparkAction>) {
-      performAbsWithTimeout(AbsSparkAction("Set Blocking") { newSpark, _, _ -> newSpark.setCANTimeout(BLOCKING_TIMEOUT) })
-      actions.forEach { performAbsWithTimeout(it) }
-      performAbsWithTimeout(AbsSparkAction("Set Async") { newSpark, _, _ -> newSpark.setCANTimeout(ASYNC_TIMEOUT) })
+      runAbsWithTimeout(AbsSparkAction("Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
+      actions.forEach { runAbsWithTimeout(it) }
+      runAbsWithTimeout(AbsSparkAction("Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
+    // FIXME: this should be blocking
     fun CANSparkMax.configureAbs(actions: LinkedHashSet<AbsSparkAction>) {
-      performAbsWithTimeout(AbsSparkAction("Restore Factory Default") { newSpark, _, _ -> newSpark.restoreFactoryDefaults() })
-      actions.forEach { performAbsWithTimeout(it) }
-      performAbsWithTimeout(AbsSparkAction("Burn Flash") { newSpark, _, _ -> newSpark.burnFlash() })
+      val configuration = LinkedHashSet<AbsSparkAction>().apply {
+        add(AbsSparkAction("Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
+        addAll(actions)
+        add(AbsSparkAction("Burn Flash") { spark, _, _ -> spark.burnFlash() })
+      }
+
+      runBlockingAbs(configuration)
     }
 
-    private fun CANSparkMax.performAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
+    private fun CANSparkMax.runAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
       var count = 0;
       while (action.accept(this, absoluteEncoder, pidController) != REVLibError.kOk && count < timeout) {
         // TODO: log the output w the name
