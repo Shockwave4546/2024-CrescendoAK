@@ -20,50 +20,36 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave
+package org.dovershockwave.subsystem.swerve
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler
-import org.littletonrobotics.junction.LoggedRobot
+import edu.wpi.first.math.kinematics.SwerveModulePosition
+import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.system.plant.DCMotor
+import edu.wpi.first.wpilibj.simulation.DCMotorSim
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim
 
-object Robot : LoggedRobot() {
-  override fun robotInit() {
-    RobotContainer
+// TODO:  
+class ModuleIOSim : ModuleIO {
+  private val driveSim = DCMotorSim(DCMotor.getNEO(1), ModuleConstants.DRIVING_MOTOR_REDUCTION, 0.025) // idk the jKhMeterSquared
+  private val turnSim = DCMotorSim(DCMotor.getNeo550(1), 1.0, 0.004) // idk the jKhMeterSquared or the reduction
+
+  override fun updateInputs(inputs: ModuleIO.ModuleIOInputs) {
+    TODO("Not yet implemented")
   }
 
-
-  override fun robotPeriodic() {
-    CommandScheduler.getInstance().run()
+  override fun getState(): SwerveModuleState {
+    TODO("Not yet implemented")
   }
 
-  override fun disabledInit() {
-
+  override fun getPosition(): SwerveModulePosition {
+    TODO("Not yet implemented")
   }
 
-  override fun disabledPeriodic() {
-
+  override fun setDesiredState(desiredState: SwerveModuleState) {
+    TODO("Not yet implemented")
   }
 
-  override fun autonomousInit() {
-
-  }
-
-  override fun autonomousPeriodic() {
-
-  }
-
-  override fun teleopInit() {
-
-  }
-
-  override fun teleopPeriodic() {
-
-  }
-
-  override fun simulationInit() {
-
-  }
-
-  override fun simulationPeriodic() {
-
+  override fun resetDriveEncoder() {
+    TODO("Not yet implemented")
   }
 }

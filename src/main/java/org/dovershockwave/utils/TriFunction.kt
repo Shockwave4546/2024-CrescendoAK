@@ -22,17 +22,6 @@
 
 package org.dovershockwave.utils
 
-import java.util.*
-
-fun interface TriConsumer<S, T, U> {
-  fun accept(s: S, t: T, u: U)
-
-  fun andThen(after: TriConsumer<in S, in T, in U>): TriConsumer<S, T, U>? {
-    Objects.requireNonNull(after)
-
-    return TriConsumer { s: S, t: T, u: U ->
-      accept(s, t, u)
-      after.accept(s, t, u)
-    }
-  }
+fun interface TriFunction<In1, In2, In3, Out> {
+  fun accept(in1: In1, in2: In2, in3: In3): Out
 }

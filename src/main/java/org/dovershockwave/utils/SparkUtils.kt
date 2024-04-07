@@ -22,55 +22,64 @@
 
 package org.dovershockwave.utils
 
-import com.revrobotics.AbsoluteEncoder
-import com.revrobotics.CANSparkMax
-import com.revrobotics.RelativeEncoder
-import com.revrobotics.SparkPIDController
+import com.revrobotics.*
+
+class RelSparkAction(val name: String, private val action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, RelativeEncoder, SparkPIDController, REVLibError> {
+  override fun accept(in1: CANSparkMax, in2: RelativeEncoder, in3: SparkPIDController) = action(in1, in2, in3)
+}
+
+class AbsSparkAction(val name: String, private val action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, AbsoluteEncoder, SparkPIDController, REVLibError> {
+  override fun accept(in1: CANSparkMax, in2: AbsoluteEncoder, in3: SparkPIDController) = action(in1, in2, in3)
+}
 
 class SparkUtils {
   companion object {
-    fun runBlockingRel(spark: CANSparkMax, action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> Unit) {
-      spark.setCANTimeout(250)
-      action(spark, spark.encoder, spark.pidController)
-      spark.setCANTimeout(0)
+    private const val BLOCKING_TIMEOUT = 250;
+    private const val ASYNC_TIMEOUT = 0;
+    private const val TIMEOUT = 5;
+
+    fun CANSparkMax.runBlockingRel(actions: LinkedHashSet<RelSparkAction>) {
+      performRelWithTimeout(RelSparkAction("Set Blocking") { newSpark, _, _ -> newSpark.setCANTimeout(BLOCKING_TIMEOUT) })
+      actions.forEach { performRelWithTimeout(it) }
+      performRelWithTimeout(RelSparkAction("Set Async") { newSpark, _, _ -> newSpark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
-    fun configureRel(spark: CANSparkMax, action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> Unit) {
-      runBlockingRel(spark) { newSpark, encoder, pid ->
-        newSpark.restoreFactoryDefaults()
-        action(newSpark, encoder, pid)
-        newSpark.burnFlash()
+    fun CANSparkMax.configureRel(actions: LinkedHashSet<RelSparkAction>) {
+      performRelWithTimeout(RelSparkAction("Restore Factory Default") { newSpark, _, _ -> newSpark.restoreFactoryDefaults() })
+      actions.forEach { performRelWithTimeout(it) }
+      performRelWithTimeout(RelSparkAction("Burn Flash") { newSpark, _, _ -> newSpark.burnFlash() })
+    }
+
+    private fun CANSparkMax.performRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
+      var count = 0;
+      while (action.accept(this, encoder, pidController) != REVLibError.kOk && count < timeout) {
+        // TODO: log the output w the name
+        count++
       }
+
+      // TODO: add something here i dont even know right now for the robot will not work.
     }
 
-    fun runBlockingAbs(spark: CANSparkMax, action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> Unit) {
-      spark.setCANTimeout(250)
-      action(spark, spark.absoluteEncoder, spark.pidController)
-      spark.setCANTimeout(0)
+    fun CANSparkMax.runBlockingAbs(actions: LinkedHashSet<AbsSparkAction>) {
+      performAbsWithTimeout(AbsSparkAction("Set Blocking") { newSpark, _, _ -> newSpark.setCANTimeout(BLOCKING_TIMEOUT) })
+      actions.forEach { performAbsWithTimeout(it) }
+      performAbsWithTimeout(AbsSparkAction("Set Async") { newSpark, _, _ -> newSpark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
-    fun configureAbs(spark: CANSparkMax, action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> Unit) {
-      runBlockingAbs(spark) { newSpark, encoder, pid ->
-        newSpark.restoreFactoryDefaults()
-        action(newSpark, encoder, pid)
-        newSpark.burnFlash()
+    fun CANSparkMax.configureAbs(actions: LinkedHashSet<AbsSparkAction>) {
+      performAbsWithTimeout(AbsSparkAction("Restore Factory Default") { newSpark, _, _ -> newSpark.restoreFactoryDefaults() })
+      actions.forEach { performAbsWithTimeout(it) }
+      performAbsWithTimeout(AbsSparkAction("Burn Flash") { newSpark, _, _ -> newSpark.burnFlash() })
+    }
+
+    private fun CANSparkMax.performAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
+      var count = 0;
+      while (action.accept(this, absoluteEncoder, pidController) != REVLibError.kOk && count < timeout) {
+        // TODO: log the output w the name
+        count++
       }
+
+      // TODO: add something here i dont even know right now for the robot will not work.
     }
   }
-}
-
-fun CANSparkMax.runBlockingRel(action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> Unit) {
-  SparkUtils.runBlockingRel(this, action)
-}
-
-fun CANSparkMax.configureRel(action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> Unit) {
-  SparkUtils.configureRel(this, action)
-}
-
-fun CANSparkMax.runBlockingAbs(action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> Unit) {
-  SparkUtils.runBlockingAbs(this, action)
-}
-
-fun CANSparkMax.configureAbs(action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> Unit) {
-  SparkUtils.configureAbs(this, action)
 }

@@ -23,7 +23,6 @@
 package org.dovershockwave
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 
 class Tabs {
   companion object {

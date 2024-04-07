@@ -28,8 +28,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState
 import org.littletonrobotics.junction.AutoLog
 
 interface ModuleIO {
-  @AutoLog
-  class ModuleIOInputs {
+  @AutoLog class ModuleIOInputs {
     var drivePosition: Double = 0.0 // m
     var driveVelocity: Double = 0.0 // m/s
     var driveAppliedVolts: Double = 0.0

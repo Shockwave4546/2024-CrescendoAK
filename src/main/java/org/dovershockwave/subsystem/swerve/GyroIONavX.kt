@@ -23,7 +23,6 @@
 package org.dovershockwave.subsystem.swerve
 
 import com.kauailabs.navx.frc.AHRS
-import edu.wpi.first.math.geometry.Rotation2d
 
 class GyroIONavX : GyroIO {
   private val gyro = AHRS()

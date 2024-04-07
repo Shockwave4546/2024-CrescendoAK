@@ -22,12 +22,10 @@
 
 package org.dovershockwave.subsystem.swerve
 
-import edu.wpi.first.math.geometry.Rotation2d
 import org.littletonrobotics.junction.AutoLog
 
 interface GyroIO {
-  @AutoLog
-  class GyroIOInputs {
+  @AutoLog class GyroIOInputs {
     var connected: Boolean = false
     var angle: Double = 0.0
   }

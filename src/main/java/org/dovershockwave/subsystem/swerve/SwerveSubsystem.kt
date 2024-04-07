@@ -71,12 +71,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
       rotSpeed * SwerveConstants.MAX_ANGULAR_SPEED * (if (useDefaultSpeeds) SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER else rotSpeedMultiplier.getDouble())
 
     val swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
-      if (fieldRelative) ChassisSpeeds.fromFieldRelativeSpeeds(
-        xSpeedDelivered,
-        ySpeedDelivered,
-        rotDelivered,
-        getHeadingRotation2d()
-      )
+      if (fieldRelative) ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, getHeadingRotation2d())
       else ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)
     )
 

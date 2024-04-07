@@ -55,6 +55,8 @@ class ModuleConstants {
     const val TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0.0 // Radians
     const val TURNING_ENCODER_POSITION_PID_MAX_INPUT = 2 * Math.PI // Radians
 
+    const val VOLTAGE_COMPENSATION = 12.0;
+
     val DRIVING_GAINS = PIDGains(0.15F, 0.0F, 0.02F, (1 / DRIVE_WHEEL_FREE_SPEED_RPS).toFloat())
     const val DRIVING_MIN_OUTPUT = -1.0
     const val DRIVING_MAX_OUTPUT = 1.0
