@@ -5,7 +5,7 @@
       "x": 1.2433335781097412,
       "y": 5.54133939743042
     },
-    "rotation": -1.1203728176010802e-24
+    "rotation": 2.078771572154098e-25
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5Note.2"
+            "pathName": "5Note.3"
           }
         }
       ]

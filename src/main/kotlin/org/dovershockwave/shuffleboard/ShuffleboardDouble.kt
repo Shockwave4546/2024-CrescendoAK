@@ -31,8 +31,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 open class ShuffleboardDouble(
   tab: ShuffleboardTab,
   name: String,
-  private val def: Double = org.dovershockwave.shuffleboard.ShuffleboardDouble.Companion.DEFAULT_VALUE
-) : org.dovershockwave.shuffleboard.ShuffleboardValue(name) {
+  private val def: Double = DEFAULT_VALUE
+) : ShuffleboardValue(name) {
   private val widget = tab.add(name, def)
 
   /**
@@ -50,7 +50,7 @@ open class ShuffleboardDouble(
    * @param height the height of the widget
    * @return the modified ShuffleboardDouble object
    */
-  open fun withSize(length: Int, height: Int): org.dovershockwave.shuffleboard.ShuffleboardDouble {
+  open fun withSize(length: Int, height: Int): ShuffleboardDouble {
     widget.withSize(length, height)
     return this
   }
@@ -62,7 +62,7 @@ open class ShuffleboardDouble(
    * @param y the y coordinate of the widget's position
    * @return the modified ShuffleboardDouble object
    */
-  open fun withPosition(x: Int, y: Int): org.dovershockwave.shuffleboard.ShuffleboardDouble {
+  open fun withPosition(x: Int, y: Int): ShuffleboardDouble {
     widget.withPosition(x, y)
     return this
   }
@@ -74,7 +74,7 @@ open class ShuffleboardDouble(
    * @param max the maximum value for the widget
    * @return the modified ShuffleboardDouble object
    */
-  fun withMinMax(min: Double, max: Double): org.dovershockwave.shuffleboard.ShuffleboardDouble {
+  fun withMinMax(min: Double, max: Double): ShuffleboardDouble {
     widget.withWidget(BuiltInWidgets.kNumberSlider)
       .withProperties(mapOf("min" to min.toString(), "max" to max.toString()))
     return this

@@ -42,7 +42,7 @@ class SwerveSubsystem(
 ) : SubsystemBase() {
   private val tab = Shuffleboard.getTab("Swerve")
   private val isX = org.dovershockwave.shuffleboard.ShuffleboardBoolean(org.dovershockwave.Tabs.MATCH, "Is X?", false)
-    .withSize(3, 3).withPosition(15, 0);
+    .withSize(3, 3).withPosition(15, 0)
 
   private val driveSpeedMultiplier =
     ShuffleboardSpeed(tab, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER)
@@ -187,7 +187,7 @@ class SwerveSubsystem(
   }
 
   fun toggleX() {
-    isX.setBoolean(!isX.getBoolean());
+    isX.setBoolean(!isX.getBoolean())
   }
 
   fun isFieldRelative(): Boolean {

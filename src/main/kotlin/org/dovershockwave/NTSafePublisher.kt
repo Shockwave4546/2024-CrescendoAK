@@ -22,11 +22,7 @@
 
 package org.dovershockwave
 
-import edu.wpi.first.networktables.GenericPublisher
-import edu.wpi.first.networktables.IntegerPublisher
-import edu.wpi.first.networktables.NetworkTable
-import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.networktables.PubSubOption
+import edu.wpi.first.networktables.*
 import edu.wpi.first.wpilibj.DriverStation
 import org.littletonrobotics.junction.LogDataReceiver
 import org.littletonrobotics.junction.LogTable

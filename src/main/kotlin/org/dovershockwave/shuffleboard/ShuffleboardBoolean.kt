@@ -32,8 +32,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 class ShuffleboardBoolean(
   tab: ShuffleboardTab,
   name: String,
-  private val def: Boolean = org.dovershockwave.shuffleboard.ShuffleboardBoolean.Companion.DEFAULT_VALUE
-) : org.dovershockwave.shuffleboard.ShuffleboardValue(name) {
+  private val def: Boolean = DEFAULT_VALUE
+) : ShuffleboardValue(name) {
   private val widget = tab.add(name, def)
 
   /**
@@ -60,7 +60,7 @@ class ShuffleboardBoolean(
    * @param height the height of the widget
    * @return the modified ShuffleboardBoolean object
    */
-  fun withSize(length: Int, height: Int): org.dovershockwave.shuffleboard.ShuffleboardBoolean {
+  fun withSize(length: Int, height: Int): ShuffleboardBoolean {
     widget.withSize(length, height)
     return this
   }
@@ -72,7 +72,7 @@ class ShuffleboardBoolean(
    * @param y the y coordinate of the widget's position
    * @return the modified ShuffleboardBoolean object
    */
-  fun withPosition(x: Int, y: Int): org.dovershockwave.shuffleboard.ShuffleboardBoolean {
+  fun withPosition(x: Int, y: Int): ShuffleboardBoolean {
     widget.withPosition(x, y)
     return this
   }

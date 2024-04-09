@@ -40,9 +40,9 @@ class AbsSparkAction(
 
 class SparkUtils {
   companion object {
-    private const val BLOCKING_TIMEOUT = 250;
-    private const val ASYNC_TIMEOUT = 0;
-    private const val TIMEOUT = 5;
+    private const val BLOCKING_TIMEOUT = 250
+    private const val ASYNC_TIMEOUT = 0
+    private const val TIMEOUT = 5
 
     fun CANSparkMax.runBlockingRel(actions: LinkedHashSet<RelSparkAction>) {
       runRelWithTimeout(RelSparkAction("Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
@@ -61,7 +61,7 @@ class SparkUtils {
     }
 
     private fun CANSparkMax.runRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
-      var count = 0;
+      var count = 0
       while (action.accept(this, encoder, pidController) != REVLibError.kOk && count < timeout) {
         // TODO: log the output w the name
         count++
@@ -88,7 +88,7 @@ class SparkUtils {
     }
 
     private fun CANSparkMax.runAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
-      var count = 0;
+      var count = 0
       while (action.accept(this, absoluteEncoder, pidController) != REVLibError.kOk && count < timeout) {
         // TODO: log the output w the name
         count++
