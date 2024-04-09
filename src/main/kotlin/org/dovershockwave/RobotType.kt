@@ -20,9 +20,8 @@
  * SOFTWARE.
  */
 
-@file:JvmName("Main") // set the compiled Java class name to "Main" rather than "MainKt"
 package org.dovershockwave
 
-import edu.wpi.first.wpilibj.RobotBase
-
-fun main() = RobotBase.startRobot { Robot }
+enum class RobotType {
+  REAL, SIM
+}

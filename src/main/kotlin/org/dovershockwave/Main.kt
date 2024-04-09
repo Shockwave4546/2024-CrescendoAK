@@ -20,13 +20,17 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.utils
+package org.dovershockwave
 
-/**
- * A class to store PID gains. The types are floats because the Rev API uses float32 for PID gains.
- * [...](https://docs.revrobotics.com/sparkmax/software-resources/configuration-parameters#:~:text=of%20the%20controller.-,kP_1,-21)
- */
-@JvmRecord data class PIDGains(val p: Float, val i: Float, val d: Float, val ff: Float) {
-  constructor(p: Float, i: Float, d: Float) : this(p, d, d, 0.0F)
-  constructor(p: Float) : this(p, 0.0F, 0.0F, 0.0F)
+import edu.wpi.first.wpilibj.RobotBase
+import kotlin.time.ExperimentalTime
+
+class Main {
+  companion object {
+    @ExperimentalTime
+    @JvmStatic
+    fun main(args: Array<String>) {
+      RobotBase.startRobot { Robot }
+    }
+  }
 }

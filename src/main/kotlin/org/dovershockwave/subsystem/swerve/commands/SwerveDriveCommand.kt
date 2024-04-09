@@ -20,22 +20,25 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.subsystem.swerve.commands
 
-import com.kauailabs.navx.frc.AHRS
+import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 
-class GyroIONavX : GyroIO {
-  private val gyro = AHRS()
-
-  override fun updateInputs(inputs: GyroIO.GyroIOInputs) {
-    inputs.connected = gyro.isConnected
-    inputs.angle = gyro.angle
+class SwerveDriveCommand(private val controller: CommandXboxController, private val swerve: SwerveSubsystem) : Command() {
+  init {
+    addRequirements(swerve)
   }
 
-  override fun reset() {
-    gyro.rotation2d
-    gyro.reset()
+  override fun execute() {
+    swerve.drive(
+      -MathUtil.applyDeadband(controller.leftY, org.dovershockwave.GlobalConstants.DRIVE_DEADBAND),
+      -MathUtil.applyDeadband(controller.leftX, org.dovershockwave.GlobalConstants.DRIVE_DEADBAND),
+      -MathUtil.applyDeadband(controller.rightX, org.dovershockwave.GlobalConstants.DRIVE_DEADBAND),
+      swerve.isFieldRelative(),
+      false
+    )
   }
-
-  override fun getAngle() = gyro.angle
 }

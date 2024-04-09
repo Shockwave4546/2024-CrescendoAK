@@ -24,7 +24,7 @@ package org.dovershockwave.subsystem.swerve
 
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
-
+import org.dovershockwave.subsystem.swerve.module.ModulePosition
 
 class SwerveConstants {
   companion object {

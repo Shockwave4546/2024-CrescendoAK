@@ -20,36 +20,13 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave
 
-import edu.wpi.first.math.kinematics.SwerveModulePosition
-import edu.wpi.first.math.kinematics.SwerveModuleState
-import edu.wpi.first.math.system.plant.DCMotor
-import edu.wpi.first.wpilibj.simulation.DCMotorSim
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim
-
-// TODO:  
-class ModuleIOSim : ModuleIO {
-  private val driveSim = DCMotorSim(DCMotor.getNEO(1), ModuleConstants.DRIVING_MOTOR_REDUCTION, 0.025) // idk the jKhMeterSquared
-  private val turnSim = DCMotorSim(DCMotor.getNeo550(1), 1.0, 0.004) // idk the jKhMeterSquared or the reduction
-
-  override fun updateInputs(inputs: ModuleIO.ModuleIOInputs) {
-    TODO("Not yet implemented")
-  }
-
-  override fun getState(): SwerveModuleState {
-    TODO("Not yet implemented")
-  }
-
-  override fun getPosition(): SwerveModulePosition {
-    TODO("Not yet implemented")
-  }
-
-  override fun setDesiredState(desiredState: SwerveModuleState) {
-    TODO("Not yet implemented")
-  }
-
-  override fun resetDriveEncoder() {
-    TODO("Not yet implemented")
+class GlobalConstants {
+  companion object {
+    val robotType = RobotType.SIM
+    const val DRIVER_CONTROLLER_PORT = 0
+    const val OPERATOR_CONTROLLER_PORT = 1
+    const val DRIVE_DEADBAND = 0.02
   }
 }

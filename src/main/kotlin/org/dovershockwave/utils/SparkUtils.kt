@@ -24,11 +24,17 @@ package org.dovershockwave.utils
 
 import com.revrobotics.*
 
-class RelSparkAction(val name: String, private val action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, RelativeEncoder, SparkPIDController, REVLibError> {
+class RelSparkAction(
+  val name: String,
+  private val action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> REVLibError
+) : TriFunction<CANSparkMax, RelativeEncoder, SparkPIDController, REVLibError> {
   override fun accept(in1: CANSparkMax, in2: RelativeEncoder, in3: SparkPIDController) = action(in1, in2, in3)
 }
 
-class AbsSparkAction(val name: String, private val action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, AbsoluteEncoder, SparkPIDController, REVLibError> {
+class AbsSparkAction(
+  val name: String,
+  private val action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> REVLibError
+) : TriFunction<CANSparkMax, AbsoluteEncoder, SparkPIDController, REVLibError> {
   override fun accept(in1: CANSparkMax, in2: AbsoluteEncoder, in3: SparkPIDController) = action(in1, in2, in3)
 }
 

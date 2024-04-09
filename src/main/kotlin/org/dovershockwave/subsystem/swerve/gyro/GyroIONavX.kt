@@ -20,19 +20,22 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.subsystem.swerve.gyro
 
-import org.littletonrobotics.junction.AutoLog
+import com.kauailabs.navx.frc.AHRS
 
-interface GyroIO {
-  @AutoLog class GyroIOInputs {
-    var connected: Boolean = false
-    var angle: Double = 0.0
+class GyroIONavX : GyroIO {
+  private val gyro = AHRS()
+
+  override fun updateInputs(inputs: GyroIO.GyroIOInputs) {
+    inputs.connected = gyro.isConnected
+    inputs.angle = gyro.angle
   }
 
-  fun updateInputs(inputs: GyroIOInputs)
+  override fun reset() {
+    gyro.rotation2d
+    gyro.reset()
+  }
 
-  fun reset()
-
-  fun getAngle(): Double
+  override fun getAngle() = gyro.angle
 }

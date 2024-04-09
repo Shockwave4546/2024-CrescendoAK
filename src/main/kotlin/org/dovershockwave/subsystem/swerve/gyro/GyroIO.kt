@@ -20,50 +20,30 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave
+package org.dovershockwave.subsystem.swerve.gyro
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler
-import org.littletonrobotics.junction.LoggedRobot
+import org.littletonrobotics.junction.LogTable
+import org.littletonrobotics.junction.inputs.LoggableInputs
 
-object Robot : LoggedRobot() {
-  override fun robotInit() {
-    RobotContainer
+interface GyroIO {
+  class GyroIOInputs : LoggableInputs {
+    var connected: Boolean = false
+    var angle: Double = 0.0
+
+    override fun toLog(table: LogTable) {
+      table.put("Connected", connected)
+      table.put("Angle", angle)
+    }
+
+    override fun fromLog(table: LogTable) {
+      connected = table.get("Connected", connected)
+      angle = table.get("Angle", angle)
+    }
   }
 
+  fun updateInputs(inputs: GyroIOInputs)
 
-  override fun robotPeriodic() {
-    CommandScheduler.getInstance().run()
-  }
+  fun reset()
 
-  override fun disabledInit() {
-
-  }
-
-  override fun disabledPeriodic() {
-
-  }
-
-  override fun autonomousInit() {
-
-  }
-
-  override fun autonomousPeriodic() {
-
-  }
-
-  override fun teleopInit() {
-
-  }
-
-  override fun teleopPeriodic() {
-
-  }
-
-  override fun simulationInit() {
-
-  }
-
-  override fun simulationPeriodic() {
-
-  }
+  fun getAngle(): Double
 }

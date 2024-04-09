@@ -27,7 +27,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 /**
  * A Shuffleboard control for adjusting the speed value.
  */
-class ShuffleboardSpeed(tab: ShuffleboardTab, name: String, def: Double = DEFAULT_VALUE) : ShuffleboardDouble(tab, name, def) {
+class ShuffleboardSpeed(tab: ShuffleboardTab, name: String, def: Double = DEFAULT_VALUE) :
+  org.dovershockwave.shuffleboard.ShuffleboardDouble(tab, name, def) {
   /**
    * Creates a ShuffleboardSpeed widget with the given name and default value,
    * and adds it to the specified Shuffleboard tab.
@@ -72,6 +73,6 @@ class ShuffleboardSpeed(tab: ShuffleboardTab, name: String, def: Double = DEFAUL
   }
 
   companion object {
-     private const val DEFAULT_VALUE = 0.0
+    private const val DEFAULT_VALUE = 0.0
   }
 }

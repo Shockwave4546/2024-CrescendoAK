@@ -20,15 +20,16 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.subsystem.swerve.module
 
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
-import org.littletonrobotics.junction.AutoLog
+import org.littletonrobotics.junction.LogTable
+import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface ModuleIO {
-  @AutoLog class ModuleIOInputs {
+  class ModuleIOInputs : LoggableInputs {
     var drivePosition: Double = 0.0 // m
     var driveVelocity: Double = 0.0 // m/s
     var driveAppliedVolts: Double = 0.0
@@ -40,6 +41,34 @@ interface ModuleIO {
     var rotAppliedVolts: Double = 0.0
     var rotCurrent: Double = 0.0
     var rotTemp: Double = 0.0 // Celsius
+
+    override fun toLog(table: LogTable) {
+      table.put("Drive Position", drivePosition)
+      table.put("Drive Velocity", driveVelocity)
+      table.put("Drive Applied Volts", driveAppliedVolts)
+      table.put("Drive Current", driveCurrent)
+      table.put("Drive Temp", driveTemp)
+
+      table.put("Rot Position", rotPosition.radians)
+      table.put("Rot Velocity", rotVelocity)
+      table.put("Rot Applied Volts", rotAppliedVolts)
+      table.put("Rot Current", rotCurrent)
+      table.put("Rot Temp", rotTemp)
+    }
+
+    override fun fromLog(table: LogTable) {
+      drivePosition = table.get("Drive Position", drivePosition)
+      driveVelocity = table.get("Drive Velocity", driveVelocity)
+      driveAppliedVolts = table.get("Drive Applied Volts", driveAppliedVolts)
+      driveCurrent = table.get("Drive Current", driveCurrent)
+      driveTemp = table.get("Drive Temp", driveTemp)
+
+      rotPosition = Rotation2d(table.get("Rot Position", rotPosition.radians))
+      rotVelocity = table.get("Rot Velocity", rotVelocity)
+      rotAppliedVolts = table.get("Rot Applied Volts", rotAppliedVolts)
+      rotCurrent = table.get("Rot Current", rotCurrent)
+      rotTemp = table.get("Rot Temp", rotTemp)
+    }
   }
 
   fun updateInputs(inputs: ModuleIOInputs)

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.subsystem.swerve.module
 
 enum class ModulePosition {
   FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT

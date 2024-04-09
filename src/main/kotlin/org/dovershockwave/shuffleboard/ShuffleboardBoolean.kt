@@ -22,31 +22,45 @@
 
 package org.dovershockwave.shuffleboard
 
+import edu.wpi.first.networktables.GenericEntry
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 
 /**
- * A class representing a double value on the Shuffleboard dashboard.
+ * A class representing a boolean value on the Shuffleboard dashboard.
  */
-open class ShuffleboardDouble(tab: ShuffleboardTab, name: String, private val def: Double = DEFAULT_VALUE) : ShuffleboardValue(name) {
+class ShuffleboardBoolean(
+  tab: ShuffleboardTab,
+  name: String,
+  private val def: Boolean = org.dovershockwave.shuffleboard.ShuffleboardBoolean.Companion.DEFAULT_VALUE
+) : org.dovershockwave.shuffleboard.ShuffleboardValue(name) {
   private val widget = tab.add(name, def)
 
   /**
-   * Constructs a new ShuffleboardDouble object with the given parameters.
+   * Constructs a new ShuffleboardBoolean object with the given parameters.
    *
    * @param tab  the ShuffleboardTab to add the widget to
    * @param name the name of the widget
    * @param def  the default value for the widget
    */
+  /**
+   * Constructs a new ShuffleboardBoolean object with the given parameters. The default value for the widget is set to false.
+   *
+   * @param tab  the ShuffleboardTab to add the widget to
+   * @param name the name of the widget
+   */
+  init {
+    widget.withWidget(BuiltInWidgets.kToggleButton)
+  }
 
   /**
    * Sets the size of the widget.
    *
    * @param length the length of the widget
    * @param height the height of the widget
-   * @return the modified ShuffleboardDouble object
+   * @return the modified ShuffleboardBoolean object
    */
-  open fun withSize(length: Int, height: Int): ShuffleboardDouble {
+  fun withSize(length: Int, height: Int): org.dovershockwave.shuffleboard.ShuffleboardBoolean {
     widget.withSize(length, height)
     return this
   }
@@ -56,50 +70,40 @@ open class ShuffleboardDouble(tab: ShuffleboardTab, name: String, private val de
    *
    * @param x the x coordinate of the widget's position
    * @param y the y coordinate of the widget's position
-   * @return the modified ShuffleboardDouble object
+   * @return the modified ShuffleboardBoolean object
    */
-  open fun withPosition(x: Int, y: Int): ShuffleboardDouble {
+  fun withPosition(x: Int, y: Int): org.dovershockwave.shuffleboard.ShuffleboardBoolean {
     widget.withPosition(x, y)
     return this
   }
 
   /**
-   * Sets the minimum and maximum values for the widget.
+   * Retrieves the current value of the ShuffleboardBoolean object.
    *
-   * @param min the minimum value for the widget
-   * @param max the maximum value for the widget
-   * @return the modified ShuffleboardDouble object
+   * @return the current value of the ShuffleboardBoolean object
    */
-  fun withMinMax(min: Double, max: Double): ShuffleboardDouble {
-    widget.withWidget(BuiltInWidgets.kNumberSlider).withProperties(mapOf("min" to min.toString(), "max" to max.toString()))
-    return this
-  }
+  fun getBoolean() = widget.entry.getBoolean(def)
 
   /**
-   * Retrieves the current value of the ShuffleboardDouble object.
-   *
-   * @return the current value of the ShuffleboardDouble object
-   */
-  fun getDouble() = widget.entry.getDouble(def)
-
-  /**
-   * Sets the value of the ShuffleboardDouble object.
+   * Sets the value of the ShuffleboardBoolean object.
    *
    * @param value the new value to set
    */
-  fun setDouble(value: Double) {
-    super.set(value)
-    widget.entry.setDouble(value)
+  fun setBoolean(value: Boolean) {
+    super.set(if (value) 1.0 else -1.0)
+    widget.entry.setBoolean(value)
   }
 
   /**
-   * Returns the Raw GenericEntry object associated with this ShuffleboardDouble.
+   * Returns the Raw GenericEntry object associated with this ShuffleboardBoolean.
    *
    * @return the Raw GenericEntry object
    */
-  override fun getRaw() = widget.entry
+  override fun getRaw(): GenericEntry {
+    return widget.entry
+  }
 
   companion object {
-     private const val DEFAULT_VALUE = 0.0
+    private const val DEFAULT_VALUE = false
   }
 }

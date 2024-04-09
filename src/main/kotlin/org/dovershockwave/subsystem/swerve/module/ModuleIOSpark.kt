@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.swerve
+package org.dovershockwave.subsystem.swerve.module
 
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
@@ -29,7 +29,7 @@ import com.revrobotics.REVLibError
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
-import org.dovershockwave.MotorConstants
+import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
@@ -49,32 +49,73 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
 
   init {
     drivingMotor.configureRel(linkedSetOf(
-      RelSparkAction("$driveID Set Drive Inverted") { spark, _, _ -> spark.inverted = SwerveConstants.INVERT_DRIVING_DIRECTION; REVLibError.kOk },
+      RelSparkAction("$driveID Set Drive Inverted") { spark, _, _ ->
+        spark.inverted =
+          SwerveConstants.INVERT_DRIVING_DIRECTION; REVLibError.kOk
+      },
       RelSparkAction("$driveID Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) },
-      RelSparkAction("$driveID Set Position Conversion Factor") { _, encoder, _ -> ModuleConstants.DRIVING_ENCODER_POSITION_FACTOR.apply(encoder) },
-      RelSparkAction("$driveID Set Velocity Conversion Factor") { _, encoder, _ -> encoder.setVelocityConversionFactor(ModuleConstants.DRIVING_ENCODER_VELOCITY_FACTOR) },
+      RelSparkAction("$driveID Set Position Conversion Factor") { _, encoder, _ ->
+        ModuleConstants.DRIVING_ENCODER_POSITION_FACTOR.apply(
+          encoder
+        )
+      },
+      RelSparkAction("$driveID Set Velocity Conversion Factor") { _, encoder, _ ->
+        encoder.setVelocityConversionFactor(
+          ModuleConstants.DRIVING_ENCODER_VELOCITY_FACTOR
+        )
+      },
       RelSparkAction("$driveID Set P Gain") { _, _, pid -> pid.setP(ModuleConstants.DRIVING_GAINS.p.toDouble()) },
       RelSparkAction("$driveID Set I Gain") { _, _, pid -> pid.setI(ModuleConstants.DRIVING_GAINS.i.toDouble()) },
       RelSparkAction("$driveID Set D Gain") { _, _, pid -> pid.setD(ModuleConstants.DRIVING_GAINS.d.toDouble()) },
       RelSparkAction("$driveID Set FF Gain") { _, _, pid -> pid.setFF(ModuleConstants.DRIVING_GAINS.ff.toDouble()) },
-      RelSparkAction("$driveID Set Output Range") { _, _, pid -> pid.setOutputRange(ModuleConstants.DRIVING_MIN_OUTPUT, ModuleConstants.DRIVING_MAX_OUTPUT) },
+      RelSparkAction("$driveID Set Output Range") { _, _, pid ->
+        pid.setOutputRange(
+          ModuleConstants.DRIVING_MIN_OUTPUT,
+          ModuleConstants.DRIVING_MAX_OUTPUT
+        )
+      },
       RelSparkAction("$driveID Set Idle Mode") { spark, _, _ -> spark.setIdleMode(CANSparkBase.IdleMode.kBrake) },
-      RelSparkAction("$driveID Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(MotorConstants.NEO_CURRENT_LIMIT) },
-      RelSparkAction("$driveID Enable Voltage Compensation") { spark, _, _ -> spark.enableVoltageCompensation(ModuleConstants.VOLTAGE_COMPENSATION) }
+      RelSparkAction("$driveID Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(org.dovershockwave.MotorConstants.NEO_CURRENT_LIMIT) },
+      RelSparkAction("$driveID Enable Voltage Compensation") { spark, _, _ ->
+        spark.enableVoltageCompensation(
+          ModuleConstants.VOLTAGE_COMPENSATION
+        )
+      }
     ))
 
     turnMotor.configureAbs(linkedSetOf(
+      AbsSparkAction("$rotID Set Turn Inverted") { _, encoder, _ -> encoder.setInverted(ModuleConstants.TURNING_ENCODER_INVERTED) },
       AbsSparkAction("$rotID Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) },
-      AbsSparkAction("$rotID Set Position Conversion Factor") { _, encoder, _ -> ModuleConstants.TURNING_ENCODER_POSITION_FACTOR.apply(encoder) },
-      AbsSparkAction("$rotID Set Velocity Conversion Factor") { _, encoder, _ -> encoder.setVelocityConversionFactor(ModuleConstants.TURNING_ENCODER_VELOCITY_FACTOR) },
+      AbsSparkAction("$rotID Set Position Conversion Factor") { _, encoder, _ ->
+        ModuleConstants.TURNING_ENCODER_POSITION_FACTOR.apply(
+          encoder
+        )
+      },
+      AbsSparkAction("$rotID Set Velocity Conversion Factor") { _, encoder, _ ->
+        encoder.setVelocityConversionFactor(
+          ModuleConstants.TURNING_ENCODER_VELOCITY_FACTOR
+        )
+      },
       AbsSparkAction("$rotID Set P Gain") { _, _, pid -> pid.setP(ModuleConstants.TURNING_GAINS.p.toDouble()) },
       AbsSparkAction("$rotID Set I Gain") { _, _, pid -> pid.setI(ModuleConstants.TURNING_GAINS.i.toDouble()) },
       AbsSparkAction("$rotID Set D Gain") { _, _, pid -> pid.setD(ModuleConstants.TURNING_GAINS.d.toDouble()) },
       AbsSparkAction("$rotID Set FF Gain") { _, _, pid -> pid.setFF(ModuleConstants.TURNING_GAINS.ff.toDouble()) },
-      AbsSparkAction("$rotID Set Output Range") { _, _, pid -> pid.setOutputRange(ModuleConstants.TURNING_MIN_OUTPUT, ModuleConstants.TURNING_MAX_OUTPUT) },
+      AbsSparkAction("$rotID Set Output Range") { _, _, pid ->
+        pid.setOutputRange(
+          ModuleConstants.TURNING_MIN_OUTPUT,
+          ModuleConstants.TURNING_MAX_OUTPUT
+        )
+      },
       AbsSparkAction("$rotID Set Idle Mode") { spark, _, _ -> spark.setIdleMode(CANSparkBase.IdleMode.kBrake) },
-      AbsSparkAction("$rotID Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(MotorConstants.NEO_550_CURRENT_LIMIT) },
-      AbsSparkAction("$rotID Enable Voltage Compensation") { spark, _, _ -> spark.enableVoltageCompensation(ModuleConstants.VOLTAGE_COMPENSATION) }
+      AbsSparkAction("$rotID Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(org.dovershockwave.MotorConstants.NEO_550_CURRENT_LIMIT) },
+      AbsSparkAction("$rotID Enable Voltage Compensation") { spark, _, _ ->
+        spark.enableVoltageCompensation(
+          ModuleConstants.VOLTAGE_COMPENSATION
+        )
+      },
+      AbsSparkAction("$rotID Enable Wrapping") { _, _, pid -> pid.setPositionPIDWrappingEnabled(true) },
+      AbsSparkAction("$rotID Set Wrapping Min") { _, _, pid -> pid.setPositionPIDWrappingMaxInput(ModuleConstants.TURNING_ENCODER_POSITION_PID_MIN_INPUT) },
+      AbsSparkAction("$rotID Set Wrapping Max") { _, _, pid -> pid.setPositionPIDWrappingMaxInput(ModuleConstants.TURNING_ENCODER_POSITION_PID_MAX_INPUT) }
     ))
 
     desiredState.angle = Rotation2d(0.0) // TODO: verify this works. 
@@ -101,9 +142,11 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
    *
    * @return The current state of the module.
    */
-  override fun getState() = SwerveModuleState(driveEncoder.velocity, Rotation2d(turnEncoder.getPosition() - chassisAngularOffset))
+  override fun getState() =
+    SwerveModuleState(driveEncoder.velocity, Rotation2d(turnEncoder.getPosition() - chassisAngularOffset))
 
-  override fun getPosition() = SwerveModulePosition(driveEncoder.position, Rotation2d(turnEncoder.getPosition() - chassisAngularOffset));
+  override fun getPosition() =
+    SwerveModulePosition(driveEncoder.position, Rotation2d(turnEncoder.getPosition() - chassisAngularOffset))
 
   override fun setDesiredState(desiredState: SwerveModuleState) {
     // Apply chassis angular offset to the desired state.

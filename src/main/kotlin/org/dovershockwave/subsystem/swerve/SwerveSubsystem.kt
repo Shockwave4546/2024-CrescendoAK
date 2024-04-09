@@ -28,23 +28,59 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.Tabs
-import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.shuffleboard.ShuffleboardSpeed
+import org.dovershockwave.subsystem.swerve.gyro.GyroIO
+import org.dovershockwave.subsystem.swerve.module.ModuleIO
+import org.littletonrobotics.junction.Logger
 
-class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: ModuleIO, private val backLeft: ModuleIO, private val backRight: ModuleIO, private val gyro: GyroIO) : SubsystemBase() {
+class SwerveSubsystem(
+  private val frontLeft: ModuleIO,
+  private val frontRight: ModuleIO,
+  private val backLeft: ModuleIO,
+  private val backRight: ModuleIO,
+  private val gyro: GyroIO
+) : SubsystemBase() {
   private val tab = Shuffleboard.getTab("Swerve")
-  private val isX = ShuffleboardBoolean(Tabs.MATCH, "Is X?", false).withSize(3, 3).withPosition(15, 0);
+  private val isX = org.dovershockwave.shuffleboard.ShuffleboardBoolean(org.dovershockwave.Tabs.MATCH, "Is X?", false)
+    .withSize(3, 3).withPosition(15, 0);
 
-  private val driveSpeedMultiplier = ShuffleboardSpeed(tab, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER)
-    .withSize(5, 2).withPosition(0, 8)
-  private val rotSpeedMultiplier = ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER)
-    .withSize(5, 2).withPosition(5, 8)
-  private val isFieldRelative = ShuffleboardBoolean(Tabs.MATCH, "Is Field Relative?", true)
-    .withSize(3, 3).withPosition(18, 0)
+  private val driveSpeedMultiplier =
+    ShuffleboardSpeed(tab, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER)
+      .withSize(5, 2).withPosition(0, 8)
+  private val rotSpeedMultiplier =
+    ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER)
+      .withSize(5, 2).withPosition(5, 8)
+  private val isFieldRelative = org.dovershockwave.shuffleboard.ShuffleboardBoolean(
+    org.dovershockwave.Tabs.MATCH,
+    "Is Field Relative?",
+    true
+  ).withSize(3, 3).withPosition(18, 0)
+
+  private val gyroInputs = GyroIO.GyroIOInputs()
+  private val frontLeftInputs = ModuleIO.ModuleIOInputs()
+  private val frontRightInputs = ModuleIO.ModuleIOInputs()
+  private val backLeftInputs = ModuleIO.ModuleIOInputs()
+  private val backRightInputs = ModuleIO.ModuleIOInputs()
 
   init {
-    resetDriverEncoders()
+    resetDriveEncoders()
+  }
+
+  override fun periodic() {
+    gyro.updateInputs(gyroInputs)
+    frontLeft.updateInputs(frontLeftInputs)
+    frontRight.updateInputs(frontRightInputs)
+    backLeft.updateInputs(backLeftInputs)
+    backRight.updateInputs(backRightInputs)
+
+    Logger.processInputs("Gyro", gyroInputs)
+    Logger.processInputs("Front Left", frontLeftInputs)
+    Logger.processInputs("Front Right", frontRightInputs)
+    Logger.processInputs("Back Left", backLeftInputs)
+    Logger.processInputs("Back Right", backRightInputs)
+
+    Logger.recordOutput("Swerve/ModuleStates", *getEstimatedStates())
+    // Logger.recordOutput("Swerve/DesiredStates") TODO
   }
 
   /**
@@ -71,7 +107,12 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
       rotSpeed * SwerveConstants.MAX_ANGULAR_SPEED * (if (useDefaultSpeeds) SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER else rotSpeedMultiplier.getDouble())
 
     val swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
-      if (fieldRelative) ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, getHeadingRotation2d())
+      if (fieldRelative) ChassisSpeeds.fromFieldRelativeSpeeds(
+        xSpeedDelivered,
+        ySpeedDelivered,
+        rotDelivered,
+        getHeadingRotation2d()
+      )
       else ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)
     )
 
@@ -116,6 +157,13 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     backRight.getPosition()
   )
 
+  fun getEstimatedStates() = arrayOf(
+    frontLeft.getState(),
+    frontRight.getState(),
+    backLeft.getState(),
+    backRight.getState()
+  )
+
   /**
    * Sets the swerve ModuleStates. (FL, FR, BL, BR)
    *
@@ -146,7 +194,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     return isFieldRelative.getBoolean()
   }
 
-  fun resetDriverEncoders() {
+  fun resetDriveEncoders() {
     frontLeft.resetDriveEncoder()
     frontRight.resetDriveEncoder()
     backLeft.resetDriveEncoder()
