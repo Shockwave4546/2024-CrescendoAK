@@ -23,18 +23,13 @@
 package org.dovershockwave.utils
 
 import com.revrobotics.*
+import org.littletonrobotics.junction.Logger
 
-class RelSparkAction(
-  val name: String,
-  private val action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> REVLibError
-) : TriFunction<CANSparkMax, RelativeEncoder, SparkPIDController, REVLibError> {
+class RelSparkAction(val name: String, private val action: (CANSparkMax, RelativeEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, RelativeEncoder, SparkPIDController, REVLibError> {
   override fun accept(in1: CANSparkMax, in2: RelativeEncoder, in3: SparkPIDController) = action(in1, in2, in3)
 }
 
-class AbsSparkAction(
-  val name: String,
-  private val action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> REVLibError
-) : TriFunction<CANSparkMax, AbsoluteEncoder, SparkPIDController, REVLibError> {
+class AbsSparkAction(val name: String, private val action: (CANSparkMax, AbsoluteEncoder, SparkPIDController) -> REVLibError) : TriFunction<CANSparkMax, AbsoluteEncoder, SparkPIDController, REVLibError> {
   override fun accept(in1: CANSparkMax, in2: AbsoluteEncoder, in3: SparkPIDController) = action(in1, in2, in3)
 }
 
@@ -45,16 +40,16 @@ class SparkUtils {
     private const val TIMEOUT = 5
 
     fun CANSparkMax.runBlockingRel(actions: LinkedHashSet<RelSparkAction>) {
-      runRelWithTimeout(RelSparkAction("Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
+      runRelWithTimeout(RelSparkAction("$deviceId Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
       actions.forEach { runRelWithTimeout(it) }
-      runRelWithTimeout(RelSparkAction("Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
+      runRelWithTimeout(RelSparkAction("$deviceId Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
     fun CANSparkMax.configureRel(actions: LinkedHashSet<RelSparkAction>) {
       val configuration = LinkedHashSet<RelSparkAction>().apply {
-        add(RelSparkAction("Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
+        add(RelSparkAction("$deviceId Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
         addAll(actions)
-        add(RelSparkAction("Burn Flash") { spark, _, _ -> spark.burnFlash() })
+        add(RelSparkAction("$deviceId Burn Flash") { spark, _, _ -> spark.burnFlash() })
       }
 
       runBlockingRel(configuration)
@@ -62,26 +57,29 @@ class SparkUtils {
 
     private fun CANSparkMax.runRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
       var count = 0
-      while (action.accept(this, encoder, pidController) != REVLibError.kOk && count < timeout) {
-        // TODO: log the output w the name
+      var output = action.accept(this, encoder, pidController)
+      while (output != REVLibError.kOk && count < timeout) {
+        Logger.recordOutput("SparkMaxActions/${action.name}", output)
+        output = action.accept(this, encoder, pidController)
         count++
       }
 
+      // TODO:
+      throw RuntimeException("Failed to run action: $action")
       // TODO: add something here i dont even know right now for the robot will not work.
     }
 
     fun CANSparkMax.runBlockingAbs(actions: LinkedHashSet<AbsSparkAction>) {
-      runAbsWithTimeout(AbsSparkAction("Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
+      runAbsWithTimeout(AbsSparkAction("$deviceId Set Blocking") { spark, _, _ -> spark.setCANTimeout(BLOCKING_TIMEOUT) })
       actions.forEach { runAbsWithTimeout(it) }
-      runAbsWithTimeout(AbsSparkAction("Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
+      runAbsWithTimeout(AbsSparkAction("$deviceId Set Async") { spark, _, _ -> spark.setCANTimeout(ASYNC_TIMEOUT) })
     }
 
-    // FIXME: this should be blocking
     fun CANSparkMax.configureAbs(actions: LinkedHashSet<AbsSparkAction>) {
       val configuration = LinkedHashSet<AbsSparkAction>().apply {
-        add(AbsSparkAction("Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
+        add(AbsSparkAction("$deviceId Restore Factory Default") { spark, _, _ -> spark.restoreFactoryDefaults() })
         addAll(actions)
-        add(AbsSparkAction("Burn Flash") { spark, _, _ -> spark.burnFlash() })
+        add(AbsSparkAction("$deviceId Burn Flash") { spark, _, _ -> spark.burnFlash() })
       }
 
       runBlockingAbs(configuration)
@@ -89,11 +87,15 @@ class SparkUtils {
 
     private fun CANSparkMax.runAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
       var count = 0
-      while (action.accept(this, absoluteEncoder, pidController) != REVLibError.kOk && count < timeout) {
-        // TODO: log the output w the name
+      var output = action.accept(this, absoluteEncoder, pidController)
+      while (output != REVLibError.kOk && count < timeout) {
+        Logger.recordOutput("SparkMaxActions/${action.name}", output)
+        output = action.accept(this, absoluteEncoder, pidController)
         count++
       }
 
+      // TODO:
+      throw RuntimeException("Failed to run action: $action")
       // TODO: add something here i dont even know right now for the robot will not work.
     }
   }

@@ -23,17 +23,36 @@
 package org.dovershockwave.subsystem.shooterwrist
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
 class ShooterWristSubsystem(private val shooter: ShooterWristIO) : SubsystemBase() {
-  private val io = ShooterWristIO.ShooterWristIOInputs()
+  private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
 
-  override fun periodic() {
-    shooter.updateInputs(io)
+  private val anglePredictor = PolynomialRegression(
+    doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
+    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 40.0, 42.0, 45.0, 47.0, 47.0, 47.0, 47.0, 47.0),
+    3,
+    "x"
+  )
 
-    Logger.processInputs("Shooter Wrist", io)
+  override fun periodic() {
+    shooter.updateInputs(inputs)
+
+    Logger.processInputs("Shooter Wrist", inputs)
     Logger.recordOutput("Shooter Wrist State Name", desiredState.name)
     Logger.recordOutput("Shooter Wrist State Angle", desiredState.angle)
   }
+}
+
+fun main() {
+  val anglePredictor = PolynomialRegression(
+    doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
+    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 40.0, 42.0, 45.0, 47.0, 47.0, 47.0, 47.0, 47.0),
+    3,
+    "x"
+  )
+
+  println(anglePredictor)
 }

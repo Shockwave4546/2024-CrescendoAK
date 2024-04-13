@@ -26,7 +26,7 @@ import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface ShooterWristIO {
-  class ShooterWristIOInputs : ShooterWristIO, LoggableInputs {
+  class ShooterWristIOInputs : LoggableInputs {
     var angle = 0.0
     var appliedVolts = 0.0
     var current = 0.0
@@ -47,5 +47,5 @@ interface ShooterWristIO {
     }
   }
 
-  fun updateInputs(inputs: ShooterWristIOInputs) {}
+  fun updateInputs(inputs: ShooterWristIOInputs)
 }

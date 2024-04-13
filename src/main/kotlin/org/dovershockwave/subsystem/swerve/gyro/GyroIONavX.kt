@@ -28,12 +28,10 @@ class GyroIONavX : GyroIO {
   private val gyro = AHRS()
 
   override fun updateInputs(inputs: GyroIO.GyroIOInputs) {
-    inputs.connected = gyro.isConnected
     inputs.angle = gyro.angle
   }
 
   override fun reset() {
-    gyro.rotation2d
     gyro.reset()
   }
 

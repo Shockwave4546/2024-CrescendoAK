@@ -29,7 +29,7 @@ import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface ModuleIO {
-  class ModuleIOInputs : ModuleIO, LoggableInputs {
+  class ModuleIOInputs : LoggableInputs {
     var drivePosition = 0.0 // m
     var driveVelocity = 0.0 // m/s
     var driveAppliedVolts = 0.0
@@ -71,13 +71,13 @@ interface ModuleIO {
     }
   }
 
-  fun updateInputs(inputs: ModuleIOInputs) {}
+  fun updateInputs(inputs: ModuleIOInputs)
 
-  fun getState() = SwerveModuleState()
+  fun getState(): SwerveModuleState
 
-  fun getPosition() = SwerveModulePosition()
+  fun getPosition(): SwerveModulePosition
 
-  fun setDesiredState(desiredState: SwerveModuleState) {}
+  fun setDesiredState(desiredState: SwerveModuleState)
 
-  fun resetDriveEncoder() {}
+  fun resetDriveEncoder()
 }

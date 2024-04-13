@@ -27,16 +27,13 @@ import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface GyroIO {
   class GyroIOInputs : LoggableInputs {
-    var connected: Boolean = false
-    var angle: Double = 0.0
+    var angle = 0.0
 
     override fun toLog(table: LogTable) {
-      table.put("Connected", connected)
       table.put("Angle", angle)
     }
 
     override fun fromLog(table: LogTable) {
-      connected = table.get("Connected", connected)
       angle = table.get("Angle", angle)
     }
   }
