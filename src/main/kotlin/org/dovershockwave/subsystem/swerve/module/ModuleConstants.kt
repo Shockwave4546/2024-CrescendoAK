@@ -60,11 +60,11 @@ class ModuleConstants {
 
     const val VOLTAGE_COMPENSATION = 12.0
 
-    val DRIVING_GAINS = PIDGains(0.15F, 0.0F, 0.02F, (1 / DRIVE_WHEEL_FREE_SPEED_RPS).toFloat())
+    val DRIVING_GAINS = PIDGains(0.15, 0.0, 0.02, 1 / DRIVE_WHEEL_FREE_SPEED_RPS)
     const val DRIVING_MIN_OUTPUT = -1.0
     const val DRIVING_MAX_OUTPUT = 1.0
 
-    val TURNING_GAINS = PIDGains(0.5F)
+    val TURNING_GAINS = PIDGains(0.5)
     const val TURNING_MIN_OUTPUT = -1.0
     const val TURNING_MAX_OUTPUT = 1.0
   }

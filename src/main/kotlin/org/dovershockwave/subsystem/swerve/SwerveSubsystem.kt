@@ -28,20 +28,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.Tabs
+import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.shuffleboard.ShuffleboardSpeed
 import org.dovershockwave.subsystem.swerve.gyro.GyroIO
 import org.dovershockwave.subsystem.swerve.module.ModuleIO
 import org.littletonrobotics.junction.Logger
 
-class SwerveSubsystem(
-  private val frontLeft: ModuleIO,
-  private val frontRight: ModuleIO,
-  private val backLeft: ModuleIO,
-  private val backRight: ModuleIO,
-  private val gyro: GyroIO
-) : SubsystemBase() {
+class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: ModuleIO, private val backLeft: ModuleIO, private val backRight: ModuleIO, private val gyro: GyroIO) : SubsystemBase() {
   private val tab = Shuffleboard.getTab("Swerve")
-  private val isX = org.dovershockwave.shuffleboard.ShuffleboardBoolean(org.dovershockwave.Tabs.MATCH, "Is X?", false)
+  private val isX = ShuffleboardBoolean(Tabs.MATCH, "Is X?", false)
     .withSize(3, 3).withPosition(15, 0)
 
   private val driveSpeedMultiplier =
@@ -50,8 +46,8 @@ class SwerveSubsystem(
   private val rotSpeedMultiplier =
     ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER)
       .withSize(5, 2).withPosition(5, 8)
-  private val isFieldRelative = org.dovershockwave.shuffleboard.ShuffleboardBoolean(
-    org.dovershockwave.Tabs.MATCH,
+  private val isFieldRelative = ShuffleboardBoolean(
+    Tabs.MATCH,
     "Is Field Relative?",
     true
   ).withSize(3, 3).withPosition(18, 0)

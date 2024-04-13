@@ -20,14 +20,15 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.utils
+package org.dovershockwave.subsystem.shooterwrist
 
-/**
- * A class to store PID gains. The types are floats because the Rev API uses float32 for PID gains.
- * [...](https://docs.revrobotics.com/sparkmax/software-resources/configuration-parameters#:~:text=of%20the%20controller.-,kP_1,-21)
- */
-@JvmRecord
-data class PIDGains(val p: Double, val i: Double, val d: Double, val ff: Double) {
-  constructor(p: Double, i: Double, d: Double) : this(p, d, d, 0.0)
-  constructor(p: Double) : this(p, 0.0, 0.0, 0.0)
+data class WristState(val name: String, val angle: Double) {
+  companion object {
+    val STARTING = WristState("Starting", 2.5)
+    val HOME = WristState("Home", 40.0)
+    val SUBWOOFER = WristState("Subwoofer", 30.0)
+    val SPIT = WristState("Spit", 30.0)
+    val AMP = WristState("Amp", 25.0)
+    val INTERPOLATED = WristState("Interpolated", -1.0)
+  }
 }

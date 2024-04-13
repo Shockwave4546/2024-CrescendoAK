@@ -23,27 +23,30 @@
 package org.dovershockwave
 
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
+import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
 
 object RobotContainer {
-  lateinit var swerve: SwerveSubsystem
+  val swerve: SwerveSubsystem
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
 
   init {
     when (GlobalConstants.robotType) {
       RobotType.REAL -> {
-//        swerve = SwerveSubsystem(
-//          ModuleIOSpark(SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
-//          ModuleIOSpark(SwerveConstants.FRONT_RIGHT_DRIVING_CAN_ID, SwerveConstants.FRONT_RIGHT_TURNING_CAN_ID, SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
-//          ModuleIOSpark(SwerveConstants.BACK_LEFT_DRIVING_CAN_ID, SwerveConstants.BACK_LEFT_TURNING_CAN_ID, SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
-//          ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
-//          GyroIONavX()
-//        )
+        swerve = SwerveSubsystem(
+          ModuleIOSpark(SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
+          ModuleIOSpark(SwerveConstants.FRONT_RIGHT_DRIVING_CAN_ID, SwerveConstants.FRONT_RIGHT_TURNING_CAN_ID, SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
+          ModuleIOSpark(SwerveConstants.BACK_LEFT_DRIVING_CAN_ID, SwerveConstants.BACK_LEFT_TURNING_CAN_ID, SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
+          ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
+          GyroIONavX()
+        )
       }
 
       RobotType.SIM -> {

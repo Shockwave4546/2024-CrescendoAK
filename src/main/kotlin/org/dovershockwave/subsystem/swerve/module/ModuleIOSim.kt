@@ -30,21 +30,12 @@ import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.wpilibj.simulation.DCMotorSim
 
 class ModuleIOSim(private val chassisAngularOffset: Double) : ModuleIO {
-  private val driveSim =
-    DCMotorSim(DCMotor.getNEO(1), ModuleConstants.DRIVING_MOTOR_REDUCTION, 0.025) // idk the jKhMeterSquared
-  private val drivePID = PIDController(
-    ModuleConstants.DRIVING_GAINS.p.toDouble(),
-    ModuleConstants.DRIVING_GAINS.i.toDouble(),
-    ModuleConstants.DRIVING_GAINS.d.toDouble()
-  )
+  private val driveSim = DCMotorSim(DCMotor.getNEO(1), ModuleConstants.DRIVING_MOTOR_REDUCTION, 0.025) // idk the jKhMeterSquared
+  private val drivePID = PIDController(ModuleConstants.DRIVING_GAINS.p, ModuleConstants.DRIVING_GAINS.i, ModuleConstants.DRIVING_GAINS.d)
   private var driveAppliedVoltage = 0.0
 
   private val turnSim = DCMotorSim(DCMotor.getNeo550(1), 1.0, 0.004) // idk the jKhMeterSquared or the reduction
-  private val turnPID = PIDController(
-    ModuleConstants.TURNING_GAINS.p.toDouble(),
-    ModuleConstants.TURNING_GAINS.i.toDouble(),
-    ModuleConstants.TURNING_GAINS.d.toDouble()
-  )
+  private val turnPID = PIDController(ModuleConstants.TURNING_GAINS.p.toDouble(), ModuleConstants.TURNING_GAINS.i.toDouble(), ModuleConstants.TURNING_GAINS.d.toDouble())
   private var turnAppliedVoltage = 0.0
 
   private var desiredState = SwerveModuleState(0.0, Rotation2d())
@@ -67,11 +58,9 @@ class ModuleIOSim(private val chassisAngularOffset: Double) : ModuleIO {
 
   private fun getLinearVelocity() = driveSim.angularVelocityRPM * (ModuleConstants.WHEEL_DIAMETER_METERS / 60.0)
 
-  override fun getState() =
-    SwerveModuleState(getLinearVelocity(), Rotation2d(turnSim.angularPositionRad - chassisAngularOffset))
+  override fun getState() = SwerveModuleState(getLinearVelocity(), Rotation2d(turnSim.angularPositionRad - chassisAngularOffset))
 
-  override fun getPosition() =
-    SwerveModulePosition(getLinearPosition(), Rotation2d(turnSim.angularPositionRad - chassisAngularOffset))
+  override fun getPosition() = SwerveModulePosition(getLinearPosition(), Rotation2d(turnSim.angularPositionRad - chassisAngularOffset))
 
   override fun setDesiredState(desiredState: SwerveModuleState) {
     // Apply chassis angular offset to the desired state.

@@ -22,6 +22,7 @@
 
 package org.dovershockwave
 
+import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
@@ -36,6 +37,7 @@ object Robot : LoggedRobot() {
     when (GlobalConstants.robotType) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
+        PowerDistribution() // Enables power distribution logging.
       }
 
       RobotType.SIM -> {
@@ -46,15 +48,15 @@ object Robot : LoggedRobot() {
     Logger.start()
     RobotContainer
 
-    CommandScheduler.getInstance().onCommandInitialize { command: Command ->
+    CommandScheduler.getInstance().onCommandInitialize { command ->
       Logger.recordOutput("/ActiveCommands/${command.name}", true)
     }
 
-    CommandScheduler.getInstance().onCommandFinish { command: Command ->
+    CommandScheduler.getInstance().onCommandFinish { command ->
       Logger.recordOutput("/ActiveCommands/${command.name}", false)
     }
 
-    CommandScheduler.getInstance().onCommandInterrupt { command: Command ->
+    CommandScheduler.getInstance().onCommandInterrupt { command ->
       Logger.recordOutput("/ActiveCommands/${command.name}", false)
     }
   }
