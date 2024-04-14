@@ -33,11 +33,7 @@ import java.util.function.DoubleSupplier
 /**
  * Wraps [SparkPIDController] because it isn't natively supported by Shuffleboard.
  */
-class TunableSparkPIDController(
-  private val child: SparkPIDController,
-  private val setpointGetter: DoubleSupplier? = null,
-  private val setpointSetter: DoubleConsumer? = null
-) : Sendable {
+class TunableSparkPIDController(private val child: SparkPIDController, private val setpointGetter: DoubleSupplier? = null, private val setpointSetter: DoubleConsumer? = null) : Sendable {
   /**
    * Initializes the Sendable interface for the TunableSparkMaxPIDController.
    *

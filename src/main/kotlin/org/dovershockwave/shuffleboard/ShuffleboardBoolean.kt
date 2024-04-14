@@ -29,11 +29,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 /**
  * A class representing a boolean value on the Shuffleboard dashboard.
  */
-class ShuffleboardBoolean(
-  tab: ShuffleboardTab,
-  name: String,
-  private val def: Boolean = DEFAULT_VALUE
-) : ShuffleboardValue(name) {
+class ShuffleboardBoolean(tab: ShuffleboardTab, name: String, private val def: Boolean = DEFAULT_VALUE) : ShuffleboardValue(name) {
   private val widget = tab.add(name, def)
 
   /**

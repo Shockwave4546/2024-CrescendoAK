@@ -28,11 +28,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 /**
  * A class representing a double value on the Shuffleboard dashboard.
  */
-open class ShuffleboardDouble(
-  tab: ShuffleboardTab,
-  name: String,
-  private val def: Double = DEFAULT_VALUE
-) : ShuffleboardValue(name) {
+open class ShuffleboardDouble(tab: ShuffleboardTab, name: String, private val def: Double = DEFAULT_VALUE) : ShuffleboardValue(name) {
   private val widget = tab.add(name, def)
 
   /**
