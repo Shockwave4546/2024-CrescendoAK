@@ -75,7 +75,8 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     Logger.processInputs("Back Left", backLeftInputs)
     Logger.processInputs("Back Right", backRightInputs)
 
-    Logger.recordOutput("Swerve/ModuleStates", *getEstimatedStates())
+    val key = "Swerve"
+    Logger.recordOutput("$key/ModuleStates", *getEstimatedStates())
     // Logger.recordOutput("Swerve/DesiredStates") TODO
   }
 
