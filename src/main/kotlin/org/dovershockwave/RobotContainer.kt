@@ -29,6 +29,7 @@ import org.dovershockwave.subsystem.intakearm.IntakeArmConstants
 import org.dovershockwave.subsystem.intakearm.IntakeArmIOSim
 import org.dovershockwave.subsystem.intakearm.IntakeArmIOSpark
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.led.LEDSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterConstants
 import org.dovershockwave.subsystem.shooter.ShooterIOSim
 import org.dovershockwave.subsystem.shooter.ShooterIOSpark
@@ -50,6 +51,7 @@ object RobotContainer {
   val arm: IntakeArmSubsystem
   val shooter: ShooterSubsystem
   val intake: IntakeSubsystem
+  val led: LEDSubsystem? // TODO: 4/13/2024 idk 
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
 
@@ -68,6 +70,7 @@ object RobotContainer {
         arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
         shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID))
         intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
+        led = LEDSubsystem()
       }
 
       RobotType.SIM -> {
@@ -83,6 +86,7 @@ object RobotContainer {
         arm = IntakeArmSubsystem(IntakeArmIOSim())
         shooter = ShooterSubsystem(ShooterIOSim())
         intake = IntakeSubsystem(IntakeIOSim())
+        led = null
       }
     }
 
