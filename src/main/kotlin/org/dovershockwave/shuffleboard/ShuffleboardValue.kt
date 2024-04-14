@@ -23,14 +23,11 @@
 package org.dovershockwave.shuffleboard
 
 import edu.wpi.first.networktables.GenericEntry
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber
-
-// TODO: remake this class to support shuffleboard better. 
 
 /**
  * The ShuffleboardValue interface represents a shuffleboard value that can be displayed on the Shuffleboard dashboard.
  */
-abstract class ShuffleboardValue(key: String) : LoggedDashboardNumber(key) {
+abstract class ShuffleboardValue {
   /**
    * Retrieves the raw GenericEntry object.
    *

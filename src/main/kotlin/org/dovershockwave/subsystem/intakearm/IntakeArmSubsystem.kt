@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.shuffleboard.TunableSparkPIDController
-import org.dovershockwave.subsystem.shooterwrist.WristState
 import org.littletonrobotics.junction.Logger
 
 class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {

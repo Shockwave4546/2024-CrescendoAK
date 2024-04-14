@@ -20,7 +20,13 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.vision
+package org.dovershockwave.subsystem.pose.commands
 
-class VisionIOSim {
-}
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
+import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+
+class ResetFieldCentricDriveCommand(swerve: SwerveSubsystem, poseEstimator: PoseEstimatorSubsystem) : InstantCommand({
+  swerve.zeroGyro()
+  poseEstimator.resetFieldCentricDriving()
+}, poseEstimator)

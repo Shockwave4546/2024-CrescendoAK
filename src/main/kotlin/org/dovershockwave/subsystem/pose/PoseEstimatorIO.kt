@@ -24,15 +24,25 @@ package org.dovershockwave.subsystem.pose
 
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
+import org.photonvision.PhotonCamera
+import org.photonvision.targeting.PhotonPipelineResult
 
 interface PoseEstimatorIO {
   class PoseEstimatorIOInputs : LoggableInputs {
-    override fun toLog(table: LogTable?) {
-      TODO("Not yet implemented")
+    var pipelineIndex = 0
+
+    override fun toLog(table: LogTable) {
+      table.put("Pipeline Index", pipelineIndex)
     }
 
-    override fun fromLog(table: LogTable?) {
-      TODO("Not yet implemented")
+    override fun fromLog(table: LogTable) {
+      pipelineIndex = table.get("Pipeline Index", pipelineIndex)
     }
   }
+
+  fun updateInputs(inputs: PoseEstimatorIOInputs)
+
+  fun getPipelineResults(): PhotonPipelineResult
+
+  fun getRawFrontCamera(): PhotonCamera
 }

@@ -49,7 +49,7 @@ class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
     this.desiredState = desiredState
   }
 
-  fun isIdle() = runIdle.getBoolean()
+  fun isIdle() = runIdle.get()
 
   fun hasNote() = intake.hasNote()
 }

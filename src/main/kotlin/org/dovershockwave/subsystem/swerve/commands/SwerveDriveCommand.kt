@@ -27,8 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 
-class SwerveDriveCommand(private val controller: CommandXboxController, private val swerve: SwerveSubsystem) :
-  Command() {
+class SwerveDriveCommand(private val controller: CommandXboxController, private val swerve: SwerveSubsystem) : Command() {
   init {
     addRequirements(swerve)
   }

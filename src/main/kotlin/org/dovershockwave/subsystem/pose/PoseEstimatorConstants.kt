@@ -20,19 +20,24 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.vision
+package org.dovershockwave.subsystem.pose
 
-import org.littletonrobotics.junction.LogTable
-import org.littletonrobotics.junction.inputs.LoggableInputs
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Transform3d
+import edu.wpi.first.math.geometry.Translation3d
 
-interface VisionIO {
-  class VisionIOInputs : LoggableInputs {
-    override fun toLog(table: LogTable?) {
-      TODO("Not yet implemented")
-    }
+class PoseEstimatorConstants {
+  companion object {
+    /**
+     * Physical location of the camera on the robot, relative to the center of the robot.
+     */
+    val FRONT_CAMERA_TO_ROBOT = Transform3d(Translation3d(0.0, 0.0, 0.0), Rotation3d())
+    val ROBOT_TO_FRONT_CAMERA = FRONT_CAMERA_TO_ROBOT.inverse()
 
-    override fun fromLog(table: LogTable?) {
-      TODO("Not yet implemented")
-    }
+    const val MAXIMUM_AMBIGUITY = 0.5
+    const val FRONT_CAMERA_NAME = "OV9281"
+
+    const val FIELD_LENGTH = 16.54175
+    const val FIELD_WIDTH = 8.0137
   }
 }

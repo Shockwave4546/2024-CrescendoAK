@@ -41,10 +41,10 @@ class TunableSparkPIDController(private val child: SparkPIDController, private v
    */
   override fun initSendable(builder: SendableBuilder) {
     builder.setSmartDashboardType("PIDController")
-    builder.addDoubleProperty("p", { child.p }, { gain: Double -> child.setP(gain) })
-    builder.addDoubleProperty("i", { child.i }, { gain: Double -> child.setI(gain) })
-    builder.addDoubleProperty("d", { child.d }, { gain: Double -> child.setD(gain) })
-    builder.addDoubleProperty("f", { child.ff }, { gain: Double -> child.setFF(gain) })
+    builder.addDoubleProperty("p", { child.p }, { gain -> child.setP(gain) })
+    builder.addDoubleProperty("i", { child.i }, { gain -> child.setI(gain) })
+    builder.addDoubleProperty("d", { child.d }, { gain -> child.setD(gain) })
+    builder.addDoubleProperty("f", { child.ff }, { gain -> child.setFF(gain) })
     builder.addDoubleProperty("setpoint", setpointGetter, setpointSetter)
     // SparkPIDController doesn't have an option to disable it, so the controller is always enabled.
     builder.addBooleanProperty("enabled", { true }, null)

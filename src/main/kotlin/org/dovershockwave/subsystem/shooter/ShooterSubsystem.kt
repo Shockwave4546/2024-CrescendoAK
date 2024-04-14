@@ -22,16 +22,12 @@
 
 package org.dovershockwave.subsystem.shooter
 
-import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.RobotContainer
 import org.dovershockwave.shuffleboard.TunableSparkPIDController
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
-import java.util.function.DoubleConsumer
-import java.util.function.DoubleSupplier
 
 class ShooterSubsystem(private val shooter: ShooterIO) : SubsystemBase() {
   private val inputs = ShooterIO.ShooterIOInputs()

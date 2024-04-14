@@ -22,8 +22,6 @@
 
 package org.dovershockwave.auto
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
-import edu.wpi.first.wpilibj2.command.Command
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem

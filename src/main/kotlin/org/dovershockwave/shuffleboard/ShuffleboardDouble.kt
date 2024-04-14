@@ -24,11 +24,12 @@ package org.dovershockwave.shuffleboard
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import org.littletonrobotics.junction.Logger
 
 /**
  * A class representing a double value on the Shuffleboard dashboard.
  */
-open class ShuffleboardDouble(tab: ShuffleboardTab, name: String, private val def: Double = DEFAULT_VALUE) : ShuffleboardValue(name) {
+open class ShuffleboardDouble(tab: ShuffleboardTab, private val name: String, private val def: Double = DEFAULT_VALUE) : ShuffleboardValue() {
   private val widget = tab.add(name, def)
 
   /**
@@ -81,15 +82,15 @@ open class ShuffleboardDouble(tab: ShuffleboardTab, name: String, private val de
    *
    * @return the current value of the ShuffleboardDouble object
    */
-  fun getDouble() = widget.entry.getDouble(def)
+  fun get() = widget.entry.getDouble(def)
 
   /**
    * Sets the value of the ShuffleboardDouble object.
    *
    * @param value the new value to set
    */
-  fun setDouble(value: Double) {
-    super.set(value)
+  fun set(value: Double) {
+    Logger.recordOutput("DashboardInputs/$name", value)
     widget.entry.setDouble(value)
   }
 

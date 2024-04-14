@@ -25,11 +25,12 @@ package org.dovershockwave.shuffleboard
 import edu.wpi.first.networktables.GenericEntry
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import org.littletonrobotics.junction.Logger
 
 /**
  * A class representing a boolean value on the Shuffleboard dashboard.
  */
-class ShuffleboardBoolean(tab: ShuffleboardTab, name: String, private val def: Boolean = DEFAULT_VALUE) : ShuffleboardValue(name) {
+class ShuffleboardBoolean(tab: ShuffleboardTab, private val name: String, private val def: Boolean = DEFAULT_VALUE) : ShuffleboardValue() {
   private val widget = tab.add(name, def)
 
   /**
@@ -78,15 +79,15 @@ class ShuffleboardBoolean(tab: ShuffleboardTab, name: String, private val def: B
    *
    * @return the current value of the ShuffleboardBoolean object
    */
-  fun getBoolean() = widget.entry.getBoolean(def)
+  fun get() = widget.entry.getBoolean(def)
 
   /**
    * Sets the value of the ShuffleboardBoolean object.
    *
    * @param value the new value to set
    */
-  fun setBoolean(value: Boolean) {
-    super.set(if (value) 1.0 else -1.0)
+  fun set(value: Boolean) {
+    Logger.recordOutput("DashboardInputs/$name", value)
     widget.entry.setBoolean(value)
   }
 

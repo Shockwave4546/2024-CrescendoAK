@@ -26,19 +26,28 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import org.dovershockwave.commands.*
-import org.dovershockwave.subsystem.intake.*
+import org.dovershockwave.subsystem.intake.IntakeConstants
+import org.dovershockwave.subsystem.intake.IntakeIOSim
+import org.dovershockwave.subsystem.intake.IntakeIOSpark
+import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.*
 import org.dovershockwave.subsystem.led.LEDSubsystem
-import org.dovershockwave.subsystem.shooter.*
+import org.dovershockwave.subsystem.pose.PoseEstimatorIOReal
+import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
+import org.dovershockwave.subsystem.pose.commands.ResetFieldCentricDriveCommand
+import org.dovershockwave.subsystem.shooter.ShooterConstants
+import org.dovershockwave.subsystem.shooter.ShooterIOSim
+import org.dovershockwave.subsystem.shooter.ShooterIOSpark
+import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.*
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.swerve.commands.SetMaxSpeedCommand
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
-
 
 object RobotContainer {
   val swerve: SwerveSubsystem
@@ -46,6 +55,7 @@ object RobotContainer {
   val arm: IntakeArmSubsystem
   val shooter: ShooterSubsystem
   val intake: IntakeSubsystem
+  val poseEstimator: PoseEstimatorSubsystem? // TODO: 4/14/2024  
   val led: LEDSubsystem? // TODO: 4/13/2024 idk 
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
@@ -65,6 +75,7 @@ object RobotContainer {
         arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
         shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID))
         intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
+        poseEstimator = PoseEstimatorSubsystem(PoseEstimatorIOReal(), swerve)
         led = LEDSubsystem()
       }
 
@@ -81,6 +92,7 @@ object RobotContainer {
         arm = IntakeArmSubsystem(IntakeArmIOSim())
         shooter = ShooterSubsystem(ShooterIOSim())
         intake = IntakeSubsystem(IntakeIOSim())
+        poseEstimator = null
         led = null
       }
     }
@@ -91,10 +103,10 @@ object RobotContainer {
   }
 
   private fun configureBindings() {
-//    driverController.b().onTrue(ResetPoseCommand(swerve, poseEstimator))
-//    driverController.x().onTrue(ToggleXCommand(swerve))
-//    driverController.leftBumper().whileTrue(SetSpeedMaxCommand(swerve, 0.2, 0.2))
-//    driverController.rightBumper().whileTrue(SetSpeedMaxCommand(swerve, 0.4, 0.4))
+    driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, poseEstimator!!)) // FIXME:  
+    driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
+    driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
+    driverController.rightBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.4, 0.4))
 
     operatorController.povUp().onTrue(InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
     operatorController.povDown().onTrue(InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm))
