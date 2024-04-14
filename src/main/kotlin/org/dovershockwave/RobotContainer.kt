@@ -24,6 +24,19 @@ package org.dovershockwave
 
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import org.dovershockwave.subsystem.intake.*
+import org.dovershockwave.subsystem.intakearm.IntakeArmConstants
+import org.dovershockwave.subsystem.intakearm.IntakeArmIOSim
+import org.dovershockwave.subsystem.intakearm.IntakeArmIOSpark
+import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.shooter.ShooterConstants
+import org.dovershockwave.subsystem.shooter.ShooterIOSim
+import org.dovershockwave.subsystem.shooter.ShooterIOSpark
+import org.dovershockwave.subsystem.shooter.ShooterSubsystem
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSim
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSpark
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
+import org.dovershockwave.subsystem.shooterwrist.WristConstants
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
@@ -33,6 +46,10 @@ import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
 
 object RobotContainer {
   val swerve: SwerveSubsystem
+  val wrist: ShooterWristSubsystem
+  val arm: IntakeArmSubsystem
+  val shooter: ShooterSubsystem
+  val intake: IntakeSubsystem
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
 
@@ -46,6 +63,11 @@ object RobotContainer {
           ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
           GyroIONavX()
         )
+
+        wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID))
+        arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
+        shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID))
+        intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
       }
 
       RobotType.SIM -> {
@@ -56,6 +78,11 @@ object RobotContainer {
           ModuleIOSim(SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
           GyroIOSim() // TODO: This is fake for now.
         )
+
+        wrist = ShooterWristSubsystem(ShooterWristIOSim())
+        arm = IntakeArmSubsystem(IntakeArmIOSim())
+        shooter = ShooterSubsystem(ShooterIOSim())
+        intake = IntakeSubsystem(IntakeIOSim())
       }
     }
 

@@ -20,34 +20,24 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.shooter
 
-import org.littletonrobotics.junction.LogTable
-import org.littletonrobotics.junction.inputs.LoggableInputs
+import org.dovershockwave.utils.PIDGains
+import org.dovershockwave.utils.PositionConversionFactor
 
-interface ShooterWristIO {
-  class ShooterWristIOInputs : LoggableInputs {
-    var angle = 0.0
-    var appliedVolts = 0.0
-    var current = 0.0
-    var temp = 0.0
-
-    override fun toLog(table: LogTable) {
-      table.put("Angle", angle)
-      table.put("Applied Volts", appliedVolts)
-      table.put("Current", current)
-      table.put("Temp", temp)
-    }
-
-    override fun fromLog(table: LogTable) {
-      angle = table.get("Angle", angle)
-      appliedVolts = table.get("Applied Volts", appliedVolts)
-      current = table.get("Current", current)
-      temp = table.get("Temp", temp)
-    }
+class ShooterConstants {
+  companion object {
+    const val BOTTOM_CAN_ID = 31
+    const val TOP_CAN_ID = 30
+    val REV_CONVERSION_FACTOR = PositionConversionFactor(1.0)
+    const val RPS_CONVERSION_FACTOR = 1.0 / 60.0
+    val GAINS = PIDGains(0.03, 0.0, 0.0, 0.011)
+    const val LEFT_INVERTED = true
+    const val RIGHT_INVERTED = true
+    const val MIN_OUTPUT = -1.0
+    const val MAX_OUTPUT = 1.0
+    const val RPS_TOLERANCE = 2.5
+    const val MIN_RPS = 0.0
+    const val MAX_RPS = 90.0
   }
-
-  fun updateInputs(inputs: ShooterWristIOInputs)
-
-  fun setAngleSetpoint(angle: Double)
 }

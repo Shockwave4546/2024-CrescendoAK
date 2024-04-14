@@ -20,34 +20,36 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.intake
 
-import org.littletonrobotics.junction.LogTable
-import org.littletonrobotics.junction.inputs.LoggableInputs
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.shuffleboard.ShuffleboardBoolean
+import org.dovershockwave.subsystem.intake.commands.IdleIntakeCommand
+import org.littletonrobotics.junction.Logger
 
-interface ShooterWristIO {
-  class ShooterWristIOInputs : LoggableInputs {
-    var angle = 0.0
-    var appliedVolts = 0.0
-    var current = 0.0
-    var temp = 0.0
+class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
+  private val inputs = IntakeIO.IntakeIOInputs()
+  private var desiredState = IntakeState.IDLE
+  private val runIdle = ShuffleboardBoolean(Shuffleboard.getTab("Intake"), "Idle Speed", true).withSize(3, 3)
 
-    override fun toLog(table: LogTable) {
-      table.put("Angle", angle)
-      table.put("Applied Volts", appliedVolts)
-      table.put("Current", current)
-      table.put("Temp", temp)
-    }
-
-    override fun fromLog(table: LogTable) {
-      angle = table.get("Angle", angle)
-      appliedVolts = table.get("Applied Volts", appliedVolts)
-      current = table.get("Current", current)
-      temp = table.get("Temp", temp)
-    }
+  init {
+    defaultCommand = IdleIntakeCommand(this)
   }
 
-  fun updateInputs(inputs: ShooterWristIOInputs)
+  override fun periodic() {
+    intake.updateInputs(inputs)
 
-  fun setAngleSetpoint(angle: Double)
+    Logger.recordOutput("Intake/Desired State", desiredState.name)
+    Logger.recordOutput("Intake/Desired State Duty Cycle", desiredState.dutyCycle)
+    intake.setDutyCycle(inputs.dutyCycle)
+  }
+
+  fun setDesiredState(desiredState: IntakeState) {
+    this.desiredState = desiredState
+  }
+
+  fun isIdle() = runIdle.getBoolean()
+
+  fun hasNote() = intake.hasNote()
 }

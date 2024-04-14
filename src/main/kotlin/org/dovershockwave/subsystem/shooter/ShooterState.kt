@@ -20,34 +20,15 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.shooter
 
-import org.littletonrobotics.junction.LogTable
-import org.littletonrobotics.junction.inputs.LoggableInputs
-
-interface ShooterWristIO {
-  class ShooterWristIOInputs : LoggableInputs {
-    var angle = 0.0
-    var appliedVolts = 0.0
-    var current = 0.0
-    var temp = 0.0
-
-    override fun toLog(table: LogTable) {
-      table.put("Angle", angle)
-      table.put("Applied Volts", appliedVolts)
-      table.put("Current", current)
-      table.put("Temp", temp)
-    }
-
-    override fun fromLog(table: LogTable) {
-      angle = table.get("Angle", angle)
-      appliedVolts = table.get("Applied Volts", appliedVolts)
-      current = table.get("Current", current)
-      temp = table.get("Temp", temp)
-    }
+data class ShooterState(val name: String, val bottomRPS: Double, val topRPS: Double) {
+  companion object {
+    val STOPPED = ShooterState("Stopped", 0.0, 0.0)
+    val AMP = ShooterState("Amp", 20.0, 12.0)
+    val SUBWOOFER = ShooterState("Subwoofer", 70.0, 30.0)
+    val IDLE = ShooterState("Idle", 30.0, 30.0)
+    val SPIT = ShooterState("Spit", 40.0, 50.0)
+    val INTERPOLATED = ShooterState("Interpolated", -1.0, -1.0)
   }
-
-  fun updateInputs(inputs: ShooterWristIOInputs)
-
-  fun setAngleSetpoint(angle: Double)
 }

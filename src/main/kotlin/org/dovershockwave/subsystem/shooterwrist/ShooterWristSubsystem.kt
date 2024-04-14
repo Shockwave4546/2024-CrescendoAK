@@ -22,11 +22,13 @@
 
 package org.dovershockwave.subsystem.shooterwrist
 
+import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
-class ShooterWristSubsystem(private val shooter: ShooterWristIO) : SubsystemBase() {
+class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase() {
   private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
 
@@ -38,12 +40,46 @@ class ShooterWristSubsystem(private val shooter: ShooterWristIO) : SubsystemBase
   )
 
   override fun periodic() {
-    shooter.updateInputs(inputs)
+    wrist.updateInputs(inputs)
 
-    Logger.processInputs("Shooter Wrist", inputs)
-    Logger.recordOutput("Shooter Wrist State Name", desiredState.name)
-    Logger.recordOutput("Shooter Wrist State Angle", desiredState.angle)
+    if (shouldStopWrist()) {
+      DriverStation.reportError("The encoder is reporting an angle that will break the wrist: " + inputs.angle, false)
+    }
+
+    val key = "Shooter Wrist"
+    Logger.processInputs(key, inputs)
+    Logger.recordOutput("$key/State Name", desiredState.name)
+    Logger.recordOutput("$key/State Angle", desiredState.angle)
+    Logger.recordOutput("$key/At Desired State", atDesiredState())
+    Logger.recordOutput("$key/Should Stop Wrist", shouldStopWrist())
   }
+
+  fun setDesiredState(state: WristState) {
+    if (shouldStopWrist()) return
+    if (state === WristState.INTERPOLATED) {
+      // TODO:  
+//      if (!vision.hasViableTarget()) return
+//      val transform: Unit = vision.getCameraToTagTransform(RobotContainer.getSubwooferTagID()) ?: return
+//      val distance: Unit = transform.getX()
+//      if (distance > 3.90) return
+//      this.desiredState = WristState("Interpolated", angleInterpolator.interpolate(distance))
+    } else {
+      this.desiredState = state
+    }
+
+    val clamped = MathUtil.clamp(desiredState.angle, WristConstants.MIN_ANGLE, WristConstants.MAX_ANGLE)
+    wrist.setAngleSetpoint(clamped)
+  }
+
+  fun atDesiredState() = inputs.angle in desiredState.angle - WristConstants.ANGLE_TOLERANCE ..desiredState.angle + WristConstants.ANGLE_TOLERANCE
+
+  /**
+   * If the Encoder is reading an angle that causes the wrist to go into the robot, it should stop.
+   * These angles include [81, 360].
+   *
+   * @return whether the wrist should stop operating as to not break it.
+   */
+  private fun shouldStopWrist() = inputs.angle > WristConstants.MAX_ANGLE
 }
 
 fun main() {

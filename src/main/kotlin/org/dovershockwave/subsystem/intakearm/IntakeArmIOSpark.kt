@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.intakearm
 
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
@@ -29,7 +29,7 @@ import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
 
-class ShooterWristIOSpark(id: Int) : ShooterWristIO {
+class IntakeArmIOSpark(id: Int) : IntakeArmIO {
   private val motor = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless)
   private val encoder = motor.absoluteEncoder
   private val pid = motor.pidController
@@ -38,19 +38,19 @@ class ShooterWristIOSpark(id: Int) : ShooterWristIO {
     motor.configureAbs(linkedSetOf(
       AbsSparkAction("$id Set Smart Current Limit") { motor, _, _ -> motor.setSmartCurrentLimit(MotorConstants.NEO_CURRENT_LIMIT) },
       AbsSparkAction("$id Set Idle Mode") { motor, _, _ -> motor.setIdleMode(CANSparkBase.IdleMode.kBrake) },
-      AbsSparkAction("$id Set Position Conversion Factor") { _, encoder, _ -> WristConstants.ANGLE_CONVERSION_FACTOR.apply(encoder) },
-      AbsSparkAction("$id Set Encoder Inverted") { _, encoder, _ -> encoder.setInverted(WristConstants.ENCODER_INVERTED) },
-      AbsSparkAction("$id Set Zero Offset") { _, encoder, _ -> encoder.setZeroOffset(WristConstants.ANGLE_OFFSET) },
-      AbsSparkAction("$id Set P Gain") { _, _, pid -> pid.setP(WristConstants.GAINS.p) },
-      AbsSparkAction("$id Set I Gain") { _, _, pid -> pid.setI(WristConstants.GAINS.i) },
-      AbsSparkAction("$id Set D Gain") { _, _, pid -> pid.setD(WristConstants.GAINS.d) },
-      AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setFF(WristConstants.GAINS.ff) },
-      AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setOutputRange(WristConstants.MIN_OUTPUT, WristConstants.MAX_OUTPUT) },
-      AbsSparkAction("$id Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) }
+      AbsSparkAction("$id Set Position Conversion Factor") { _, encoder, _ -> IntakeArmConstants.ANGLE_CONVERSION_FACTOR.apply(encoder) },
+      AbsSparkAction("$id Set Zero Offset") { _, encoder, _ -> encoder.setZeroOffset(IntakeArmConstants.ANGLE_OFFSET) },
+      AbsSparkAction("$id Set P Gain") { _, _, pid -> pid.setP(IntakeArmConstants.GAINS.p) },
+      AbsSparkAction("$id Set I Gain") { _, _, pid -> pid.setI(IntakeArmConstants.GAINS.i) },
+      AbsSparkAction("$id Set D Gain") { _, _, pid -> pid.setD(IntakeArmConstants.GAINS.d) },
+      AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setFF(IntakeArmConstants.GAINS.ff) },
+      AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setOutputRange(IntakeArmConstants.MIN_OUTPUT, IntakeArmConstants.MAX_OUTPUT) },
+      AbsSparkAction("$id Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) },
+      AbsSparkAction("Set Encoder Inverted") { _, encoder, _ -> encoder.setInverted(IntakeArmConstants.ENCODER_INVERTED) },
     ))
   }
 
-  override fun updateInputs(inputs: ShooterWristIO.ShooterWristIOInputs) {
+  override fun updateInputs(inputs: IntakeArmIO.IntakeArmIOInputs) {
     inputs.angle = encoder.position
     inputs.appliedVolts = motor.busVoltage
     inputs.current = motor.outputCurrent

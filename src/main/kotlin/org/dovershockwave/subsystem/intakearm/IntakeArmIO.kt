@@ -20,13 +20,13 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.intakearm
 
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
-interface ShooterWristIO {
-  class ShooterWristIOInputs : LoggableInputs {
+interface IntakeArmIO {
+  class IntakeArmIOInputs : LoggableInputs {
     var angle = 0.0
     var appliedVolts = 0.0
     var current = 0.0
@@ -47,7 +47,7 @@ interface ShooterWristIO {
     }
   }
 
-  fun updateInputs(inputs: ShooterWristIOInputs)
+  fun updateInputs(inputs: IntakeArmIOInputs)
 
   fun setAngleSetpoint(angle: Double)
 }

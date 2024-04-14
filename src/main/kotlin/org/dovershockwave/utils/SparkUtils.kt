@@ -59,13 +59,13 @@ class SparkUtils {
       var count = 0
       var output = action.accept(this, encoder, pidController)
       while (output != REVLibError.kOk && count < timeout) {
-        Logger.recordOutput("SparkMaxActions/${action.name}", output)
+        Logger.recordOutput("SparkMaxActions/${action.name} #$count", output)
         output = action.accept(this, encoder, pidController)
         count++
       }
 
       // TODO:
-      throw RuntimeException("Failed to run action: $action")
+      throw RuntimeException("Failed to run action: ${action.name}")
       // TODO: add something here i dont even know right now for the robot will not work.
     }
 
@@ -89,13 +89,13 @@ class SparkUtils {
       var count = 0
       var output = action.accept(this, absoluteEncoder, pidController)
       while (output != REVLibError.kOk && count < timeout) {
-        Logger.recordOutput("SparkMaxActions/${action.name}", output)
+        Logger.recordOutput("SparkMaxActions/${action.name} #$count", output)
         output = action.accept(this, absoluteEncoder, pidController)
         count++
       }
 
       // TODO:
-      throw RuntimeException("Failed to run action: $action")
+      throw RuntimeException("Failed to run action: ${action.name}")
       // TODO: add something here i dont even know right now for the robot will not work.
     }
   }

@@ -20,34 +20,39 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.shooterwrist
+package org.dovershockwave.subsystem.intake
 
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
-interface ShooterWristIO {
-  class ShooterWristIOInputs : LoggableInputs {
-    var angle = 0.0
+interface IntakeIO {
+  class IntakeIOInputs : LoggableInputs {
+    var hasNote = false
+    var dutyCycle = 0.0
     var appliedVolts = 0.0
     var current = 0.0
     var temp = 0.0
 
     override fun toLog(table: LogTable) {
-      table.put("Angle", angle)
+      table.put("Has Note", hasNote)
+      table.put("Duty Cycle", dutyCycle)
       table.put("Applied Volts", appliedVolts)
       table.put("Current", current)
       table.put("Temp", temp)
     }
 
     override fun fromLog(table: LogTable) {
-      angle = table.get("Angle", angle)
+      hasNote = table.get("Has Note", hasNote)
+      dutyCycle = table.get("Duty Cycle", dutyCycle)
       appliedVolts = table.get("Applied Volts", appliedVolts)
       current = table.get("Current", current)
       temp = table.get("Temp", temp)
     }
   }
 
-  fun updateInputs(inputs: ShooterWristIOInputs)
+  fun updateInputs(inputs: IntakeIOInputs)
 
-  fun setAngleSetpoint(angle: Double)
+  fun setDutyCycle(dutyCycle: Double)
+
+  fun hasNote(): Boolean
 }
