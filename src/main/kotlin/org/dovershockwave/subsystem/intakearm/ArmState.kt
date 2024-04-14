@@ -25,6 +25,6 @@ package org.dovershockwave.subsystem.intakearm
 data class ArmState(val name: String, val angle: Double) {
   companion object {
     val HOME = ArmState("Home", 5.0)
-    val FLOOR = ArmState("Floor", 190.0)
+    val FLOOR = ArmState("Floor", 50.0)
   }
 }

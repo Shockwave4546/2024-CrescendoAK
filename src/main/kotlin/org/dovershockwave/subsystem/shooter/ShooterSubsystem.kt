@@ -22,10 +22,16 @@
 
 package org.dovershockwave.subsystem.shooter
 
+import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.RobotContainer
+import org.dovershockwave.shuffleboard.TunableSparkPIDController
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
+import java.util.function.DoubleConsumer
+import java.util.function.DoubleSupplier
 
 class ShooterSubsystem(private val shooter: ShooterIO) : SubsystemBase() {
   private val inputs = ShooterIO.ShooterIOInputs()
@@ -44,6 +50,24 @@ class ShooterSubsystem(private val shooter: ShooterIO) : SubsystemBase() {
     3,
     "x"
   )
+
+  val tab = Shuffleboard.getTab("Shooter")
+
+  init {
+    tab.add("Top PID",
+      TunableSparkPIDController(shooter.getRawTop(), { desiredState.topRPS }, { topRPS: Double ->
+        this.desiredState = ShooterState("Manual", desiredState.bottomRPS, topRPS)
+        shooter.setTopVelocitySetpoint(topRPS)
+      })
+    )
+
+    tab.add("Bottom PID",
+      TunableSparkPIDController(shooter.getRawBot(), { desiredState.bottomRPS }, { botRPS: Double ->
+        this.desiredState = ShooterState("Manual", botRPS, desiredState.topRPS)
+        shooter.setBottomVelocitySetpoint(botRPS)
+      })
+    )
+  }
 
   override fun periodic() {
     shooter.updateInputs(inputs)

@@ -24,13 +24,20 @@ package org.dovershockwave.subsystem.shooterwrist
 
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.shuffleboard.TunableSparkPIDController
+import org.dovershockwave.subsystem.shooter.ShooterState
+import org.dovershockwave.utils.LoggedTunableNumber
 import org.dovershockwave.utils.PolynomialRegression
+import org.dovershockwave.utils.TunableNumber
 import org.littletonrobotics.junction.Logger
 
 class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase() {
   private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
+
+  private val tune = LoggedTunableNumber("Tunable")
 
   private val anglePredictor = PolynomialRegression(
     doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
@@ -38,6 +45,16 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase()
     3,
     "x"
   )
+
+  init {
+    val tab = Shuffleboard.getTab("ShooterWrist")
+    tab.add("Top PID",
+      TunableSparkPIDController(wrist.pid(), { desiredState.angle }, { angle: Double ->
+        this.desiredState = WristState("Manual", angle)
+        wrist.setAngleSetpoint(angle)
+      })
+    )
+  }
 
   override fun periodic() {
     wrist.updateInputs(inputs)
@@ -52,6 +69,8 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase()
     Logger.recordOutput("$key/State Angle", desiredState.angle)
     Logger.recordOutput("$key/At Desired State", atDesiredState())
     Logger.recordOutput("$key/Should Stop Wrist", shouldStopWrist())
+
+    println(tune.get())
   }
 
   fun setDesiredState(state: WristState) {

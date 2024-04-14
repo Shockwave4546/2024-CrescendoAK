@@ -22,13 +22,11 @@
 
 package org.dovershockwave.subsystem.shooter
 
-import com.revrobotics.CANSparkBase
-import com.revrobotics.CANSparkLowLevel
-import com.revrobotics.CANSparkMax
-import com.revrobotics.REVLibError
+import com.revrobotics.*
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureRel
+import org.dovershockwave.utils.SparkUtils.Companion.runBlockingRel
 
 class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
   private val bottomMotor = CANSparkMax(bottomID, CANSparkLowLevel.MotorType.kBrushless)
@@ -71,21 +69,33 @@ class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
 
   override fun updateInputs(inputs: ShooterIO.ShooterIOInputs) {
     inputs.bottomRPS = bottomEncoder.velocity
-    inputs.bottomAppliedVolts = bottomMotor.busVoltage
+    inputs.bottomAppliedVolts = bottomMotor.appliedOutput * 12
     inputs.bottomCurrent = bottomMotor.outputCurrent
     inputs.bottomTemp = bottomMotor.motorTemperature
 
     inputs.topRPS = topEncoder.velocity
-    inputs.topAppliedVolts = topMotor.busVoltage
+    inputs.topAppliedVolts = topMotor.appliedOutput * 12
     inputs.topCurrent = topMotor.outputCurrent
     inputs.topTemp = topMotor.motorTemperature
   }
 
   override fun setBottomVelocitySetpoint(rps: Double) {
-    bottomPID.setReference(rps, CANSparkBase.ControlType.kVelocity)
+    bottomMotor.runBlockingRel(linkedSetOf(
+      RelSparkAction("a") { _, _, pid -> pid.setReference(rps, CANSparkBase.ControlType.kVelocity)}
+    ))
   }
 
   override fun setTopVelocitySetpoint(rps: Double) {
-    topPID.setReference(rps, CANSparkBase.ControlType.kVelocity)
+    topMotor.runBlockingRel(linkedSetOf(
+      RelSparkAction("b") { _, _, pid -> pid.setReference(rps, CANSparkBase.ControlType.kVelocity)}
+    ))
+  }
+
+  override fun getRawBot(): SparkPIDController {
+    return bottomPID
+  }
+
+  override fun getRawTop(): SparkPIDController {
+    return topPID
   }
 }

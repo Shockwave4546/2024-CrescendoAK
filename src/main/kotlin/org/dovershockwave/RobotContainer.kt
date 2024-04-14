@@ -23,27 +23,22 @@
 package org.dovershockwave
 
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import org.dovershockwave.commands.*
 import org.dovershockwave.subsystem.intake.*
-import org.dovershockwave.subsystem.intakearm.IntakeArmConstants
-import org.dovershockwave.subsystem.intakearm.IntakeArmIOSim
-import org.dovershockwave.subsystem.intakearm.IntakeArmIOSpark
-import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
+import org.dovershockwave.subsystem.intakearm.*
 import org.dovershockwave.subsystem.led.LEDSubsystem
-import org.dovershockwave.subsystem.shooter.ShooterConstants
-import org.dovershockwave.subsystem.shooter.ShooterIOSim
-import org.dovershockwave.subsystem.shooter.ShooterIOSpark
-import org.dovershockwave.subsystem.shooter.ShooterSubsystem
-import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSim
-import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSpark
-import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
-import org.dovershockwave.subsystem.shooterwrist.WristConstants
+import org.dovershockwave.subsystem.shooter.*
+import org.dovershockwave.subsystem.shooterwrist.*
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
+
 
 object RobotContainer {
   val swerve: SwerveSubsystem
@@ -56,7 +51,7 @@ object RobotContainer {
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
 
   init {
-    when (GlobalConstants.robotType) {
+    when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         swerve = SwerveSubsystem(
           ModuleIOSpark(SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
@@ -96,6 +91,22 @@ object RobotContainer {
   }
 
   private fun configureBindings() {
+//    driverController.b().onTrue(ResetPoseCommand(swerve, poseEstimator))
+//    driverController.x().onTrue(ToggleXCommand(swerve))
+//    driverController.leftBumper().whileTrue(SetSpeedMaxCommand(swerve, 0.2, 0.2))
+//    driverController.rightBumper().whileTrue(SetSpeedMaxCommand(swerve, 0.4, 0.4))
 
+    operatorController.povUp().onTrue(InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
+    operatorController.povDown().onTrue(InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm))
+    operatorController.povRight().onTrue(FeedShooterCommand(intake).withTimeout(0.25))
+
+    operatorController.leftBumper().onTrue(ResetRobotStateCommand(shooter, intake, arm, wrist))
+
+    operatorController.rightTrigger().onTrue(InstantCommand({ wrist.setDesiredState(WristState.SPIT) }, wrist))
+    operatorController.rightBumper().onTrue(FullSpitCommand(intake, shooter, arm, wrist))
+    operatorController.a().toggleOnTrue(FullShootCloseCommand(intake, shooter, arm, wrist))
+    operatorController.b().toggleOnTrue(FullSpitCommand(intake, shooter, arm, wrist))
+    operatorController.x().toggleOnTrue(FullShootAmpCommand(intake, shooter, arm, wrist))
+    operatorController.y().toggleOnTrue(FullIntakeCommand(arm, intake))
   }
 }

@@ -25,9 +25,11 @@ package org.dovershockwave.subsystem.intakearm
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
+import com.revrobotics.SparkPIDController
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
+import org.dovershockwave.utils.SparkUtils.Companion.runBlockingAbs
 
 class IntakeArmIOSpark(id: Int) : IntakeArmIO {
   private val motor = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless)
@@ -43,21 +45,27 @@ class IntakeArmIOSpark(id: Int) : IntakeArmIO {
       AbsSparkAction("$id Set P Gain") { _, _, pid -> pid.setP(IntakeArmConstants.GAINS.p) },
       AbsSparkAction("$id Set I Gain") { _, _, pid -> pid.setI(IntakeArmConstants.GAINS.i) },
       AbsSparkAction("$id Set D Gain") { _, _, pid -> pid.setD(IntakeArmConstants.GAINS.d) },
-      AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setFF(IntakeArmConstants.GAINS.ff) },
+      AbsSparkAction("$id Set FF") { _, _, pid -> pid.setFF(IntakeArmConstants.GAINS.ff) },
       AbsSparkAction("$id Set Output Range") { _, _, pid -> pid.setOutputRange(IntakeArmConstants.MIN_OUTPUT, IntakeArmConstants.MAX_OUTPUT) },
       AbsSparkAction("$id Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) },
-      AbsSparkAction("Set Encoder Inverted") { _, encoder, _ -> encoder.setInverted(IntakeArmConstants.ENCODER_INVERTED) },
+      AbsSparkAction("$id Set Encoder Inverted") { _, encoder, _ -> encoder.setInverted(IntakeArmConstants.ENCODER_INVERTED) },
     ))
   }
 
   override fun updateInputs(inputs: IntakeArmIO.IntakeArmIOInputs) {
     inputs.angle = encoder.position
-    inputs.appliedVolts = motor.busVoltage
+    inputs.appliedVolts = motor.appliedOutput * 12
     inputs.current = motor.outputCurrent
     inputs.temp = motor.motorTemperature
   }
 
   override fun setAngleSetpoint(angle: Double) {
-    pid.setReference(angle, CANSparkBase.ControlType.kPosition)
+    motor.runBlockingAbs(linkedSetOf(
+      AbsSparkAction("Set Reference $angle") {_, _, pid -> pid.setReference(angle, CANSparkBase.ControlType.kPosition) }
+    ))
+  }
+
+  override fun pid(): SparkPIDController {
+    return pid
   }
 }

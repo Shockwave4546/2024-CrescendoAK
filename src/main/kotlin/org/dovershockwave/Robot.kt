@@ -23,17 +23,25 @@
 package org.dovershockwave
 
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import org.dovershockwave.shuffleboard.ShuffleboardDouble
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
+import org.dovershockwave.utils.LoggedTunableNumber
+import org.dovershockwave.utils.TunableNumber
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber
 import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.rlog.RLOGServer
+import org.littletonrobotics.junction.wpilog.WPILOGReader
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 object Robot : LoggedRobot() {
   override fun robotInit() {
-    Logger.recordMetadata("ProjectName", "2024Crescendo")
+    Logger.recordMetadata("ProjectName", "OmNom")
 
-    when (GlobalConstants.robotType) {
+    when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
         PowerDistribution() // Enables power distribution logging.

@@ -24,7 +24,7 @@ package org.dovershockwave
 
 class GlobalConstants {
   companion object {
-    val robotType = RobotType.SIM
+    val ROBOT_TYPE = RobotType.REAL
     const val DRIVER_CONTROLLER_PORT = 0
     const val OPERATOR_CONTROLLER_PORT = 1
     const val DRIVE_DEADBAND = 0.02

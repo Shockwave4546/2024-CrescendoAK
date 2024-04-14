@@ -28,6 +28,6 @@ package org.dovershockwave.utils
  */
 @JvmRecord
 data class PIDGains(val p: Double, val i: Double, val d: Double, val ff: Double) {
-  constructor(p: Double, i: Double, d: Double) : this(p, d, d, 0.0)
+  constructor(p: Double, i: Double, d: Double) : this(p, i, d, 0.0)
   constructor(p: Double) : this(p, 0.0, 0.0, 0.0)
 }

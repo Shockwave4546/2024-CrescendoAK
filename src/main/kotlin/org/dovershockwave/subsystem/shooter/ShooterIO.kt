@@ -22,6 +22,7 @@
 
 package org.dovershockwave.subsystem.shooter
 
+import com.revrobotics.SparkPIDController
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -67,4 +68,8 @@ interface ShooterIO {
   fun setBottomVelocitySetpoint(rps: Double)
 
   fun setTopVelocitySetpoint(rps: Double)
+
+  fun getRawBot(): SparkPIDController
+
+  fun getRawTop(): SparkPIDController
 }

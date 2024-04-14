@@ -22,6 +22,7 @@
 
 package org.dovershockwave.subsystem.intakearm
 
+import com.revrobotics.SparkPIDController
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -50,4 +51,6 @@ interface IntakeArmIO {
   fun updateInputs(inputs: IntakeArmIOInputs)
 
   fun setAngleSetpoint(angle: Double)
+
+  fun pid(): SparkPIDController
 }

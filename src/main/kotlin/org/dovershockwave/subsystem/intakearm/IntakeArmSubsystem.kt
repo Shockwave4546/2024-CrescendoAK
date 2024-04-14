@@ -24,12 +24,25 @@ package org.dovershockwave.subsystem.intakearm
 
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.shuffleboard.TunableSparkPIDController
+import org.dovershockwave.subsystem.shooterwrist.WristState
 import org.littletonrobotics.junction.Logger
 
 class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
   private val inputs = IntakeArmIO.IntakeArmIOInputs()
   private var desiredState = ArmState.HOME
+
+  init {
+    val tab = Shuffleboard.getTab("IntakeArm")
+    tab.add("PID",
+      TunableSparkPIDController(intakeArm.pid(), { desiredState.angle }, { angle: Double ->
+        this.desiredState = ArmState("Manual", angle)
+        intakeArm.setAngleSetpoint(angle)
+      })
+    )
+  }
 
   override fun periodic() {
     intakeArm.updateInputs(inputs)
@@ -37,6 +50,7 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
     if (shouldStopArm()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the arm: " + inputs.angle, false)
     }
+
 
     val key = "Intake Arm"
     Logger.processInputs(key, inputs)

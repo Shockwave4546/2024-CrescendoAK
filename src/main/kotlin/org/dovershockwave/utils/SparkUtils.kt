@@ -56,17 +56,17 @@ class SparkUtils {
     }
 
     private fun CANSparkMax.runRelWithTimeout(action: RelSparkAction, timeout: Int = TIMEOUT) {
-      var count = 0
+      var count = 1
       var output = action.accept(this, encoder, pidController)
+      Logger.recordOutput("SparkMaxActions/${action.name} #0", output)
       while (output != REVLibError.kOk && count < timeout) {
         Logger.recordOutput("SparkMaxActions/${action.name} #$count", output)
         output = action.accept(this, encoder, pidController)
         count++
       }
 
-      // TODO:
+      if (output == REVLibError.kOk) return
       throw RuntimeException("Failed to run action: ${action.name}")
-      // TODO: add something here i dont even know right now for the robot will not work.
     }
 
     fun CANSparkMax.runBlockingAbs(actions: LinkedHashSet<AbsSparkAction>) {
@@ -86,17 +86,17 @@ class SparkUtils {
     }
 
     private fun CANSparkMax.runAbsWithTimeout(action: AbsSparkAction, timeout: Int = TIMEOUT) {
-      var count = 0
+      var count = 1
       var output = action.accept(this, absoluteEncoder, pidController)
+      Logger.recordOutput("SparkMaxActions/${action.name} #0", output)
       while (output != REVLibError.kOk && count < timeout) {
         Logger.recordOutput("SparkMaxActions/${action.name} #$count", output)
         output = action.accept(this, absoluteEncoder, pidController)
         count++
       }
 
-      // TODO:
+      if (output == REVLibError.kOk) return
       throw RuntimeException("Failed to run action: ${action.name}")
-      // TODO: add something here i dont even know right now for the robot will not work.
     }
   }
 }

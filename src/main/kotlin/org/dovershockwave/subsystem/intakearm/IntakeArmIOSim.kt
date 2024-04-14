@@ -22,6 +22,8 @@
 
 package org.dovershockwave.subsystem.intakearm
 
+import com.revrobotics.SparkPIDController
+
 // TODO:
 class IntakeArmIOSim : IntakeArmIO {
   override fun updateInputs(inputs: IntakeArmIO.IntakeArmIOInputs) {
@@ -29,6 +31,10 @@ class IntakeArmIOSim : IntakeArmIO {
   }
 
   override fun setAngleSetpoint(angle: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun pid(): SparkPIDController {
     TODO("Not yet implemented")
   }
 }

@@ -42,7 +42,7 @@ class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
 
     Logger.recordOutput("Intake/Desired State", desiredState.name)
     Logger.recordOutput("Intake/Desired State Duty Cycle", desiredState.dutyCycle)
-    intake.setDutyCycle(inputs.dutyCycle)
+    intake.setDutyCycle(desiredState.dutyCycle)
   }
 
   fun setDesiredState(desiredState: IntakeState) {
