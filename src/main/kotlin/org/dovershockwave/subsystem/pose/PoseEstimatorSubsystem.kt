@@ -76,6 +76,7 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
     swervePoseEstimator.update(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions())
     if (useVisionMeasurement.get()) {
       photonPoseEstimator.update().ifPresent { estimatedPose ->
+        if (!isValidMeasurement(estimatedPose.estimatedPose)) return@ifPresent
         swervePoseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), poseEstimator.getPipelineResults().timestampSeconds)
       }
     }
