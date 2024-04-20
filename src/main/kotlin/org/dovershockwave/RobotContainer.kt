@@ -25,6 +25,7 @@ package org.dovershockwave
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import org.dovershockwave.auto.AutoManager
 import org.dovershockwave.commands.*
 import org.dovershockwave.subsystem.intake.IntakeConstants
 import org.dovershockwave.subsystem.intake.IntakeIOSim
@@ -59,6 +60,7 @@ object RobotContainer {
   val led: LEDSubsystem? // TODO: 4/13/2024 idk 
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
+  val autoManager: AutoManager?
 
   init {
     when (GlobalConstants.ROBOT_TYPE) {
@@ -77,6 +79,7 @@ object RobotContainer {
         intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
         poseEstimator = PoseEstimatorSubsystem(PoseEstimatorIOReal(), swerve)
         led = LEDSubsystem()
+        autoManager = AutoManager(swerve, shooter, wrist, arm, intake, poseEstimator)
       }
 
       RobotType.SIM -> {
@@ -94,6 +97,7 @@ object RobotContainer {
         intake = IntakeSubsystem(IntakeIOSim())
         poseEstimator = null
         led = null
+        autoManager = null
       }
     }
 

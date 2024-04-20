@@ -22,16 +22,70 @@
 
 package org.dovershockwave.auto
 
+import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.auto.NamedCommands
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig
+import com.pathplanner.lib.util.PIDConstants
+import com.pathplanner.lib.util.ReplanningConfig
+import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import org.dovershockwave.Tabs
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
+import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
+import org.dovershockwave.subsystem.shooter.ShooterState
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
+import org.dovershockwave.subsystem.shooterwrist.WristState
+import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
-class AutoManager(private val swerve: SwerveSubsystem, private val shooter: ShooterSubsystem, private val wrist: ShooterWristSubsystem, private val arm: IntakeArmSubsystem, private val intake: IntakeSubsystem) {
-//  private val chooser: SendableChooser<Command>
+class AutoManager(private val swerve: SwerveSubsystem, private val shooter: ShooterSubsystem, private val wrist: ShooterWristSubsystem, private val arm: IntakeArmSubsystem, private val intake: IntakeSubsystem, private val poseEstimator: PoseEstimatorSubsystem) {
+  private val chooser: LoggedDashboardChooser<Command>
 
   init {
+    AutoBuilder.configureHolonomic(
+      poseEstimator::getPose2d,
+      poseEstimator::resetPose,
+      swerve::getRelativeChassisSpeed,
+      swerve::driveAutonomous,
+      HolonomicPathFollowerConfig(
+        PIDConstants(AutoConstants.DRIVING_GAINS.p, AutoConstants.DRIVING_GAINS.i, AutoConstants.DRIVING_GAINS.d),
+        PIDConstants(AutoConstants.TURNING_GAINS.p, AutoConstants.TURNING_GAINS.i, AutoConstants.TURNING_GAINS.d),
+        SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+        SwerveConstants.WHEEL_BASE / 2.0,
+        ReplanningConfig()
+      ),
+      this::shouldFlipPath,
+      swerve
+    )
 
+
+    // Note: Named commands must be registered before the creation of any PathPlanner Autos or Paths.
+    NamedCommands.registerCommand("RampClose", InstantCommand({ shooter.setDesiredState(ShooterState.SUBWOOFER) }, shooter))
+    NamedCommands.registerCommand("IntakeNote", AutoIntakeCommand(arm, intake))
+    NamedCommands.registerCommand("ShootClose", AutoShootCloseCommand(intake, shooter, arm, wrist))
+    NamedCommands.registerCommand("StopShooter", InstantCommand({ shooter.setDesiredState(ShooterState.STOPPED) }, shooter))
+    NamedCommands.registerCommand("IntakeHome", InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
+    NamedCommands.registerCommand("ShootInterpolated", InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter))
+    NamedCommands.registerCommand("WristHome", InstantCommand({ wrist.setDesiredState(WristState.HOME) }, wrist))
+
+    this.chooser = LoggedDashboardChooser("Autonomous", AutoBuilder.buildAutoChooser())
+    Tabs.MATCH.add("Autonomous", chooser).withSize(3, 3).withPosition(12, 0);
   }
+
+  /**
+   * Red = flip, since PathPlanner uses blue as the default wall.
+   *
+   * @return whether the autonomous path should be flipped dependent on the alliance color.
+   */
+  private fun shouldFlipPath() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+
+  /**
+   * Schedules the selected autonomous mode.
+   */
+  fun executeRoutine() = chooser.get().execute()
 }

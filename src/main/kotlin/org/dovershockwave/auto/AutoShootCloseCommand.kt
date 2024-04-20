@@ -20,23 +20,28 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.commands
+package org.dovershockwave.auto
 
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
-import org.dovershockwave.subsystem.intake.commands.IntakeNoteCommand
+import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.shooter.ShooterSubsystem
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
+import org.dovershockwave.subsystem.shooterwrist.WristState
 
-class FullIntakeCommand(arm: IntakeArmSubsystem, intake: IntakeSubsystem) : SequentialCommandGroup() {
+class AutoShootCloseCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : SequentialCommandGroup() {
   init {
     addCommands(
-      InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm),
-      IntakeNoteCommand(intake).until(intake::hasNote),
-      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm)
+      InstantCommand({ wrist.setDesiredState(WristState.SUBWOOFER) }, wrist),
+      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
+      WaitUntilCommand(shooter::atDesiredState),
+      FeedShooterCommand(intake).withTimeout(0.25)
     )
 
-    addRequirements(intake, arm)
+    addRequirements(intake, arm, wrist)
   }
 }

@@ -74,7 +74,12 @@ object Robot : LoggedRobot() {
   }
 
   override fun autonomousInit() {
-
+    CommandScheduler.getInstance().removeDefaultCommand(RobotContainer.swerve)
+    RobotContainer.swerve.zeroGyro()
+    RobotContainer.swerve.resetDriveEncoders()
+    RobotContainer.poseEstimator!!.resetFieldCentricDriving()
+    Thread.sleep(50)
+    RobotContainer.autoManager!!.executeRoutine()
   }
 
   override fun autonomousPeriodic() {

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.commands
+package org.dovershockwave.auto
 
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
@@ -29,14 +29,14 @@ import org.dovershockwave.subsystem.intake.commands.IntakeNoteCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
 
-class FullIntakeCommand(arm: IntakeArmSubsystem, intake: IntakeSubsystem) : SequentialCommandGroup() {
+class AutoIntakeCommand(arm: IntakeArmSubsystem, intake: IntakeSubsystem) : SequentialCommandGroup() {
   init {
     addCommands(
-      InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm),
+      InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }),
       IntakeNoteCommand(intake).until(intake::hasNote),
-      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm)
+      InstantCommand({ arm.setDesiredState(ArmState.HOME) })
     )
 
-    addRequirements(intake, arm)
+    addRequirements(intake)
   }
 }
