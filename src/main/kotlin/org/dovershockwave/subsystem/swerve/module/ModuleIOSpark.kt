@@ -36,6 +36,7 @@ import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
 import org.dovershockwave.utils.SparkUtils.Companion.configureRel
 import org.dovershockwave.utils.SparkUtils.Companion.runBlockingRel
+import java.util.UUID
 
 class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: Double) : ModuleIO {
   private val drivingMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless)
@@ -82,7 +83,7 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
       AbsSparkAction("$rotID Set Wrapping Max") { _, _, pid -> pid.setPositionPIDWrappingMaxInput(ModuleConstants.TURNING_ENCODER_POSITION_PID_MAX_INPUT) }
     ))
 
-    desiredState.angle = Rotation2d(0.0) // TODO: verify this works. 
+    desiredState.angle = Rotation2d(0.0)
     resetDriveEncoder()
   }
 
@@ -118,8 +119,7 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
     )
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
-    val optimizedDesiredState =
-      SwerveModuleState.optimize(correctedDesiredState, Rotation2d(turnEncoder.getPosition()))
+    val optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState, Rotation2d(turnEncoder.getPosition()))
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     drivePID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity)
@@ -130,7 +130,7 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
 
   override fun resetDriveEncoder() {
     drivingMotor.runBlockingRel(linkedSetOf(
-      RelSparkAction("Reset Drive Encoder") { _, encoder, _ -> encoder.setPosition(0.0) }
+      RelSparkAction("Reset Drive Encoder #${UUID.randomUUID()}") { _, encoder, _ -> encoder.setPosition(0.0) }
     ))
   }
 }

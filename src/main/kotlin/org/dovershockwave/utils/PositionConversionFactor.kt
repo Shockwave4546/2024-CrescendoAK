@@ -61,16 +61,12 @@ class PositionConversionFactor(private val oneRev: Double) {
    *
    * @return the conversion factor for a SparkMaxRelativeEncoder.
    */
-  private fun toSparkMaxRelativeEncoder(): Double {
-    return oneRev
-  }
+  private fun toSparkMaxRelativeEncoder() = oneRev
 
   /**
    * @return the conversion factor for a Quadrature Encoder.
    */
-  private fun toQuadEncoder(): Double {
-    return oneRev / QUAD_PULSES_PER_REV
-  }
+  private fun toQuadEncoder() = oneRev / QUAD_PULSES_PER_REV
 
   companion object {
     private const val QUAD_PULSES_PER_REV = 2048.0
