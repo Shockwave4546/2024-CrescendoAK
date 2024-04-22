@@ -48,6 +48,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   private val frontRightInputs = ModuleIO.ModuleIOInputs()
   private val backLeftInputs = ModuleIO.ModuleIOInputs()
   private val backRightInputs = ModuleIO.ModuleIOInputs()
+  private var desiredStates = arrayOf(SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
   init {
     resetDriveEncoders()
@@ -68,10 +69,10 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
 
     val key = "Swerve"
     Logger.recordOutput("$key/ModuleStates", *getEstimatedStates())
+    Logger.recordOutput("$key/DesiredStates", *desiredStates)
     Logger.recordOutput("$key/XVelocity", getRelativeChassisSpeed().vxMetersPerSecond)
     Logger.recordOutput("$key/YVelocity", getRelativeChassisSpeed().vyMetersPerSecond)
     Logger.recordOutput("$key/Rotation2d", getHeadingRotation2d())
-    // Logger.recordOutput("Swerve/DesiredStates") TODO
   }
 
   /**
@@ -104,7 +105,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
       else ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)
     )
 
-    setModuleStates(*swerveModuleStates)
+    setDesiredModuleStates(*swerveModuleStates)
   }
 
   /**
@@ -115,7 +116,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
    */
   fun driveAutonomous(speeds: ChassisSpeeds) {
     val swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds)
-    setModuleStates(*swerveModuleStates)
+    setDesiredModuleStates(*swerveModuleStates)
   }
 
   fun setMaxSpeed(maxDrive: Double, maxRot: Double) {
@@ -162,8 +163,9 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
    *
    * @param desiredStates The desired SwerveModule states.
    */
-  fun setModuleStates(vararg desiredStates: SwerveModuleState) {
+  fun setDesiredModuleStates(vararg desiredStates: SwerveModuleState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND)
+    this.desiredStates = arrayOf(*desiredStates)
     frontLeft.setDesiredState(desiredStates[0])
     frontRight.setDesiredState(desiredStates[1])
     backLeft.setDesiredState(desiredStates[2])
@@ -171,7 +173,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   }
 
   private fun setX() {
-    setModuleStates(
+    setDesiredModuleStates(
       SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
       SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
       SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
