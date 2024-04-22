@@ -25,6 +25,7 @@ package org.dovershockwave.subsystem.pose
 import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.util.Units
 
 class PoseEstimatorConstants {
   companion object {
@@ -39,5 +40,10 @@ class PoseEstimatorConstants {
 
     const val FIELD_LENGTH = 16.54175
     const val FIELD_WIDTH = 8.0137
+
+    const val RED_SPEAKER_ID = 4
+    const val BLUE_SPEAKER_ID = 7
+
+    val HEADING_TOLERANCE = Units.degreesToRadians(1.5)
   }
 }

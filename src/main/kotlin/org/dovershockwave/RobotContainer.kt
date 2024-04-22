@@ -106,6 +106,8 @@ object RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true)
   }
 
+  fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+
   private fun configureBindings() {
     driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, poseEstimator!!)) // FIXME:  
     driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
