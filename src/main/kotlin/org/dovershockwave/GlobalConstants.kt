@@ -28,5 +28,6 @@ class GlobalConstants {
     const val DRIVER_CONTROLLER_PORT = 0
     const val OPERATOR_CONTROLLER_PORT = 1
     const val DRIVE_DEADBAND = 0.02
+    const val LOG_FOLDER_PATH = "/media/sda2/"
   }
 }

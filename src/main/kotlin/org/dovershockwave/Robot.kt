@@ -22,12 +22,16 @@
 
 package org.dovershockwave
 
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
+import java.nio.file.Files
+import java.nio.file.Paths
 
 object Robot : LoggedRobot() {
   override fun robotInit() {
@@ -36,6 +40,12 @@ object Robot : LoggedRobot() {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
+        if (Files.exists(Paths.get(GlobalConstants.LOG_FOLDER_PATH))) {
+          Logger.addDataReceiver(WPILOGWriter(GlobalConstants.LOG_FOLDER_PATH))
+        } else {
+          DriverStation.reportError("Log folder does not exist!", false)
+        }
+
         PowerDistribution() // Enables power distribution logging.
       }
 
@@ -46,6 +56,8 @@ object Robot : LoggedRobot() {
 
     Logger.start()
     RobotContainer
+    RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
+    RobotContainer.swerve.resetDriveEncoders()
 
     CommandScheduler.getInstance().onCommandInitialize { command ->
       Logger.recordOutput("/ActiveCommands/${command.name}", true)
@@ -65,19 +77,14 @@ object Robot : LoggedRobot() {
     CommandScheduler.getInstance().run()
   }
 
-  override fun disabledInit() {
-
-  }
-
   override fun disabledPeriodic() {
-
+    RobotContainer.led!!.rainbow()
   }
 
   override fun autonomousInit() {
     CommandScheduler.getInstance().removeDefaultCommand(RobotContainer.swerve)
-    RobotContainer.swerve.zeroGyro()
-    RobotContainer.swerve.resetDriveEncoders()
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
+    RobotContainer.swerve.resetDriveEncoders()
     Thread.sleep(50)
     RobotContainer.autoManager!!.executeRoutine()
   }
@@ -95,14 +102,6 @@ object Robot : LoggedRobot() {
   }
 
   override fun teleopPeriodic() {
-
-  }
-
-  override fun simulationInit() {
-
-  }
-
-  override fun simulationPeriodic() {
 
   }
 }

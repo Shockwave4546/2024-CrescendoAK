@@ -2,6 +2,7 @@ plugins {
   id "java"
   id "org.jetbrains.kotlin.jvm" version "1.9.23"
   id "edu.wpi.first.GradleRIO" version "2024.3.2"
+  id "com.peterabeles.gversion" version "1.10.2"
   id "idea"
 }
 
@@ -128,6 +129,25 @@ kotlin {
     // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
     jvmToolchain(Integer.valueOf(javaVersion.toString()))
   }
+
+  compileKotlin {
+    dependsOn.add(tasks.createVersionFile)
+  }
+}
+
+gversion {
+	srcDir       = "src/main/kotlin/"           // path is relative to the sub-project by default
+	// Gradle variables can also be used
+	// E.g. "${project.rootDir}/module/src/main/java"
+	classPackage = "org.dovershockwave"
+	className    = "BuildConstants"                // optional. If not specified GVersion is used
+	dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'" // optional. This is the default
+	timeZone     = "EST"                      // optional. UTC is default
+	debug        = false                      // optional. print out extra debug information
+	language     = "kotlin"                     // optional. Can be Java, Kotlin, YAML, or Properties. Case insensitive.
+	explicitType = false                      // optional. Force types to be explicitly printed
+	indent       = "\t"                       // optional. Change how code is indented. 1 tab is default.
+	annotate     = false                      // optional. Java only. Adds @Generated annotation
 }
 
 idea {
