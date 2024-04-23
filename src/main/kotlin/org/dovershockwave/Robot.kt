@@ -54,6 +54,17 @@ object Robot : LoggedRobot() {
       }
     }
 
+    Logger.recordMetadata("MavenGroup", MAVEN_GROUP)
+    Logger.recordMetadata("MavenName", MAVEN_NAME)
+    Logger.recordMetadata("BuildDate", BUILD_DATE)
+    Logger.recordMetadata("GitSHA", GIT_SHA)
+    Logger.recordMetadata("GitBranch", GIT_BRANCH)
+    when (DIRTY) {
+      0 -> Logger.recordMetadata("GitDirty", "All changes committed")
+      1 -> Logger.recordMetadata("GitDirty", "Uncommitted changes")
+      else -> Logger.recordMetadata("GitDirty", "Unknown")
+    }
+
     Logger.start()
     RobotContainer
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
