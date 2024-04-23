@@ -89,12 +89,13 @@ dependencies {
   annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
 }
 
-configurations.all {
+configurations.configureEach {
   exclude group: "edu.wpi.first.wpilibj"
 }
 
 
-task(checkAkitInstall, dependsOn: "classes", type: JavaExec) {
+tasks.register('checkAkitInstall', JavaExec) {
+  dependsOn "classes"
   mainClass = "org.littletonrobotics.junction.CheckInstall"
   classpath = sourceSets.main.runtimeClasspath
 }
@@ -119,7 +120,7 @@ deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
   // Configure string concat to always inline compile
   options.compilerArgs.add '-XDstringConcat=inline'
 }
