@@ -89,7 +89,8 @@ object Robot : LoggedRobot() {
   override fun teleopInit() {
     RobotContainer.swerve.defaultCommand = SwerveDriveCommand(
       RobotContainer.driverController,
-      RobotContainer.swerve
+      RobotContainer.swerve,
+      RobotContainer.poseEstimator!!
     )
   }
 

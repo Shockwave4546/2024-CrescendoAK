@@ -83,7 +83,7 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
     if (useVisionMeasurement.get()) {
       photonPoseEstimator.update().ifPresent { estimatedPose ->
         val pose = estimatedPose.estimatedPose
-        Logger.recordOutput("$key/VisionEstimatedPose2d", pose)
+        Logger.recordOutput("$key/VisionEstimatedPose2d", pose.toPose2d())
         if (!isValidMeasurement(pose)) return@ifPresent
         swervePoseEstimator.addVisionMeasurement(pose.toPose2d(), poseEstimator.getPipelineResults().timestampSeconds)
       }
@@ -98,15 +98,15 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
     Logger.recordOutput("$key/SpeakerTagPose3d", getSpeakerTagPose3d())
     Logger.recordOutput("$key/SpeakerTagPose2d", getSpeakerTagPose3d().toPose2d())
 
-    Logger.recordOutput("$key/SpeakerDistanceV1", getSpeakerDistanceAngleV1().first.getOrDefault(-1.0))
-    Logger.recordOutput("$key/SpeakerAngleV1", getSpeakerDistanceAngleV1().second.getOrDefault(Rotation2d()))
-    Logger.recordOutput("$key/SpeakerAngleDegreesV1", getSpeakerDistanceAngleV1().second.getOrDefault(Rotation2d()).degrees)
+    Logger.recordOutput("$key/(Vision)SpeakerDistance", getToSpeakerFromVision().distance.getOrDefault(-1.0))
+    Logger.recordOutput("$key/(Vision)SpeakerRot", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()))
+    Logger.recordOutput("$key/(Vision)SpeakerRotDegrees", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()).degrees)
 
-    Logger.recordOutput("$key/SpeakerDistanceV2", getSpeakerDistanceAngleV2().first)
-    Logger.recordOutput("$key/SpeakerAngleV2", getSpeakerDistanceAngleV2().second)
-    Logger.recordOutput("$key/SpeakerAngleDegreesV2", getSpeakerDistanceAngleV2().second.degrees)
+    Logger.recordOutput("$key/(Pose)SpeakerDistance", getToSpeakerFromPose().distance.getOrDefault(-1.0))
+    Logger.recordOutput("$key/(Pose)SpeakerRot", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()))
+    Logger.recordOutput("$key/(Pose)SpeakerRotDegrees", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()).degrees)
 
-    Logger.recordOutput("$key/IsHeadingTowardSpeaker", isHeadingTowardSpeaker().getOrDefault(false))
+    Logger.recordOutput("$key/IsHeadingTowardSpeaker", isHeadingAlignedWithSpeaker().getOrDefault(false))
   }
 
   fun getDistanceToTags() = buildMap {
@@ -150,39 +150,25 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
     return angle
   }
 
-  /**
-   * Via vision
-   */
-  fun getSpeakerDistanceAngleV1() = Pair(
+  fun getToSpeakerFromVision() = DistanceAnglePair(
     getDistanceToTag(getSpeakerTargetTagId()),
     getAngleToTag(getSpeakerTargetTagId())
   )
 
-  /**
-   * Via robot Pose
-   */
-  fun getSpeakerDistanceAngleV2(): Pair<Double, Rotation2d> {
+  fun getToSpeakerFromPose(): DistanceAnglePair {
     val robotPose = getPose2d()
     val speakerPose = getSpeakerTagPose3d()
     val xDistance = speakerPose.x - robotPose.x
     val yDistance = speakerPose.y - robotPose.y
     val distance = sqrt(xDistance.pow(2.0) + yDistance.pow(2.0))
     val angle = Rotation2d.fromRadians(atan2(yDistance, xDistance))
-    return Pair(distance, angle)
+    return DistanceAnglePair(Optional.of(distance), Optional.of(angle))
   }
 
-  fun isHeadingTowardRotation(targetAngle: Rotation2d): Boolean {
-    val robotAngle = swerve.getHeadingRotation2d()
-    val angleDifference = robotAngle.minus(targetAngle)
-    return abs(angleDifference.radians) < PoseEstimatorConstants.HEADING_TOLERANCE
+  fun isHeadingAlignedWithSpeaker(): Optional<Boolean> {
+    val speakerAngle = getToSpeakerFromVision().rotation2d
+    return if (speakerAngle.isPresent) Optional.of(abs(speakerAngle.get().radians) < PoseEstimatorConstants.HEADING_TOLERANCE) else Optional.empty()
   }
-
-  fun isHeadingTowardSpeaker(): Optional<Boolean> {
-    val speakerAngle = getSpeakerDistanceAngleV1().second
-    return if (speakerAngle.isPresent) Optional.of(isHeadingTowardRotation(speakerAngle.get())) else Optional.empty()
-  }
-
-  private fun getSpeakerTargetTagId() = if (RobotContainer.isRedAlliance()) PoseEstimatorConstants.RED_SPEAKER_ID else PoseEstimatorConstants.BLUE_SPEAKER_ID
 
   private fun getSpeakerTagPose3d() = layout.getTagPose(getSpeakerTargetTagId()).get()
 
@@ -239,5 +225,7 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
      * Source: [...](https://github.com/STMARobotics/frc-7028-2023/blob/5916bb426b97f10e17d9dfd5ec6c3b6fda49a7ce/src/main/java/frc/robot/subsystems/PoseEstimatorSubsystem.java)
      */
     private val VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10.0))
+
+    fun getSpeakerTargetTagId() = if (RobotContainer.isRedAlliance()) PoseEstimatorConstants.RED_SPEAKER_ID else PoseEstimatorConstants.BLUE_SPEAKER_ID
   }
 }

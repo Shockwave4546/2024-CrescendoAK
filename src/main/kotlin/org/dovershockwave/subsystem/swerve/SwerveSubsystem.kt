@@ -22,15 +22,20 @@
 
 package org.dovershockwave.subsystem.swerve
 
+import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.Tabs
+import org.dovershockwave.auto.AutoConstants
 import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.shuffleboard.ShuffleboardSpeed
+import org.dovershockwave.subsystem.pose.PoseEstimatorConstants
 import org.dovershockwave.subsystem.swerve.gyro.GyroIO
 import org.dovershockwave.subsystem.swerve.module.ModuleIO
 import org.littletonrobotics.junction.Logger
@@ -43,6 +48,16 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   private val rotSpeedMultiplier = ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER).withSize(5, 2).withPosition(5, 8)
   private val isFieldRelative = ShuffleboardBoolean(Tabs.MATCH, "Is Field Relative?", true).withSize(3, 3).withPosition(18, 0)
 
+  private val headingController = ProfiledPIDController(
+    1.5,
+    AutoConstants.DRIVING_GAINS.i,
+    0.08,
+    TrapezoidProfile.Constraints(
+      Units.degreesToRadians(540.0),
+      Units.degreesToRadians(720.0)
+    )
+  )
+
   private val gyroInputs = GyroIO.GyroIOInputs()
   private val frontLeftInputs = ModuleIO.ModuleIOInputs()
   private val frontRightInputs = ModuleIO.ModuleIOInputs()
@@ -52,6 +67,10 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
 
   init {
     resetDriveEncoders()
+
+    headingController.setTolerance(PoseEstimatorConstants.HEADING_TOLERANCE)
+
+    tab.add("Heading PID", headingController)
   }
 
   override fun periodic() {
@@ -73,6 +92,8 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     Logger.recordOutput("$key/XVelocity", getRelativeChassisSpeed().vxMetersPerSecond)
     Logger.recordOutput("$key/YVelocity", getRelativeChassisSpeed().vyMetersPerSecond)
     Logger.recordOutput("$key/Rotation2d", getHeadingRotation2d())
+    Logger.recordOutput("$key/Rotation2d degrees", getHeadingRotation2d().degrees)
+    Logger.recordOutput("$key/Rotation2d rad", getHeadingRotation2d().radians)
   }
 
   /**
@@ -117,6 +138,11 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   fun driveAutonomous(speeds: ChassisSpeeds) {
     val swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds)
     setDesiredModuleStates(*swerveModuleStates)
+  }
+
+  fun calculateSpeedForDesiredHeading(desiredHeading: Double): Double {
+    headingController.setGoal(0.0)
+    return headingController.calculate(desiredHeading)
   }
 
   fun setMaxSpeed(maxDrive: Double, maxRot: Double) {
@@ -204,7 +230,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
    *
    * @return The robot's heading as a Rotation2d.
    */
-  fun getHeadingRotation2d() = Rotation2d.fromDegrees(getRawAngleDegrees())
+  fun getHeadingRotation2d(): Rotation2d = Rotation2d.fromDegrees(getRawAngleDegrees())
 
   /**
    * The default SwerveMax template has an issue with inverting the Gyro, so the workaround is

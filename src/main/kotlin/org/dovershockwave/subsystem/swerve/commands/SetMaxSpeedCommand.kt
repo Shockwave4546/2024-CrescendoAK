@@ -27,10 +27,6 @@ import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 
 class SetMaxSpeedCommand(private val swerve: SwerveSubsystem, private val driveMax: Double, private val rotMax: Double) : Command() {
-  init {
-    addRequirements(swerve)
-  }
-
   override fun execute() {
     swerve.setMaxSpeed(driveMax, rotMax)
   }

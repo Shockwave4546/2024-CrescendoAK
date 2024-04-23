@@ -36,7 +36,7 @@ import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
 import org.dovershockwave.utils.SparkUtils.Companion.configureRel
 import org.dovershockwave.utils.SparkUtils.Companion.runBlockingRel
-import java.util.UUID
+import java.util.*
 
 class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: Double) : ModuleIO {
   private val drivingMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless)

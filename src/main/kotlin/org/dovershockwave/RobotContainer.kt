@@ -52,11 +52,11 @@ import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
 
 object RobotContainer {
   val swerve: SwerveSubsystem
+  val poseEstimator: PoseEstimatorSubsystem? // TODO: 4/14/2024
   val wrist: ShooterWristSubsystem
   val arm: IntakeArmSubsystem
   val shooter: ShooterSubsystem
   val intake: IntakeSubsystem
-  val poseEstimator: PoseEstimatorSubsystem? // TODO: 4/14/2024  
   val led: LEDSubsystem? // TODO: 4/13/2024 idk 
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
@@ -73,11 +73,11 @@ object RobotContainer {
           GyroIONavX()
         )
 
-        wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID))
-        arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
-        shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID))
-        intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
         poseEstimator = PoseEstimatorSubsystem(PoseEstimatorIOReal(), swerve)
+        wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID), poseEstimator)
+        arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
+        shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID), poseEstimator)
+        intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
         led = LEDSubsystem()
         autoManager = AutoManager(swerve, shooter, wrist, arm, intake, poseEstimator)
       }
@@ -91,11 +91,11 @@ object RobotContainer {
           GyroIOSim() // TODO: This is fake for now.
         )
 
-        wrist = ShooterWristSubsystem(ShooterWristIOSim())
-        arm = IntakeArmSubsystem(IntakeArmIOSim())
-        shooter = ShooterSubsystem(ShooterIOSim())
-        intake = IntakeSubsystem(IntakeIOSim())
         poseEstimator = null
+        wrist = ShooterWristSubsystem(ShooterWristIOSim(), poseEstimator!!)
+        arm = IntakeArmSubsystem(IntakeArmIOSim())
+        shooter = ShooterSubsystem(ShooterIOSim(), poseEstimator!!)
+        intake = IntakeSubsystem(IntakeIOSim())
         led = null
         autoManager = null
       }

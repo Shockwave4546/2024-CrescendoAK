@@ -28,5 +28,4 @@ import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 
 class ResetFieldCentricDriveCommand(swerve: SwerveSubsystem, poseEstimator: PoseEstimatorSubsystem) : InstantCommand({
   swerve.zeroGyro()
-  poseEstimator.resetFieldCentricDriving()
 }, poseEstimator)

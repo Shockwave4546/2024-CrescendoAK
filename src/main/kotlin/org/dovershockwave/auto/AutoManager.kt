@@ -74,7 +74,7 @@ class AutoManager(private val swerve: SwerveSubsystem, private val shooter: Shoo
     NamedCommands.registerCommand("WristHome", InstantCommand({ wrist.setDesiredState(WristState.HOME) }, wrist))
 
     this.chooser = LoggedDashboardChooser("Autonomous", AutoBuilder.buildAutoChooser())
-    Tabs.MATCH.add("Autonomous", chooser).withSize(3, 3).withPosition(12, 0);
+    Tabs.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3).withPosition(12, 0)
   }
 
   /**

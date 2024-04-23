@@ -27,10 +27,11 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.shuffleboard.TunableSparkPIDController
+import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
-class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase() {
+class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseEstimator: PoseEstimatorSubsystem) : SubsystemBase() {
   private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
 
@@ -69,12 +70,9 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO) : SubsystemBase()
   fun setDesiredState(state: WristState) {
     if (shouldStopWrist()) return
     if (state === WristState.INTERPOLATED) {
-      // TODO:  
-//      if (!vision.hasViableTarget()) return
-//      val transform: Unit = vision.getCameraToTagTransform(RobotContainer.getSubwooferTagID()) ?: return
-//      val distance: Unit = transform.getX()
-//      if (distance > 3.90) return
-//      this.desiredState = WristState("Interpolated", angleInterpolator.interpolate(distance))
+      val distance = poseEstimator.getToSpeakerFromVision().distance
+      if (!distance.isPresent) return
+      this.desiredState = WristState("Interpolated", anglePredictor.predict(distance.get()))
     } else {
       this.desiredState = state
     }
