@@ -35,8 +35,6 @@ import java.nio.file.Paths
 
 object Robot : LoggedRobot() {
   override fun robotInit() {
-    Logger.recordMetadata("ProjectName", "OmNom")
-
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
@@ -66,7 +64,6 @@ object Robot : LoggedRobot() {
     }
 
     Logger.start()
-    RobotContainer
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
     RobotContainer.swerve.resetDriveEncoders()
 
