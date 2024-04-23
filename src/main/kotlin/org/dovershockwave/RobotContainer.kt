@@ -34,9 +34,6 @@ import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.*
 import org.dovershockwave.subsystem.led.LEDSubsystem
-import org.dovershockwave.subsystem.pose.PoseEstimatorIOReal
-import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
-import org.dovershockwave.subsystem.pose.commands.ResetFieldCentricDriveCommand
 import org.dovershockwave.subsystem.shooter.ShooterConstants
 import org.dovershockwave.subsystem.shooter.ShooterIOSim
 import org.dovershockwave.subsystem.shooter.ShooterIOSpark
@@ -44,15 +41,18 @@ import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.*
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.swerve.commands.ResetFieldCentricDriveCommand
 import org.dovershockwave.subsystem.swerve.commands.SetMaxSpeedCommand
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
+import org.dovershockwave.subsystem.vision.VisionIOReal
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 
 object RobotContainer {
   val swerve: SwerveSubsystem
-  val poseEstimator: PoseEstimatorSubsystem? // TODO: 4/14/2024
+  val vision: VisionSubsystem? // TODO: 4/14/2024
   val wrist: ShooterWristSubsystem
   val arm: IntakeArmSubsystem
   val shooter: ShooterSubsystem
@@ -73,13 +73,13 @@ object RobotContainer {
           GyroIONavX()
         )
 
-        poseEstimator = PoseEstimatorSubsystem(PoseEstimatorIOReal(), swerve)
-        wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID), poseEstimator)
+        vision = VisionSubsystem(VisionIOReal(), swerve)
+        wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID), vision)
         arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
-        shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID), poseEstimator)
+        shooter = ShooterSubsystem(ShooterIOSpark(ShooterConstants.BOTTOM_CAN_ID, ShooterConstants.TOP_CAN_ID), vision)
         intake = IntakeSubsystem(IntakeIOSpark(IntakeConstants.MOTOR_CAN_ID))
         led = LEDSubsystem()
-        autoManager = AutoManager(swerve, shooter, wrist, arm, intake, poseEstimator)
+        autoManager = AutoManager(swerve, shooter, wrist, arm, intake, vision)
       }
 
       RobotType.SIM -> {
@@ -91,10 +91,10 @@ object RobotContainer {
           GyroIOSim() // TODO: This is fake for now.
         )
 
-        poseEstimator = null
-        wrist = ShooterWristSubsystem(ShooterWristIOSim(), poseEstimator!!)
+        vision = null
+        wrist = ShooterWristSubsystem(ShooterWristIOSim(), vision!!)
         arm = IntakeArmSubsystem(IntakeArmIOSim())
-        shooter = ShooterSubsystem(ShooterIOSim(), poseEstimator!!)
+        shooter = ShooterSubsystem(ShooterIOSim(), vision!!)
         intake = IntakeSubsystem(IntakeIOSim())
         led = null
         autoManager = null
@@ -109,7 +109,7 @@ object RobotContainer {
   fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
 
   private fun configureBindings() {
-    driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, poseEstimator!!)) // FIXME:  
+    driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve))
     driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
     driverController.rightBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.4, 0.4))

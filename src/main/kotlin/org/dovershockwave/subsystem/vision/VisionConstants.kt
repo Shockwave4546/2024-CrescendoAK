@@ -20,14 +20,14 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.pose
+package org.dovershockwave.subsystem.vision
 
 import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 
-class PoseEstimatorConstants {
+class VisionConstants {
   companion object {
     /**
      * Physical location of the camera on the robot, relative to the center of the robot.

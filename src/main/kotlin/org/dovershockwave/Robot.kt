@@ -77,7 +77,7 @@ object Robot : LoggedRobot() {
     CommandScheduler.getInstance().removeDefaultCommand(RobotContainer.swerve)
     RobotContainer.swerve.zeroGyro()
     RobotContainer.swerve.resetDriveEncoders()
-    RobotContainer.poseEstimator!!.resetFieldCentricDriving()
+    RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
     Thread.sleep(50)
     RobotContainer.autoManager!!.executeRoutine()
   }
@@ -90,7 +90,7 @@ object Robot : LoggedRobot() {
     RobotContainer.swerve.defaultCommand = SwerveDriveCommand(
       RobotContainer.driverController,
       RobotContainer.swerve,
-      RobotContainer.poseEstimator!!
+      RobotContainer.vision!!
     )
   }
 

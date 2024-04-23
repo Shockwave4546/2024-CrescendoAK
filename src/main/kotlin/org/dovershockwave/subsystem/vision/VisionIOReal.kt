@@ -20,14 +20,14 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.pose
+package org.dovershockwave.subsystem.vision
 
 import org.photonvision.PhotonCamera
 
-class PoseEstimatorIOReal : PoseEstimatorIO {
-  private val frontCamera = PhotonCamera(PoseEstimatorConstants.FRONT_CAMERA_NAME)
+class VisionIOReal : VisionIO {
+  private val frontCamera = PhotonCamera(VisionConstants.FRONT_CAMERA_NAME)
 
-  override fun updateInputs(inputs: PoseEstimatorIO.PoseEstimatorIOInputs) {
+  override fun updateInputs(inputs: VisionIO.PoseEstimatorIOInputs) {
     inputs.pipelineIndex = frontCamera.pipelineIndex
   }
 

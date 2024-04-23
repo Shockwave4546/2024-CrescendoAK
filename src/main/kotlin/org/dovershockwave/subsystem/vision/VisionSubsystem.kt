@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.pose
+package org.dovershockwave.subsystem.vision
 
 import edu.wpi.first.apriltag.AprilTagFields
 import edu.wpi.first.math.VecBuilder
@@ -46,14 +46,14 @@ import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private val swerve: SwerveSubsystem) : SubsystemBase() {
-  private val inputs = PoseEstimatorIO.PoseEstimatorIOInputs()
+class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSubsystem) : SubsystemBase() {
+  private val inputs = VisionIO.PoseEstimatorIOInputs()
   private val layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
   private val photonPoseEstimator: PhotonPoseEstimator = PhotonPoseEstimator(
     layout,
     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-    poseEstimator.getRawFrontCamera(),
-    PoseEstimatorConstants.FRONT_CAMERA_TO_ROBOT)
+    vision.getRawFrontCamera(),
+    VisionConstants.FRONT_CAMERA_TO_ROBOT)
   private val swervePoseEstimator: SwerveDrivePoseEstimator
   private val useVisionMeasurement = ShuffleboardBoolean(Shuffleboard.getTab("PoseEstimator"), "Use Vision Measurement", true)
 
@@ -76,25 +76,22 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
   }
 
   override fun periodic() {
-    poseEstimator.updateInputs(inputs)
+    vision.updateInputs(inputs)
 
-    val key = "PoseEstimator"
+    val key = "Vision"
     swervePoseEstimator.update(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions())
     if (useVisionMeasurement.get()) {
       photonPoseEstimator.update().ifPresent { estimatedPose ->
         val pose = estimatedPose.estimatedPose
         Logger.recordOutput("$key/VisionEstimatedPose2d", pose.toPose2d())
         if (!isValidMeasurement(pose)) return@ifPresent
-        swervePoseEstimator.addVisionMeasurement(pose.toPose2d(), poseEstimator.getPipelineResults().timestampSeconds)
+        swervePoseEstimator.addVisionMeasurement(pose.toPose2d(), vision.getPipelineResults().timestampSeconds)
       }
     }
 
     Logger.processInputs(key, inputs)
     Logger.recordOutput("$key/EstimatedPose2d", getPose2d())
 
-    /**
-     * Debug stuff
-     */
     Logger.recordOutput("$key/SpeakerTagPose3d", getSpeakerTagPose3d())
     Logger.recordOutput("$key/SpeakerTagPose2d", getSpeakerTagPose3d().toPose2d())
 
@@ -110,26 +107,26 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
   }
 
   fun getDistanceToTags() = buildMap {
-    for (target in poseEstimator.getPipelineResults().targets) {
+    for (target in vision.getPipelineResults().targets) {
       val camToTarget = target.bestCameraToTarget
-      val robotToTarget = PoseEstimatorConstants.ROBOT_TO_FRONT_CAMERA.plus(camToTarget)
+      val robotToTarget = VisionConstants.ROBOT_TO_FRONT_CAMERA.plus(camToTarget)
       val calcDistance = sqrt(robotToTarget.x.pow(2.0) + robotToTarget.y.pow(2.0))
       put(target.fiducialId, calcDistance)
     }
   }
 
   fun getAngleToTags() = buildMap {
-    for (target in poseEstimator.getPipelineResults().targets) {
+    for (target in vision.getPipelineResults().targets) {
       put(target.fiducialId, Rotation2d.fromDegrees(target.yaw))
     }
   }
 
   fun getDistanceToTag(id: Int): Optional<Double> {
     var distance = Optional.empty<Double>()
-    for (target in poseEstimator.getPipelineResults().targets) {
+    for (target in vision.getPipelineResults().targets) {
       if (target.fiducialId != id) continue
       val camToTarget = target.bestCameraToTarget
-      val robotToTarget = PoseEstimatorConstants.ROBOT_TO_FRONT_CAMERA.plus(camToTarget)
+      val robotToTarget = VisionConstants.ROBOT_TO_FRONT_CAMERA.plus(camToTarget)
 
       val calcDistance = sqrt(robotToTarget.x.pow(2.0) + robotToTarget.y.pow(2.0))
       distance = Optional.of(calcDistance)
@@ -141,7 +138,7 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
 
   fun getAngleToTag(id: Int): Optional<Rotation2d> {
     var angle = Optional.empty<Rotation2d>()
-    for (target in poseEstimator.getPipelineResults().targets) {
+    for (target in vision.getPipelineResults().targets) {
       if (target.fiducialId != id) continue
       angle = Optional.of(Rotation2d.fromDegrees(target.yaw))
       break
@@ -167,39 +164,39 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
 
   fun isHeadingAlignedWithSpeaker(): Optional<Boolean> {
     val speakerAngle = getToSpeakerFromVision().rotation2d
-    return if (speakerAngle.isPresent) Optional.of(abs(speakerAngle.get().radians) < PoseEstimatorConstants.HEADING_TOLERANCE) else Optional.empty()
+    return if (speakerAngle.isPresent) Optional.of(abs(speakerAngle.get().radians) < VisionConstants.HEADING_TOLERANCE) else Optional.empty()
   }
 
   private fun getSpeakerTagPose3d() = layout.getTagPose(getSpeakerTargetTagId()).get()
 
   private fun isValidMeasurement(pose: Pose3d) = when {
-    pose.x > PoseEstimatorConstants.FIELD_LENGTH -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is off the field in +x direction.", false)
+    pose.x > VisionConstants.FIELD_LENGTH -> {
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +x direction.", false)
       false
     }
 
     pose.x < 0 -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is off the field in -x direction.", false)
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -x direction.", false)
       false
     }
 
-    pose.y > PoseEstimatorConstants.FIELD_WIDTH -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is off the field in +y direction.", false)
+    pose.y > VisionConstants.FIELD_WIDTH -> {
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +y direction.", false)
       false
     }
 
     pose.y < 0 -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is off the field in -y direction.", false)
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -y direction.", false)
       false
     }
 
     pose.z < -0.15 -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is inside the floor.", false)
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is inside the floor.", false)
       false
     }
 
     pose.z > 0.15 -> {
-      DriverStation.reportError("According to ${PoseEstimatorConstants.FRONT_CAMERA_NAME}, Robot is floating above the floor.", false)
+      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is floating above the floor.", false)
       false
     }
     else -> true
@@ -208,8 +205,6 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
   fun getPose2d(): Pose2d = swervePoseEstimator.estimatedPosition
 
   fun resetPose(pose: Pose2d) = swervePoseEstimator.resetPosition(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions(), pose)
-
-  fun resetFieldCentricDriving() = resetPose(Pose2d())
 
   companion object {
     /**
@@ -226,6 +221,6 @@ class PoseEstimatorSubsystem(private val poseEstimator: PoseEstimatorIO, private
      */
     private val VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10.0))
 
-    fun getSpeakerTargetTagId() = if (RobotContainer.isRedAlliance()) PoseEstimatorConstants.RED_SPEAKER_ID else PoseEstimatorConstants.BLUE_SPEAKER_ID
+    fun getSpeakerTargetTagId() = if (RobotContainer.isRedAlliance()) VisionConstants.RED_SPEAKER_ID else VisionConstants.BLUE_SPEAKER_ID
   }
 }

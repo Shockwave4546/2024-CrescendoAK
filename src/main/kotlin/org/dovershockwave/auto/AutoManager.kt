@@ -34,22 +34,22 @@ import org.dovershockwave.Tabs
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
-import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterState
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
 import org.dovershockwave.subsystem.shooterwrist.WristState
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
-class AutoManager(private val swerve: SwerveSubsystem, private val shooter: ShooterSubsystem, private val wrist: ShooterWristSubsystem, private val arm: IntakeArmSubsystem, private val intake: IntakeSubsystem, private val poseEstimator: PoseEstimatorSubsystem) {
+class AutoManager(private val swerve: SwerveSubsystem, private val shooter: ShooterSubsystem, private val wrist: ShooterWristSubsystem, private val arm: IntakeArmSubsystem, private val intake: IntakeSubsystem, private val vision: VisionSubsystem) {
   private val chooser: LoggedDashboardChooser<Command>
 
   init {
     AutoBuilder.configureHolonomic(
-      poseEstimator::getPose2d,
-      poseEstimator::resetPose,
+      vision::getPose2d,
+      vision::resetPose,
       swerve::getRelativeChassisSpeed,
       swerve::driveAutonomous,
       HolonomicPathFollowerConfig(

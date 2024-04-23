@@ -35,9 +35,9 @@ import org.dovershockwave.Tabs
 import org.dovershockwave.auto.AutoConstants
 import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.shuffleboard.ShuffleboardSpeed
-import org.dovershockwave.subsystem.pose.PoseEstimatorConstants
 import org.dovershockwave.subsystem.swerve.gyro.GyroIO
 import org.dovershockwave.subsystem.swerve.module.ModuleIO
+import org.dovershockwave.subsystem.vision.VisionConstants
 import org.littletonrobotics.junction.Logger
 
 class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: ModuleIO, private val backLeft: ModuleIO, private val backRight: ModuleIO, private val gyro: GyroIO) : SubsystemBase() {
@@ -68,7 +68,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   init {
     resetDriveEncoders()
 
-    headingController.setTolerance(PoseEstimatorConstants.HEADING_TOLERANCE)
+    headingController.setTolerance(VisionConstants.HEADING_TOLERANCE)
 
     tab.add("Heading PID", headingController)
   }
@@ -128,6 +128,7 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
 
     setDesiredModuleStates(*swerveModuleStates)
   }
+
 
   /**
    * Overridden drive function for PathPlanner autonomous. It's also important to note that autonomous drives

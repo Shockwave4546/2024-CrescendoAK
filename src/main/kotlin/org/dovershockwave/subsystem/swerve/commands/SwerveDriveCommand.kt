@@ -26,20 +26,20 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import org.dovershockwave.GlobalConstants
-import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 
-class SwerveDriveCommand(private val controller: CommandXboxController, private val swerve: SwerveSubsystem, private val poseEstimator: PoseEstimatorSubsystem) : Command() {
+class SwerveDriveCommand(private val controller: CommandXboxController, private val swerve: SwerveSubsystem, private val vision: VisionSubsystem) : Command() {
   init {
     addRequirements(swerve)
   }
 
   override fun execute() {
-    val towardSpeaker = poseEstimator.isHeadingTowardSpeaker()
+    val towardSpeaker = vision.isHeadingAlignedWithSpeaker()
     val autoAim = towardSpeaker.isPresent && !towardSpeaker.get()
     var rotSpeed = MathUtil.applyDeadband(controller.rightX, GlobalConstants.DRIVE_DEADBAND)
     if (autoAim) {
-      val rot = poseEstimator.getSpeakerDistanceAngleV1().second
+      val rot = vision.getToSpeakerFromVision().rotation2d
       if (rot.isPresent) {
         rotSpeed = -swerve.calculateSpeedForDesiredHeading(rot.get().radians)
       }

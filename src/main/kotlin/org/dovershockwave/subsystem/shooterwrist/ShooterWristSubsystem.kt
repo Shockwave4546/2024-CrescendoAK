@@ -27,11 +27,11 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.shuffleboard.TunableSparkPIDController
-import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
-class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseEstimator: PoseEstimatorSubsystem) : SubsystemBase() {
+class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseEstimator: VisionSubsystem) : SubsystemBase() {
   private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
 

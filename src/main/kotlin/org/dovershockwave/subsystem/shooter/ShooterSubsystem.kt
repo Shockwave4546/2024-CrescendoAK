@@ -26,11 +26,11 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.shuffleboard.TunableSparkPIDController
-import org.dovershockwave.subsystem.pose.PoseEstimatorSubsystem
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
-class ShooterSubsystem(private val shooter: ShooterIO, private val poseEstimator: PoseEstimatorSubsystem) : SubsystemBase() {
+class ShooterSubsystem(private val shooter: ShooterIO, private val vision: VisionSubsystem) : SubsystemBase() {
   private val inputs = ShooterIO.ShooterIOInputs()
   private var desiredState = ShooterState.STOPPED
 
@@ -79,7 +79,7 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val poseEstimator
 
   fun setDesiredState(state: ShooterState) {
     if (state === ShooterState.INTERPOLATED) {
-      val distance = poseEstimator.getToSpeakerFromVision().distance
+      val distance = vision.getToSpeakerFromVision().distance
       if (!distance.isPresent) return
       this.desiredState = ShooterState("Interpolated", bottomRPSPredictor.predict(distance.get()), topRPSPredictor.predict(distance.get()))
     } else {

@@ -20,29 +20,9 @@
  * SOFTWARE.
  */
 
-package org.dovershockwave.subsystem.pose
+package org.dovershockwave.subsystem.swerve.commands
 
-import org.littletonrobotics.junction.LogTable
-import org.littletonrobotics.junction.inputs.LoggableInputs
-import org.photonvision.PhotonCamera
-import org.photonvision.targeting.PhotonPipelineResult
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 
-interface PoseEstimatorIO {
-  class PoseEstimatorIOInputs : LoggableInputs {
-    var pipelineIndex = 0
-
-    override fun toLog(table: LogTable) {
-      table.put("Pipeline Index", pipelineIndex)
-    }
-
-    override fun fromLog(table: LogTable) {
-      pipelineIndex = table.get("Pipeline Index", pipelineIndex)
-    }
-  }
-
-  fun updateInputs(inputs: PoseEstimatorIOInputs)
-
-  fun getPipelineResults(): PhotonPipelineResult
-
-  fun getRawFrontCamera(): PhotonCamera
-}
+class ResetFieldCentricDriveCommand(swerve: SwerveSubsystem) : InstantCommand({ swerve.zeroGyro() })
