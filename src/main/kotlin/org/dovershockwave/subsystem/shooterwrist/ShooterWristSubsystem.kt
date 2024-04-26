@@ -71,7 +71,7 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
     if (shouldStopWrist()) return
     if (state === WristState.INTERPOLATED) {
       val distance = poseEstimator.getToSpeakerFromVision().distance
-      if (!distance.isPresent) return
+      if (distance.isEmpty) return
       this.desiredState = WristState("Interpolated", anglePredictor.predict(distance.get()))
     } else {
       this.desiredState = state

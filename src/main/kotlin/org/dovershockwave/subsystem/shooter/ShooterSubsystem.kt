@@ -80,7 +80,7 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
   fun setDesiredState(state: ShooterState) {
     if (state === ShooterState.INTERPOLATED) {
       val distance = vision.getToSpeakerFromVision().distance
-      if (!distance.isPresent) return
+      if (distance.isEmpty) return
       this.desiredState = ShooterState("Interpolated", bottomRPSPredictor.predict(distance.get()), topRPSPredictor.predict(distance.get()))
     } else {
       this.desiredState = state
