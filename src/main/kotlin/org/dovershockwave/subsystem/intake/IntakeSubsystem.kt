@@ -40,6 +40,7 @@ class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
   override fun periodic() {
     intake.updateInputs(inputs)
 
+    Logger.processInputs("Intake", inputs)
     Logger.recordOutput("Intake/Desired State", desiredState.name)
     Logger.recordOutput("Intake/Desired State Duty Cycle", desiredState.dutyCycle)
     intake.setDutyCycle(desiredState.dutyCycle)

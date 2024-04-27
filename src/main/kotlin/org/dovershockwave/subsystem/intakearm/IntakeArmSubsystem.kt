@@ -45,14 +45,13 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
 
   override fun periodic() {
     intakeArm.updateInputs(inputs)
+    val key = "Intake Arm"
+    Logger.processInputs(key, inputs)
 
     if (shouldStopArm()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the arm: " + inputs.angle, false)
     }
 
-
-    val key = "Intake Arm"
-    Logger.processInputs(key, inputs)
     Logger.recordOutput("$key/State Name", desiredState.name)
     Logger.recordOutput("$key/State Angle", desiredState.angle)
     Logger.recordOutput("$key/At Desired State", atDesiredState())

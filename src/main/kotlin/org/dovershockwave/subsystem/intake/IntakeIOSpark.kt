@@ -53,5 +53,5 @@ class IntakeIOSpark(id: Int) : IntakeIO {
     motor.set(dutyCycle)
   }
 
-  override fun hasNote() = !limitSwitch.get()
+  override fun hasNote() = limitSwitch.get()
 }
