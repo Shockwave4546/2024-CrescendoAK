@@ -206,6 +206,8 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
 
   fun resetPose(pose: Pose2d) = swervePoseEstimator.resetPosition(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions(), pose)
 
+  fun resetFieldOrientatedPose() = swervePoseEstimator.resetPosition(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions(), Pose2d(getPose2d().translation, Rotation2d()))
+
   companion object {
     /**
      * Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This

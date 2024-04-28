@@ -24,5 +24,9 @@ package org.dovershockwave.subsystem.swerve.commands
 
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.subsystem.vision.VisionSubsystem
 
-class ResetFieldCentricDriveCommand(swerve: SwerveSubsystem) : InstantCommand({ swerve.zeroGyro() })
+class ResetFieldCentricDriveCommand(swerve: SwerveSubsystem, vision: VisionSubsystem) : InstantCommand({
+  swerve.zeroGyro()
+  vision.resetFieldOrientatedPose()
+})

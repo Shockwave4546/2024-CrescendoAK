@@ -33,5 +33,9 @@ class VisionIOReal : VisionIO {
 
   override fun getPipelineResults() = frontCamera.latestResult
 
+  override fun setPipelineIndex(index: Int) {
+    frontCamera.pipelineIndex = index
+  }
+
   override fun getRawFrontCamera() = frontCamera
 }

@@ -109,7 +109,7 @@ object RobotContainer {
   fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
 
   private fun configureBindings() {
-    driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve))
+    driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, vision!!))
     driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
     driverController.rightBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.4, 0.4))

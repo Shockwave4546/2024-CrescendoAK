@@ -44,5 +44,7 @@ interface VisionIO {
 
   fun getPipelineResults(): PhotonPipelineResult
 
+  fun setPipelineIndex(index: Int)
+
   fun getRawFrontCamera(): PhotonCamera
 }
