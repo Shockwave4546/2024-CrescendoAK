@@ -46,7 +46,7 @@ class IntakeIOSpark(id: Int) : IntakeIO {
     inputs.appliedVolts = motor.busVoltage
     inputs.current = motor.outputCurrent
     inputs.temp = motor.motorTemperature
-    inputs.hasNote = !limitSwitch.get()
+    inputs.hasNote = hasNote()
   }
 
   override fun setDutyCycle(dutyCycle: Double) {
