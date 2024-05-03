@@ -84,7 +84,7 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
       photonPoseEstimator.update().ifPresent { estimatedPose ->
         val pose = estimatedPose.estimatedPose
         Logger.recordOutput("$key/VisionEstimatedPose2d", pose.toPose2d())
-        if (!isValidMeasurement(pose)) return@ifPresent
+        if (!isValidMeasurement(pose, false)) return@ifPresent
         swervePoseEstimator.addVisionMeasurement(pose.toPose2d(), vision.getPipelineResults().timestampSeconds)
       }
     }
@@ -169,34 +169,34 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
 
   private fun getSpeakerTagPose3d() = layout.getTagPose(getSpeakerTargetTagId()).get()
 
-  private fun isValidMeasurement(pose: Pose3d) = when {
+  private fun isValidMeasurement(pose: Pose3d, printError: Boolean) = when {
     pose.x > VisionConstants.FIELD_LENGTH -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +x direction.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +x direction.", false)
       false
     }
 
     pose.x < 0 -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -x direction.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -x direction.", false)
       false
     }
 
     pose.y > VisionConstants.FIELD_WIDTH -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +y direction.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in +y direction.", false)
       false
     }
 
     pose.y < 0 -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -y direction.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is off the field in -y direction.", false)
       false
     }
 
     pose.z < -0.15 -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is inside the floor.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is inside the floor.", false)
       false
     }
 
     pose.z > 0.15 -> {
-      DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is floating above the floor.", false)
+      if (printError) DriverStation.reportError("According to ${VisionConstants.FRONT_CAMERA_NAME}, Robot is floating above the floor.", false)
       false
     }
     else -> true

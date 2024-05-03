@@ -35,9 +35,10 @@ class SwerveDriveCommand(private val controller: CommandXboxController, private 
   }
 
   override fun execute() {
-    val towardSpeaker = vision.isHeadingAlignedWithSpeaker()
-    val autoAim = towardSpeaker.isPresent && !towardSpeaker.get()
     var rotSpeed = MathUtil.applyDeadband(controller.rightX, GlobalConstants.DRIVE_DEADBAND)
+
+    val towardSpeaker = vision.isHeadingAlignedWithSpeaker()
+    val autoAim = towardSpeaker.isPresent && !towardSpeaker.get() && swerve.isAutoAlign()
     if (autoAim) {
       val rot = vision.getToSpeakerFromVision().rotation2d
       if (rot.isPresent) {

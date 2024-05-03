@@ -48,6 +48,8 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
   private val rotSpeedMultiplier = ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER).withSize(5, 2).withPosition(5, 8)
   private val isFieldRelative = ShuffleboardBoolean(Tabs.MATCH, "Is Field Relative?", true).withSize(3, 3).withPosition(18, 0)
 
+  private val autoAlign = ShuffleboardBoolean(Tabs.MATCH, "Auto Align", false).withSize(3, 3)
+
   private val headingController = ProfiledPIDController(
     1.5,
     AutoConstants.DRIVING_GAINS.i,
@@ -95,6 +97,8 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     Logger.recordOutput("$key/Rotation2d degrees", getHeadingRotation2d().degrees)
     Logger.recordOutput("$key/Rotation2d rad", getHeadingRotation2d().radians)
   }
+
+  fun isAutoAlign() = autoAlign.get()
 
   /**
    * Method to drive the robot using joystick info.
