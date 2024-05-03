@@ -22,7 +22,6 @@
 
 package org.dovershockwave
 
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
@@ -38,12 +37,12 @@ object Robot : LoggedRobot() {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
-        if (Files.exists(Paths.get(GlobalConstants.LOG_FOLDER_PATH))) {
-          Logger.addDataReceiver(WPILOGWriter(GlobalConstants.LOG_FOLDER_PATH))
-        } else {
-          DriverStation.reportError("Log folder does not exist!", false)
+        val path = Paths.get(GlobalConstants.LOG_FOLDER_PATH)
+        if (!Files.exists(path)) {
+          path.toFile().mkdirs()
         }
 
+        Logger.addDataReceiver(WPILOGWriter(GlobalConstants.LOG_FOLDER_PATH))
         PowerDistribution() // Enables power distribution logging.
       }
 
