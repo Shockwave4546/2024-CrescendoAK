@@ -63,6 +63,7 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
 
     val clamped = MathUtil.clamp(desiredState.angle, IntakeArmConstants.MIN_ANGLE, IntakeArmConstants.MAX_ANGLE)
     intakeArm.setAngleSetpoint(clamped)
+    this.desiredState = desiredState
   }
 
   fun atDesiredState() = inputs.angle in desiredState.angle - IntakeArmConstants.ANGLE_TOLERANCE ..desiredState.angle + IntakeArmConstants.ANGLE_TOLERANCE
