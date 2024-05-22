@@ -31,9 +31,10 @@ class ShooterConstants {
     const val TOP_CAN_ID = 30
     val REV_CONVERSION_FACTOR = PositionConversionFactor(1.0)
     const val RPS_CONVERSION_FACTOR = 1.0 / 60.0
-    val GAINS = PIDGains(0.03, 0.0, 0.0, 0.011)
-    const val LEFT_INVERTED = true
-    const val RIGHT_INVERTED = true
+    val BOT_GAINS = PIDGains(0.03, 0.0, 0.0, 0.011)
+    val TOP_GAINS = PIDGains(0.03, 0.0, 0.0, 0.011)
+    const val BOT_INVERTED = true
+    const val TOP_INVERTED = true
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
     const val RPS_TOLERANCE = 2.5

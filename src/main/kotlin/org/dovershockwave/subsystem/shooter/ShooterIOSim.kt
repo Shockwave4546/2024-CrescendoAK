@@ -22,8 +22,6 @@
 
 package org.dovershockwave.subsystem.shooter
 
-import com.revrobotics.SparkPIDController
-
 // TODO:
 class ShooterIOSim : ShooterIO {
   override fun updateInputs(inputs: ShooterIO.ShooterIOInputs) {
@@ -34,15 +32,39 @@ class ShooterIOSim : ShooterIO {
     TODO("Not yet implemented")
   }
 
+  override fun setBotP(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setBotI(i: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setBotD(d: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setBotFF(ff: Double) {
+    TODO("Not yet implemented")
+  }
+
   override fun setTopVelocitySetpoint(rps: Double) {
     TODO("Not yet implemented")
   }
 
-  override fun getRawBot(): SparkPIDController {
+  override fun setTopP(p: Double) {
     TODO("Not yet implemented")
   }
 
-  override fun getRawTop(): SparkPIDController {
+  override fun setTopI(i: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTopD(d: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTopFF(ff: Double) {
     TODO("Not yet implemented")
   }
 }

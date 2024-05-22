@@ -23,10 +23,9 @@
 package org.dovershockwave.subsystem.shooter
 
 import edu.wpi.first.math.MathUtil
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.shuffleboard.TunableSparkPIDController
 import org.dovershockwave.subsystem.vision.VisionSubsystem
+import org.dovershockwave.utils.LoggedTunableNumber
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
@@ -48,33 +47,39 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
     "x"
   )
 
-  val tab = Shuffleboard.getTab("Shooter")
+  private val key = "Shooter"
+  private val botP = LoggedTunableNumber("$key/Bot/P", ShooterConstants.BOT_GAINS.p)
+  private val botI = LoggedTunableNumber("$key/Bot/I", ShooterConstants.BOT_GAINS.i)
+  private val botD = LoggedTunableNumber("$key/Bot/D", ShooterConstants.BOT_GAINS.d)
+  private val botFF = LoggedTunableNumber("$key/Bot/FF", ShooterConstants.BOT_GAINS.ff)
 
-  init {
-    tab.add("Top PID",
-      TunableSparkPIDController(shooter.getRawTop(), { desiredState.topRPS }, { topRPS: Double ->
-        this.desiredState = ShooterState("Manual", desiredState.bottomRPS, topRPS)
-        shooter.setTopVelocitySetpoint(topRPS)
-      })
-    )
-
-    tab.add("Bottom PID",
-      TunableSparkPIDController(shooter.getRawBot(), { desiredState.bottomRPS }, { botRPS: Double ->
-        this.desiredState = ShooterState("Manual", botRPS, desiredState.topRPS)
-        shooter.setBottomVelocitySetpoint(botRPS)
-      })
-    )
-  }
+  private val topP = LoggedTunableNumber("$key/Top/P", ShooterConstants.TOP_GAINS.p)
+  private val topI = LoggedTunableNumber("$key/Top/I", ShooterConstants.TOP_GAINS.i)
+  private val topD = LoggedTunableNumber("$key/Top/D", ShooterConstants.TOP_GAINS.d)
+  private val topFF = LoggedTunableNumber("$key/Top/FF", ShooterConstants.TOP_GAINS.ff)
 
   override fun periodic() {
     shooter.updateInputs(inputs)
-
-    val key = "Shooter"
     Logger.processInputs(key, inputs)
-    Logger.recordOutput("$key/Desired State", desiredState.name)
-    Logger.recordOutput("$key/Desired State Bot RPS", desiredState.bottomRPS)
-    Logger.recordOutput("$key/Desired State Top RPS", desiredState.topRPS)
-    Logger.recordOutput("$key/At Desired State", atDesiredState())
+
+    LoggedTunableNumber.ifChanged(hashCode(), { values ->
+      shooter.setBotP(values[0])
+      shooter.setBotI(values[1])
+      shooter.setBotD(values[2])
+      shooter.setBotFF(values[3])
+    }, botP, botI, botD, botFF)
+
+    LoggedTunableNumber.ifChanged(hashCode(), { values ->
+      shooter.setTopP(values[0])
+      shooter.setTopI(values[1])
+      shooter.setTopD(values[2])
+      shooter.setTopFF(values[3])
+    }, topP, topI, topD, topFF)
+
+    Logger.recordOutput("$key/Desired State/Name", desiredState.name)
+    Logger.recordOutput("$key/Desired State/Bot RPS", desiredState.bottomRPS)
+    Logger.recordOutput("$key/Desired State/Top RPS", desiredState.topRPS)
+    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
   }
 
   fun setDesiredState(state: ShooterState) {

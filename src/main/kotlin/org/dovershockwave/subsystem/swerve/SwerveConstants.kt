@@ -25,6 +25,7 @@ package org.dovershockwave.subsystem.swerve
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import org.dovershockwave.subsystem.swerve.module.ModulePosition
+import org.dovershockwave.utils.PIDGains
 
 class SwerveConstants {
   companion object {
@@ -77,5 +78,7 @@ class SwerveConstants {
 
     const val DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.85
     const val DEFAULT_ROT_SPEED_MULTIPLIER = 0.85
+
+    val HEADING_GAINS = PIDGains(1.5, 0.0, 0.08)
   }
 }

@@ -80,4 +80,20 @@ interface ModuleIO {
   fun setDesiredState(desiredState: SwerveModuleState)
 
   fun resetDriveEncoder()
+
+  fun setDriveP(p: Double)
+
+  fun setDriveI(p: Double)
+
+  fun setDriveD(p: Double)
+
+  fun setDriveFF(p: Double)
+
+  fun setTurnP(p: Double)
+
+  fun setTurnI(p: Double)
+
+  fun setTurnD(p: Double)
+
+  fun setTurnFF(p: Double)
 }

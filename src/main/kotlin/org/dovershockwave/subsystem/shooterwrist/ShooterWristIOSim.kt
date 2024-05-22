@@ -22,8 +22,6 @@
 
 package org.dovershockwave.subsystem.shooterwrist
 
-import com.revrobotics.SparkPIDController
-
 class ShooterWristIOSim : ShooterWristIO {
   // TODO:  
   override fun updateInputs(inputs: ShooterWristIO.ShooterWristIOInputs) {
@@ -34,7 +32,19 @@ class ShooterWristIOSim : ShooterWristIO {
     TODO("Not yet implemented")
   }
 
-  override fun pid(): SparkPIDController {
+  override fun setP(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setI(i: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setD(d: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setFF(ff: Double) {
     TODO("Not yet implemented")
   }
 }

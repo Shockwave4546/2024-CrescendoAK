@@ -133,4 +133,36 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
       RelSparkAction("Reset Drive Encoder #${UUID.randomUUID()}") { _, encoder, _ -> encoder.setPosition(0.0) }
     ))
   }
+
+  override fun setDriveP(p: Double) {
+    drivePID.setP(p)
+  }
+
+  override fun setDriveI(p: Double) {
+    drivePID.setI(p)
+  }
+
+  override fun setDriveD(p: Double) {
+    drivePID.setD(p)
+  }
+
+  override fun setDriveFF(p: Double) {
+    drivePID.setFF(p)
+  }
+
+  override fun setTurnP(p: Double) {
+    turnPID.setP(p)
+  }
+
+  override fun setTurnI(p: Double) {
+    turnPID.setI(p)
+  }
+
+  override fun setTurnD(p: Double) {
+    turnPID.setD(p)
+  }
+
+  override fun setTurnFF(p: Double) {
+    turnPID.setFF(p)
+  }
 }

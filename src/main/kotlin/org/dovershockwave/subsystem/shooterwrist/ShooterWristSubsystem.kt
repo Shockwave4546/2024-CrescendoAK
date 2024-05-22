@@ -24,10 +24,9 @@ package org.dovershockwave.subsystem.shooterwrist
 
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.shuffleboard.TunableSparkPIDController
 import org.dovershockwave.subsystem.vision.VisionSubsystem
+import org.dovershockwave.utils.LoggedTunableNumber
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
 
@@ -42,28 +41,30 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
     "x"
   )
 
-  init {
-    val tab = Shuffleboard.getTab("ShooterWrist")
-    tab.add("Top PID",
-      TunableSparkPIDController(wrist.pid(), { desiredState.angle }, { angle: Double ->
-        this.desiredState = WristState("Manual", angle)
-        wrist.setAngleSetpoint(angle)
-      })
-    )
-  }
+  private val key = "ShooterWrist"
+  private val p = LoggedTunableNumber("$key/P", WristConstants.GAINS.p)
+  private val i = LoggedTunableNumber("$key/I", WristConstants.GAINS.i)
+  private val d = LoggedTunableNumber("$key/D", WristConstants.GAINS.d)
+  private val ff = LoggedTunableNumber("$key/FF", WristConstants.GAINS.ff)
 
   override fun periodic() {
     wrist.updateInputs(inputs)
+    Logger.processInputs(key, inputs)
+
+    LoggedTunableNumber.ifChanged(hashCode(), { values ->
+      wrist.setP(values[0])
+      wrist.setI(values[1])
+      wrist.setD(values[2])
+      wrist.setFF(values[3])
+    }, p, i, d, ff)
 
     if (shouldStopWrist()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the wrist: " + inputs.angle, false)
     }
 
-    val key = "Shooter Wrist"
-    Logger.processInputs(key, inputs)
-    Logger.recordOutput("$key/State Name", desiredState.name)
-    Logger.recordOutput("$key/State Angle", desiredState.angle)
-    Logger.recordOutput("$key/At Desired State", atDesiredState())
+    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/Angle", desiredState.angle)
+    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
     Logger.recordOutput("$key/Should Stop Wrist", shouldStopWrist())
   }
 

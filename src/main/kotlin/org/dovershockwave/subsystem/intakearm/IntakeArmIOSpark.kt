@@ -25,7 +25,6 @@ package org.dovershockwave.subsystem.intakearm
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
-import com.revrobotics.SparkPIDController
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
@@ -65,7 +64,19 @@ class IntakeArmIOSpark(id: Int) : IntakeArmIO {
     ))
   }
 
-  override fun pid(): SparkPIDController {
-    return pid
+  override fun setP(p: Double) {
+    pid.setP(p)
+  }
+
+  override fun setI(i: Double) {
+    pid.setI(i)
+  }
+
+  override fun setD(d: Double) {
+    pid.setD(d)
+  }
+
+  override fun setFF(ff: Double) {
+    pid.setFF(ff)
   }
 }

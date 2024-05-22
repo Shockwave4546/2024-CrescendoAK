@@ -42,8 +42,8 @@ class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
 
     val key = "Intake"
     Logger.processInputs(key, inputs)
-    Logger.recordOutput("$key/Desired State", desiredState.name)
-    Logger.recordOutput("$key/Desired State Duty Cycle", desiredState.dutyCycle)
+    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/Duty Cycle", desiredState.dutyCycle)
     intake.setDutyCycle(desiredState.dutyCycle)
   }
 

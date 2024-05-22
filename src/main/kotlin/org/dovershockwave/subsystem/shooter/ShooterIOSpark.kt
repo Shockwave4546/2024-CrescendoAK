@@ -22,7 +22,10 @@
 
 package org.dovershockwave.subsystem.shooter
 
-import com.revrobotics.*
+import com.revrobotics.CANSparkBase
+import com.revrobotics.CANSparkLowLevel
+import com.revrobotics.CANSparkMax
+import com.revrobotics.REVLibError
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureRel
@@ -40,28 +43,28 @@ class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
   init {
     bottomMotor.configureRel(linkedSetOf(
       RelSparkAction("Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(MotorConstants.NEO_CURRENT_LIMIT) },
-      RelSparkAction("Set Inverted") { spark, _, _ -> spark.inverted = ShooterConstants.LEFT_INVERTED; REVLibError.kOk },
+      RelSparkAction("Set Inverted") { spark, _, _ -> spark.inverted = ShooterConstants.BOT_INVERTED; REVLibError.kOk },
       RelSparkAction("Set Idle Mode") { spark, _, _ -> spark.setIdleMode(CANSparkBase.IdleMode.kBrake) },
       RelSparkAction("Set Position Conversion Factor") { _, encoder, _ -> ShooterConstants.REV_CONVERSION_FACTOR.apply(encoder) },
       RelSparkAction("Set Velocity Conversion Factor") { _, encoder, _ -> encoder.setVelocityConversionFactor(ShooterConstants.RPS_CONVERSION_FACTOR) },
-      RelSparkAction("Set PID P") { _, _, pid -> pid.setP(ShooterConstants.GAINS.p) },
-      RelSparkAction("Set PID I") { _, _, pid -> pid.setI(ShooterConstants.GAINS.i) },
-      RelSparkAction("Set PID D") { _, _, pid -> pid.setD(ShooterConstants.GAINS.d) },
-      RelSparkAction("Set PID FF") { _, _, pid -> pid.setFF(ShooterConstants.GAINS.ff) },
+      RelSparkAction("Set PID P") { _, _, pid -> pid.setP(ShooterConstants.BOT_GAINS.p) },
+      RelSparkAction("Set PID I") { _, _, pid -> pid.setI(ShooterConstants.BOT_GAINS.i) },
+      RelSparkAction("Set PID D") { _, _, pid -> pid.setD(ShooterConstants.BOT_GAINS.d) },
+      RelSparkAction("Set PID FF") { _, _, pid -> pid.setFF(ShooterConstants.BOT_GAINS.ff) },
       RelSparkAction("Set PID Output Range") { _, _, pid -> pid.setOutputRange(ShooterConstants.MIN_OUTPUT, ShooterConstants.MAX_OUTPUT) },
       RelSparkAction("Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) }
     ))
 
     topMotor.configureRel(linkedSetOf(
       RelSparkAction("Set Smart Current Limit") { spark, _, _ -> spark.setSmartCurrentLimit(MotorConstants.NEO_CURRENT_LIMIT) },
-      RelSparkAction("Set Inverted") { spark, _, _ -> spark.inverted = ShooterConstants.RIGHT_INVERTED; REVLibError.kOk },
+      RelSparkAction("Set Inverted") { spark, _, _ -> spark.inverted = ShooterConstants.TOP_INVERTED; REVLibError.kOk },
       RelSparkAction("Set Idle Mode") { spark, _, _ -> spark.setIdleMode(CANSparkBase.IdleMode.kBrake) },
       RelSparkAction("Set Position Conversion Factor") { _, encoder, _ -> ShooterConstants.REV_CONVERSION_FACTOR.apply(encoder) },
       RelSparkAction("Set Velocity Conversion Factor") { _, encoder, _ -> encoder.setVelocityConversionFactor(ShooterConstants.RPS_CONVERSION_FACTOR) },
-      RelSparkAction("Set PID P") { _, _, pid -> pid.setP(ShooterConstants.GAINS.p) },
-      RelSparkAction("Set PID I") { _, _, pid -> pid.setI(ShooterConstants.GAINS.i) },
-      RelSparkAction("Set PID D") { _, _, pid -> pid.setD(ShooterConstants.GAINS.d) },
-      RelSparkAction("Set PID FF") { _, _, pid -> pid.setFF(ShooterConstants.GAINS.ff) },
+      RelSparkAction("Set PID P") { _, _, pid -> pid.setP(ShooterConstants.TOP_GAINS.p) },
+      RelSparkAction("Set PID I") { _, _, pid -> pid.setI(ShooterConstants.TOP_GAINS.i) },
+      RelSparkAction("Set PID D") { _, _, pid -> pid.setD(ShooterConstants.TOP_GAINS.d) },
+      RelSparkAction("Set PID FF") { _, _, pid -> pid.setFF(ShooterConstants.TOP_GAINS.ff) },
       RelSparkAction("Set PID Output Range") { _, _, pid -> pid.setOutputRange(ShooterConstants.MIN_OUTPUT, ShooterConstants.MAX_OUTPUT) },
       RelSparkAction("Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) }
     ))
@@ -85,17 +88,41 @@ class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
     ))
   }
 
+  override fun setBotP(p: Double) {
+    bottomPID.setP(p)
+  }
+
+  override fun setBotI(i: Double) {
+    bottomPID.setI(i)
+  }
+
+  override fun setBotD(d: Double) {
+    bottomPID.setD(d)
+  }
+
+  override fun setBotFF(ff: Double) {
+    bottomPID.setFF(ff)
+  }
+
   override fun setTopVelocitySetpoint(rps: Double) {
     topMotor.runBlockingRel(linkedSetOf(
       RelSparkAction("b") { _, _, pid -> pid.setReference(rps, CANSparkBase.ControlType.kVelocity)}
     ))
   }
 
-  override fun getRawBot(): SparkPIDController {
-    return bottomPID
+  override fun setTopP(p: Double) {
+    topPID.setP(p)
   }
 
-  override fun getRawTop(): SparkPIDController {
-    return topPID
+  override fun setTopI(i: Double) {
+    topPID.setI(i)
+  }
+
+  override fun setTopD(d: Double) {
+    topPID.setD(d)
+  }
+
+  override fun setTopFF(ff: Double) {
+    topPID.setFF(ff)
   }
 }

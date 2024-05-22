@@ -30,7 +30,7 @@ import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
-import org.dovershockwave.Tabs
+import org.dovershockwave.Tab
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
@@ -74,7 +74,7 @@ class AutoManager(private val swerve: SwerveSubsystem, private val shooter: Shoo
     NamedCommands.registerCommand("WristHome", InstantCommand({ wrist.setDesiredState(WristState.HOME) }, wrist))
 
     this.chooser = LoggedDashboardChooser("Autonomous", AutoBuilder.buildAutoChooser())
-    Tabs.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3).withPosition(12, 0)
+    Tab.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3).withPosition(12, 0)
   }
 
   /**

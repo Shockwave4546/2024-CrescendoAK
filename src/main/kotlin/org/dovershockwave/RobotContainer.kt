@@ -45,6 +45,7 @@ import org.dovershockwave.subsystem.swerve.commands.ResetFieldCentricDriveComman
 import org.dovershockwave.subsystem.swerve.commands.SetMaxSpeedCommand
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
+import org.dovershockwave.subsystem.swerve.module.Module
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
 import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
 import org.dovershockwave.subsystem.vision.VisionIOReal
@@ -66,10 +67,23 @@ object RobotContainer {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         swerve = SwerveSubsystem(
-          ModuleIOSpark(SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSpark(SwerveConstants.FRONT_RIGHT_DRIVING_CAN_ID, SwerveConstants.FRONT_RIGHT_TURNING_CAN_ID, SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSpark(SwerveConstants.BACK_LEFT_DRIVING_CAN_ID, SwerveConstants.BACK_LEFT_TURNING_CAN_ID, SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
+          Module(
+            ModuleIOSpark(
+              SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
+            "FL"
+          ),
+          Module(
+            ModuleIOSpark(SwerveConstants.FRONT_RIGHT_DRIVING_CAN_ID, SwerveConstants.FRONT_RIGHT_TURNING_CAN_ID, SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
+          "FR"
+          ),
+          Module(
+            ModuleIOSpark(SwerveConstants.BACK_LEFT_DRIVING_CAN_ID, SwerveConstants.BACK_LEFT_TURNING_CAN_ID, SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
+            "BL"
+          ),
+          Module(
+            ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
+            "BR"
+          ),
           GyroIONavX()
         )
 
@@ -84,10 +98,22 @@ object RobotContainer {
 
       RobotType.SIM -> {
         swerve = SwerveSubsystem(
-          ModuleIOSim(SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSim(SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSim(SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
-          ModuleIOSim(SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
+          Module(
+            ModuleIOSim(SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
+            "FL"
+          ),
+          Module(
+            ModuleIOSim(SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
+            "FR"
+          ),
+          Module(
+            ModuleIOSim(SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
+            "BL"
+          ),
+          Module(
+            ModuleIOSim(SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
+            "BR"
+          ),
           GyroIOSim() // TODO: This is fake for now.
         )
 

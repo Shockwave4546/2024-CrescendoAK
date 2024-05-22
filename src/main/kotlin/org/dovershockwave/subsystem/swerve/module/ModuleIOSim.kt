@@ -81,4 +81,36 @@ class ModuleIOSim(private val chassisAngularOffset: Double) : ModuleIO {
   }
 
   override fun resetDriveEncoder() = driveSim.setState(0.0, 0.0)
+
+  override fun setDriveP(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setDriveI(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setDriveD(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setDriveFF(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTurnP(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTurnI(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTurnD(p: Double) {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTurnFF(p: Double) {
+    TODO("Not yet implemented")
+  }
 }

@@ -25,11 +25,9 @@ package org.dovershockwave.subsystem.shooterwrist
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
-import com.revrobotics.SparkPIDController
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
-import org.dovershockwave.utils.SparkUtils.Companion.runBlockingAbs
 
 class ShooterWristIOSpark(id: Int) : ShooterWristIO {
   private val motor = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless)
@@ -60,12 +58,22 @@ class ShooterWristIOSpark(id: Int) : ShooterWristIO {
   }
 
   override fun setAngleSetpoint(angle: Double) {
-    motor.runBlockingAbs(linkedSetOf(
-      AbsSparkAction("c") { _, _, pid -> pid.setReference(angle, CANSparkBase.ControlType.kPosition)}
-    ))
+    pid.setReference(angle, CANSparkBase.ControlType.kPosition)
   }
 
-  override fun pid(): SparkPIDController {
-    return pid
+  override fun setP(p: Double) {
+    pid.setP(p)
+  }
+
+  override fun setI(i: Double) {
+    pid.setI(i)
+  }
+
+  override fun setD(d: Double) {
+    pid.setD(d)
+  }
+
+  override fun setFF(ff: Double) {
+    pid.setFF(ff)
   }
 }

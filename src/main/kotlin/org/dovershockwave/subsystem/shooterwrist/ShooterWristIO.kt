@@ -22,7 +22,6 @@
 
 package org.dovershockwave.subsystem.shooterwrist
 
-import com.revrobotics.SparkPIDController
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -52,5 +51,11 @@ interface ShooterWristIO {
 
   fun setAngleSetpoint(angle: Double)
 
-  fun pid(): SparkPIDController
+  fun setP(p: Double)
+
+  fun setI(i: Double)
+
+  fun setD(d: Double)
+
+  fun setFF(ff: Double)
 }

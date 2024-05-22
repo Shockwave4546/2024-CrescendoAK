@@ -77,8 +77,9 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
 
   override fun periodic() {
     vision.updateInputs(inputs)
-
     val key = "Vision"
+    Logger.processInputs(key, inputs)
+
     swervePoseEstimator.update(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions())
     if (useVisionMeasurement.get()) {
       photonPoseEstimator.update().ifPresent { estimatedPose ->
@@ -89,7 +90,6 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
       }
     }
 
-    Logger.processInputs(key, inputs)
     Logger.recordOutput("$key/EstimatedPose2d", getPose2d())
 
     Logger.recordOutput("$key/SpeakerTagPose3d", getSpeakerTagPose3d())

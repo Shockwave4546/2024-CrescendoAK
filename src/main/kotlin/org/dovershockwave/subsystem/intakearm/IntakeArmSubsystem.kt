@@ -24,37 +24,38 @@ package org.dovershockwave.subsystem.intakearm
 
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.shuffleboard.TunableSparkPIDController
+import org.dovershockwave.utils.LoggedTunableNumber
 import org.littletonrobotics.junction.Logger
 
 class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
   private val inputs = IntakeArmIO.IntakeArmIOInputs()
   private var desiredState = ArmState.HOME
 
-  init {
-    val tab = Shuffleboard.getTab("IntakeArm")
-    tab.add("PID",
-      TunableSparkPIDController(intakeArm.pid(), { desiredState.angle }, { angle: Double ->
-        this.desiredState = ArmState("Manual", angle)
-        intakeArm.setAngleSetpoint(angle)
-      })
-    )
-  }
+  private val key = "IntakeArm"
+  private val p = LoggedTunableNumber("$key/P", IntakeArmConstants.GAINS.p)
+  private val i = LoggedTunableNumber("$key/I", IntakeArmConstants.GAINS.i)
+  private val d = LoggedTunableNumber("$key/D", IntakeArmConstants.GAINS.d)
+  private val ff = LoggedTunableNumber("$key/FF", IntakeArmConstants.GAINS.ff)
 
   override fun periodic() {
     intakeArm.updateInputs(inputs)
-    val key = "Intake Arm"
     Logger.processInputs(key, inputs)
+
+    LoggedTunableNumber.ifChanged(hashCode(), { values ->
+      intakeArm.setP(values[0])
+      intakeArm.setI(values[1])
+      intakeArm.setD(values[2])
+      intakeArm.setFF(values[3])
+    }, p, i, d, ff)
 
     if (shouldStopArm()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the arm: " + inputs.angle, false)
     }
 
-    Logger.recordOutput("$key/State Name", desiredState.name)
-    Logger.recordOutput("$key/State Angle", desiredState.angle)
-    Logger.recordOutput("$key/At Desired State", atDesiredState())
+    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/Angle", desiredState.angle)
+    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
     Logger.recordOutput("$key/Should Stop Arm", shouldStopArm())
   }
 

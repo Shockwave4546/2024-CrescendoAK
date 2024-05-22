@@ -29,68 +29,65 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.util.Units
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.Tabs
-import org.dovershockwave.auto.AutoConstants
+import org.dovershockwave.Tab
 import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.shuffleboard.ShuffleboardSpeed
 import org.dovershockwave.subsystem.swerve.gyro.GyroIO
-import org.dovershockwave.subsystem.swerve.module.ModuleIO
+import org.dovershockwave.subsystem.swerve.module.Module
 import org.dovershockwave.subsystem.vision.VisionConstants
+import org.dovershockwave.utils.LoggedTunableNumber
 import org.littletonrobotics.junction.Logger
 
-class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: ModuleIO, private val backLeft: ModuleIO, private val backRight: ModuleIO, private val gyro: GyroIO) : SubsystemBase() {
-  private val tab = Shuffleboard.getTab("Swerve")
-  private val isX = ShuffleboardBoolean(Tabs.MATCH, "Is X?", false).withSize(3, 3).withPosition(15, 0)
+class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Module, private val backLeft: Module, private val backRight: Module, private val gyro: GyroIO) : SubsystemBase() {
+  private val isX = ShuffleboardBoolean(Tab.MATCH, "Is X?", false).withSize(3, 3)
 
-  private val driveSpeedMultiplier = ShuffleboardSpeed(tab, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER).withSize(5, 2).withPosition(0, 8)
-  private val rotSpeedMultiplier = ShuffleboardSpeed(tab, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER).withSize(5, 2).withPosition(5, 8)
-  private val isFieldRelative = ShuffleboardBoolean(Tabs.MATCH, "Is Field Relative?", true).withSize(3, 3).withPosition(18, 0)
+  private val driveSpeedMultiplier = ShuffleboardSpeed(Tab.MATCH, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER).withSize(5, 2)
+  private val rotSpeedMultiplier = ShuffleboardSpeed(Tab.MATCH, "Rot Speed Multiplier", SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER).withSize(5, 2)
+  private val isFieldRelative = ShuffleboardBoolean(Tab.MATCH, "Is Field Relative?", true).withSize(3, 3)
 
-  private val autoAlign = ShuffleboardBoolean(Tabs.MATCH, "Auto Align", false).withSize(3, 3)
+  private val autoAlign = ShuffleboardBoolean(Tab.MATCH, "Auto Align", false).withSize(3, 3)
 
   private val headingController = ProfiledPIDController(
-    1.5,
-    AutoConstants.DRIVING_GAINS.i,
-    0.08,
+    SwerveConstants.HEADING_GAINS.p,
+    SwerveConstants.HEADING_GAINS.i,
+    SwerveConstants.HEADING_GAINS.d,
     TrapezoidProfile.Constraints(
       Units.degreesToRadians(540.0),
       Units.degreesToRadians(720.0)
     )
   )
 
+  private val key = "Swerve"
+  private val p = LoggedTunableNumber("$key/Heading/P", SwerveConstants.HEADING_GAINS.p)
+  private val i = LoggedTunableNumber("$key/Heading/I", SwerveConstants.HEADING_GAINS.i)
+  private val d = LoggedTunableNumber("$key/Heading/D", SwerveConstants.HEADING_GAINS.d)
+
   private val gyroInputs = GyroIO.GyroIOInputs()
-  private val frontLeftInputs = ModuleIO.ModuleIOInputs()
-  private val frontRightInputs = ModuleIO.ModuleIOInputs()
-  private val backLeftInputs = ModuleIO.ModuleIOInputs()
-  private val backRightInputs = ModuleIO.ModuleIOInputs()
-  private var desiredStates = arrayOf(SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
   init {
     resetDriveEncoders()
 
     headingController.setTolerance(VisionConstants.HEADING_TOLERANCE)
-
-    tab.add("Heading PID", headingController)
   }
 
   override fun periodic() {
+    frontLeft.periodic()
+    frontRight.periodic()
+    backLeft.periodic()
+    backRight.periodic()
+
     gyro.updateInputs(gyroInputs)
-    frontLeft.updateInputs(frontLeftInputs)
-    frontRight.updateInputs(frontRightInputs)
-    backLeft.updateInputs(backLeftInputs)
-    backRight.updateInputs(backRightInputs)
-
     Logger.processInputs("Gyro", gyroInputs)
-    Logger.processInputs("Front Left", frontLeftInputs)
-    Logger.processInputs("Front Right", frontRightInputs)
-    Logger.processInputs("Back Left", backLeftInputs)
-    Logger.processInputs("Back Right", backRightInputs)
 
-    val key = "Swerve"
+    LoggedTunableNumber.ifChanged(hashCode(), { values ->
+      headingController.p = values[0]
+      headingController.i = values[1]
+      headingController.d = values[2]
+    }, p, i, d)
+
     Logger.recordOutput("$key/ModuleStates", *getEstimatedStates())
-    Logger.recordOutput("$key/DesiredStates", *desiredStates)
+    Logger.recordOutput("$key/DesiredStates", *getDesiredStates())
     Logger.recordOutput("$key/XVelocity", getRelativeChassisSpeed().vxMetersPerSecond)
     Logger.recordOutput("$key/YVelocity", getRelativeChassisSpeed().vyMetersPerSecond)
     Logger.recordOutput("$key/Rotation2d", getHeadingRotation2d())
@@ -182,6 +179,13 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
     backRight.getPosition()
   )
 
+  fun getDesiredStates() = arrayOf(
+    frontLeft.getDesiredState(),
+    frontRight.getDesiredState(),
+    backLeft.getDesiredState(),
+    backRight.getDesiredState()
+  )
+
   fun getEstimatedStates() = arrayOf(
     frontLeft.getState(),
     frontRight.getState(),
@@ -196,7 +200,6 @@ class SwerveSubsystem(private val frontLeft: ModuleIO, private val frontRight: M
    */
   fun setDesiredModuleStates(vararg desiredStates: SwerveModuleState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND)
-    this.desiredStates = arrayOf(*desiredStates)
     frontLeft.setDesiredState(desiredStates[0])
     frontRight.setDesiredState(desiredStates[1])
     backLeft.setDesiredState(desiredStates[2])
