@@ -22,16 +22,16 @@
 
 package org.dovershockwave.subsystem.intake
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.subsystem.intake.commands.IdleIntakeCommand
+import org.dovershockwave.utils.LoggedTunableBoolean
 import org.littletonrobotics.junction.Logger
 
 class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
   private val inputs = IntakeIO.IntakeIOInputs()
   private var desiredState = IntakeState.IDLE
-  private val runIdle = ShuffleboardBoolean(Shuffleboard.getTab("Intake"), "Idle Speed", true).withSize(3, 3)
+  private val key = "Intake"
+  private val runIdle = LoggedTunableBoolean("$key/RunIdle", true)
 
   init {
     defaultCommand = IdleIntakeCommand(this)
@@ -40,10 +40,9 @@ class IntakeSubsystem(private val intake: IntakeIO) : SubsystemBase() {
   override fun periodic() {
     intake.updateInputs(inputs)
 
-    val key = "Intake"
     Logger.processInputs(key, inputs)
-    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
-    Logger.recordOutput("$key/DesiredState/Duty Cycle", desiredState.dutyCycle)
+    Logger.recordOutput("$key/DesiredState/1.Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/2.Duty Cycle", desiredState.dutyCycle)
     intake.setDutyCycle(desiredState.dutyCycle)
   }
 

@@ -31,12 +31,11 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.RobotContainer
-import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
+import org.dovershockwave.utils.LoggedTunableBoolean
 import org.littletonrobotics.junction.Logger
 import org.photonvision.PhotonPoseEstimator
 import java.util.*
@@ -55,7 +54,8 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
     vision.getRawFrontCamera(),
     VisionConstants.FRONT_CAMERA_TO_ROBOT)
   private val swervePoseEstimator: SwerveDrivePoseEstimator
-  private val useVisionMeasurement = ShuffleboardBoolean(Shuffleboard.getTab("PoseEstimator"), "Use Vision Measurement", true)
+  private val key = "Vision"
+  private val useVisionMeasurement = LoggedTunableBoolean("$key/Use Vision Measurement", true)
 
   init {
     photonPoseEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY)
@@ -77,7 +77,6 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
 
   override fun periodic() {
     vision.updateInputs(inputs)
-    val key = "Vision"
     Logger.processInputs(key, inputs)
 
     swervePoseEstimator.update(swerve.getHeadingRotation2d(), swerve.getEstimatedPositions())

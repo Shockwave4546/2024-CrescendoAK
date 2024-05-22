@@ -33,10 +33,10 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
   private var desiredState = ArmState.HOME
 
   private val key = "IntakeArm"
-  private val p = LoggedTunableNumber("$key/P", IntakeArmConstants.GAINS.p)
-  private val i = LoggedTunableNumber("$key/I", IntakeArmConstants.GAINS.i)
-  private val d = LoggedTunableNumber("$key/D", IntakeArmConstants.GAINS.d)
-  private val ff = LoggedTunableNumber("$key/FF", IntakeArmConstants.GAINS.ff)
+  private val p = LoggedTunableNumber("$key/1.P", IntakeArmConstants.GAINS.p)
+  private val i = LoggedTunableNumber("$key/2.I", IntakeArmConstants.GAINS.i)
+  private val d = LoggedTunableNumber("$key/3.D", IntakeArmConstants.GAINS.d)
+  private val ff = LoggedTunableNumber("$key/4.FF", IntakeArmConstants.GAINS.ff)
 
   override fun periodic() {
     intakeArm.updateInputs(inputs)
@@ -53,9 +53,9 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
       DriverStation.reportError("The encoder is reporting an angle that will break the arm: " + inputs.angle, false)
     }
 
-    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
-    Logger.recordOutput("$key/DesiredState/Angle", desiredState.angle)
-    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
+    Logger.recordOutput("$key/DesiredState/1.Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/2.Angle", desiredState.angle)
+    Logger.recordOutput("$key/DesiredState/3.At Goal", atDesiredState())
     Logger.recordOutput("$key/Should Stop Arm", shouldStopArm())
   }
 

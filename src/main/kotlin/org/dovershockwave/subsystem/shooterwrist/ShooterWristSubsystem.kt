@@ -42,10 +42,10 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
   )
 
   private val key = "ShooterWrist"
-  private val p = LoggedTunableNumber("$key/P", WristConstants.GAINS.p)
-  private val i = LoggedTunableNumber("$key/I", WristConstants.GAINS.i)
-  private val d = LoggedTunableNumber("$key/D", WristConstants.GAINS.d)
-  private val ff = LoggedTunableNumber("$key/FF", WristConstants.GAINS.ff)
+  private val p = LoggedTunableNumber("$key/1.P", WristConstants.GAINS.p)
+  private val i = LoggedTunableNumber("$key/2.I", WristConstants.GAINS.i)
+  private val d = LoggedTunableNumber("$key/3.D", WristConstants.GAINS.d)
+  private val ff = LoggedTunableNumber("$key/4.FF", WristConstants.GAINS.ff)
 
   override fun periodic() {
     wrist.updateInputs(inputs)
@@ -62,9 +62,9 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
       DriverStation.reportError("The encoder is reporting an angle that will break the wrist: " + inputs.angle, false)
     }
 
-    Logger.recordOutput("$key/DesiredState/Name", desiredState.name)
-    Logger.recordOutput("$key/DesiredState/Angle", desiredState.angle)
-    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
+    Logger.recordOutput("$key/DesiredState/1.Name", desiredState.name)
+    Logger.recordOutput("$key/DesiredState/2.Angle", desiredState.angle)
+    Logger.recordOutput("$key/DesiredState/3.At Goal", atDesiredState())
     Logger.recordOutput("$key/Should Stop Wrist", shouldStopWrist())
   }
 

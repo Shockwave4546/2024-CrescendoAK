@@ -23,20 +23,20 @@
 package org.dovershockwave.utils
 
 import org.dovershockwave.GlobalConstants
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 
-class LoggedTunableNumber(dashboardKey: String, private val defaultValue: Double = 0.0) {
+class LoggedTunableBoolean(dashboardKey: String, private val defaultValue: Boolean = false) {
   private val key = "$TABLE_KEY/$dashboardKey"
-  private var dashboardNumber: LoggedDashboardNumber? = null
-  private val lastHasChangedValues = hashMapOf<Int, Double>()
+  private var dashboardBoolean: LoggedDashboardBoolean? = null
+  private val lastHasChangedValues = hashMapOf<Int, Boolean>()
 
   init {
     if (GlobalConstants.TUNING_MODE) {
-      dashboardNumber = LoggedDashboardNumber(key, defaultValue)
+      dashboardBoolean = LoggedDashboardBoolean(key, defaultValue)
     }
   }
 
-  fun get() = dashboardNumber?.get() ?: defaultValue
+  fun get() = dashboardBoolean?.get() ?: defaultValue
 
   fun hasChanged(id: Int): Boolean {
     val currentValue = get()
@@ -52,12 +52,12 @@ class LoggedTunableNumber(dashboardKey: String, private val defaultValue: Double
   companion object {
     private const val TABLE_KEY = "Tuning"
 
-    fun ifChanged(id: Int, action: (DoubleArray) -> Unit, vararg tunableNumbers: LoggedTunableNumber) {
-      tunableNumbers.filter { it.hasChanged(id) }.forEach { _ ->
-        action(tunableNumbers.map { it.get() }.toDoubleArray())
+    fun ifChanged(id: Int, action: (BooleanArray) -> Unit, vararg tunableBooleans: LoggedTunableBoolean) {
+      tunableBooleans.filter { it.hasChanged(id) }.forEach { _ ->
+        action(tunableBooleans.map { it.get() }.toBooleanArray())
       }
     }
 
-    fun ifChanged(id: Int, action: Runnable, vararg tunableNumbers: LoggedTunableNumber) = ifChanged(id, { _: DoubleArray -> action.run() }, *tunableNumbers)
+    fun ifChanged(id: Int, action: Runnable, vararg tunableBooleans: LoggedTunableBoolean) = ifChanged(id, { _: BooleanArray -> action.run() }, *tunableBooleans)
   }
 }

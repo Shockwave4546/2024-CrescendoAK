@@ -34,19 +34,19 @@ interface IntakeIO {
     var temp = 0.0
 
     override fun toLog(table: LogTable) {
-      table.put("Has Note", hasNote)
-      table.put("Duty Cycle", dutyCycle)
-      table.put("Applied Volts", appliedVolts)
-      table.put("Current", current)
-      table.put("Temp", temp)
+      table.put("1.HasNote", hasNote)
+      table.put("2.DutyCycle", dutyCycle)
+      table.put("3.AppliedVolts", appliedVolts)
+      table.put("4.Current", current)
+      table.put("5.Temp", temp)
     }
 
     override fun fromLog(table: LogTable) {
-      hasNote = table.get("Has Note", hasNote)
-      dutyCycle = table.get("Duty Cycle", dutyCycle)
-      appliedVolts = table.get("Applied Volts", appliedVolts)
-      current = table.get("Current", current)
-      temp = table.get("Temp", temp)
+      hasNote = table.get("1.HasNote", hasNote)
+      dutyCycle = table.get("2.DutyCycle", dutyCycle)
+      appliedVolts = table.get("3.AppliedVolts", appliedVolts)
+      current = table.get("4.Current", current)
+      temp = table.get("5.Temp", temp)
     }
   }
 

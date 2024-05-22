@@ -33,17 +33,17 @@ interface ShooterWristIO {
     var temp = 0.0
 
     override fun toLog(table: LogTable) {
-      table.put("Angle", angle)
-      table.put("Applied Volts", appliedVolts)
-      table.put("Current", current)
-      table.put("Temp", temp)
+      table.put("1.Angle", angle)
+      table.put("2.AppliedVolts", appliedVolts)
+      table.put("3.Current", current)
+      table.put("4.Temp", temp)
     }
 
     override fun fromLog(table: LogTable) {
-      angle = table.get("Angle", angle)
-      appliedVolts = table.get("Applied Volts", appliedVolts)
-      current = table.get("Current", current)
-      temp = table.get("Temp", temp)
+      angle = table.get("1.Angle", angle)
+      appliedVolts = table.get("2.AppliedVolts", appliedVolts)
+      current = table.get("3.Current", current)
+      temp = table.get("4.Temp", temp)
     }
   }
 

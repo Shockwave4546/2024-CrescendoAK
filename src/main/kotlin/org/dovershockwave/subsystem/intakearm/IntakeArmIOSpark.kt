@@ -53,7 +53,7 @@ class IntakeArmIOSpark(id: Int) : IntakeArmIO {
 
   override fun updateInputs(inputs: IntakeArmIO.IntakeArmIOInputs) {
     inputs.angle = encoder.position
-    inputs.appliedVolts = motor.appliedOutput * 12
+    inputs.appliedVolts = motor.get() * motor.busVoltage
     inputs.current = motor.outputCurrent
     inputs.temp = motor.motorTemperature
   }

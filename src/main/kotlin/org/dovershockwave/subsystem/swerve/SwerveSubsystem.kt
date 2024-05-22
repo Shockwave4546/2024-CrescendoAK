@@ -59,9 +59,9 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
   )
 
   private val key = "Swerve"
-  private val p = LoggedTunableNumber("$key/Heading/P", SwerveConstants.HEADING_GAINS.p)
-  private val i = LoggedTunableNumber("$key/Heading/I", SwerveConstants.HEADING_GAINS.i)
-  private val d = LoggedTunableNumber("$key/Heading/D", SwerveConstants.HEADING_GAINS.d)
+  private val p = LoggedTunableNumber("$key/Heading/1.P", SwerveConstants.HEADING_GAINS.p)
+  private val i = LoggedTunableNumber("$key/Heading/2.I", SwerveConstants.HEADING_GAINS.i)
+  private val d = LoggedTunableNumber("$key/Heading/3.D", SwerveConstants.HEADING_GAINS.d)
 
   private val gyroInputs = GyroIO.GyroIOInputs()
 
@@ -86,13 +86,13 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
       headingController.d = values[2]
     }, p, i, d)
 
-    Logger.recordOutput("$key/ModuleStates", *getEstimatedStates())
-    Logger.recordOutput("$key/DesiredStates", *getDesiredStates())
-    Logger.recordOutput("$key/XVelocity", getRelativeChassisSpeed().vxMetersPerSecond)
-    Logger.recordOutput("$key/YVelocity", getRelativeChassisSpeed().vyMetersPerSecond)
-    Logger.recordOutput("$key/Rotation2d", getHeadingRotation2d())
-    Logger.recordOutput("$key/Rotation2d degrees", getHeadingRotation2d().degrees)
-    Logger.recordOutput("$key/Rotation2d rad", getHeadingRotation2d().radians)
+    Logger.recordOutput("$key/1.ModuleStates", *getEstimatedStates())
+    Logger.recordOutput("$key/2.DesiredStates", *getDesiredStates())
+    Logger.recordOutput("$key/3.XVelocity", getRelativeChassisSpeed().vxMetersPerSecond)
+    Logger.recordOutput("$key/4.YVelocity", getRelativeChassisSpeed().vyMetersPerSecond)
+    Logger.recordOutput("$key/5.Rotation2d", getHeadingRotation2d())
+    Logger.recordOutput("$key/6.Rotation2d degrees", getHeadingRotation2d().degrees)
+    Logger.recordOutput("$key/7.Rotation2d rad", getHeadingRotation2d().radians)
   }
 
   fun isAutoAlign() = autoAlign.get()

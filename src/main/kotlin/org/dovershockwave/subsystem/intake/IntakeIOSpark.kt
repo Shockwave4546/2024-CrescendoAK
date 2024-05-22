@@ -43,7 +43,7 @@ class IntakeIOSpark(id: Int) : IntakeIO {
 
   override fun updateInputs(inputs: IntakeIO.IntakeIOInputs) {
     inputs.dutyCycle = motor.appliedOutput
-    inputs.appliedVolts = motor.busVoltage
+    inputs.appliedVolts = motor.get() * motor.busVoltage
     inputs.current = motor.outputCurrent
     inputs.temp = motor.motorTemperature
     inputs.hasNote = hasNote()

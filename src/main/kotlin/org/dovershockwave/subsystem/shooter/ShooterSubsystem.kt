@@ -48,15 +48,15 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
   )
 
   private val key = "Shooter"
-  private val botP = LoggedTunableNumber("$key/Bot/P", ShooterConstants.BOT_GAINS.p)
-  private val botI = LoggedTunableNumber("$key/Bot/I", ShooterConstants.BOT_GAINS.i)
-  private val botD = LoggedTunableNumber("$key/Bot/D", ShooterConstants.BOT_GAINS.d)
-  private val botFF = LoggedTunableNumber("$key/Bot/FF", ShooterConstants.BOT_GAINS.ff)
+  private val botP = LoggedTunableNumber("$key/Bot/1.P", ShooterConstants.BOT_GAINS.p)
+  private val botI = LoggedTunableNumber("$key/Bot/2.I", ShooterConstants.BOT_GAINS.i)
+  private val botD = LoggedTunableNumber("$key/Bot/3.D", ShooterConstants.BOT_GAINS.d)
+  private val botFF = LoggedTunableNumber("$key/Bot/4.FF", ShooterConstants.BOT_GAINS.ff)
 
-  private val topP = LoggedTunableNumber("$key/Top/P", ShooterConstants.TOP_GAINS.p)
-  private val topI = LoggedTunableNumber("$key/Top/I", ShooterConstants.TOP_GAINS.i)
-  private val topD = LoggedTunableNumber("$key/Top/D", ShooterConstants.TOP_GAINS.d)
-  private val topFF = LoggedTunableNumber("$key/Top/FF", ShooterConstants.TOP_GAINS.ff)
+  private val topP = LoggedTunableNumber("$key/Top/1.P", ShooterConstants.TOP_GAINS.p)
+  private val topI = LoggedTunableNumber("$key/Top/2.I", ShooterConstants.TOP_GAINS.i)
+  private val topD = LoggedTunableNumber("$key/Top/3.D", ShooterConstants.TOP_GAINS.d)
+  private val topFF = LoggedTunableNumber("$key/Top/4.FF", ShooterConstants.TOP_GAINS.ff)
 
   override fun periodic() {
     shooter.updateInputs(inputs)
@@ -76,10 +76,10 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
       shooter.setTopFF(values[3])
     }, topP, topI, topD, topFF)
 
-    Logger.recordOutput("$key/Desired State/Name", desiredState.name)
-    Logger.recordOutput("$key/Desired State/Bot RPS", desiredState.bottomRPS)
-    Logger.recordOutput("$key/Desired State/Top RPS", desiredState.topRPS)
-    Logger.recordOutput("$key/DesiredState/At Goal", atDesiredState())
+    Logger.recordOutput("$key/Desired State/1.Name", desiredState.name)
+    Logger.recordOutput("$key/Desired State/2.Bot RPS", desiredState.bottomRPS)
+    Logger.recordOutput("$key/Desired State/3.Top RPS", desiredState.topRPS)
+    Logger.recordOutput("$key/DesiredState/4.At Goal", atDesiredState())
   }
 
   fun setDesiredState(state: ShooterState) {

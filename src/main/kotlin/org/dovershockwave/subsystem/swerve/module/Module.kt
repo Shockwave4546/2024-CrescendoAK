@@ -9,15 +9,15 @@ class Module(private val module: ModuleIO, private val key: String) {
   private val inputs = ModuleIO.ModuleIOInputs()
   private var desiredState = SwerveModuleState(0.0, Rotation2d())
 
-  private val driveP = LoggedTunableNumber("$key/Drive/P", ModuleConstants.DRIVING_GAINS.p)
-  private val driveI = LoggedTunableNumber("$key/Drive/I", ModuleConstants.DRIVING_GAINS.i)
-  private val driveD = LoggedTunableNumber("$key/Drive/D", ModuleConstants.DRIVING_GAINS.d)
-  private val driveFF = LoggedTunableNumber("$key/Drive/FF", ModuleConstants.DRIVING_GAINS.ff)
+  private val driveP = LoggedTunableNumber("$key/Drive/1.P", ModuleConstants.DRIVING_GAINS.p)
+  private val driveI = LoggedTunableNumber("$key/Drive/2.I", ModuleConstants.DRIVING_GAINS.i)
+  private val driveD = LoggedTunableNumber("$key/Drive/3.D", ModuleConstants.DRIVING_GAINS.d)
+  private val driveFF = LoggedTunableNumber("$key/Drive/4.FF", ModuleConstants.DRIVING_GAINS.ff)
 
-  private val turnP = LoggedTunableNumber("$key/Turn/P", ModuleConstants.TURNING_GAINS.p)
-  private val turnI = LoggedTunableNumber("$key/Turn/I", ModuleConstants.TURNING_GAINS.i)
-  private val turnD = LoggedTunableNumber("$key/Turn/D", ModuleConstants.TURNING_GAINS.d)
-  private val turnFF = LoggedTunableNumber("$key/Turn/FF", ModuleConstants.TURNING_GAINS.ff)
+  private val turnP = LoggedTunableNumber("$key/Turn/1.P", ModuleConstants.TURNING_GAINS.p)
+  private val turnI = LoggedTunableNumber("$key/Turn/2.I", ModuleConstants.TURNING_GAINS.i)
+  private val turnD = LoggedTunableNumber("$key/Turn/3.D", ModuleConstants.TURNING_GAINS.d)
+  private val turnFF = LoggedTunableNumber("$key/Turn/4.FF", ModuleConstants.TURNING_GAINS.ff)
 
   init {
     module.setDesiredState(desiredState)

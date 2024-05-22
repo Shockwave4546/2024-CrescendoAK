@@ -38,27 +38,27 @@ interface ShooterIO {
     var topTemp = 0.0
 
     override fun toLog(table: LogTable) {
-      table.put("Bottom RPS", bottomRPS)
-      table.put("Bottom Applied Volts", bottomAppliedVolts)
-      table.put("Bottom Current", bottomCurrent)
-      table.put("Bottom Temp", bottomTemp)
+      table.put("Bottom/1.RPS", bottomRPS)
+      table.put("Bottom/2.AppliedVolts", bottomAppliedVolts)
+      table.put("Bottom/3.Current", bottomCurrent)
+      table.put("Bottom/4.Temp", bottomTemp)
 
-      table.put("Top RPS", topRPS)
-      table.put("Top Applied Volts", topAppliedVolts)
-      table.put("Top Current", topCurrent)
-      table.put("Top Temp", topTemp)
+      table.put("Top/1.RPS", topRPS)
+      table.put("Top/2.AppliedVolts", topAppliedVolts)
+      table.put("Top/3.Current", topCurrent)
+      table.put("Top/4.Temp", topTemp)
     }
 
     override fun fromLog(table: LogTable) {
-      bottomRPS = table.get("Bottom RPS", bottomRPS)
-      bottomAppliedVolts = table.get("Bottom Applied Volts", bottomAppliedVolts)
-      bottomCurrent = table.get("Bottom Current", bottomCurrent)
-      bottomTemp = table.get("Bottom Temp", bottomTemp)
+      bottomRPS = table.get("Bottom/1.RPS", bottomRPS)
+      bottomAppliedVolts = table.get("Bottom/2.AppliedVolts", bottomAppliedVolts)
+      bottomCurrent = table.get("Bottom/3.Current", bottomCurrent)
+      bottomTemp = table.get("Bottom/4.Temp", bottomTemp)
 
-      topRPS = table.get("Top RPS", topRPS)
-      topAppliedVolts = table.get("Top Applied Volts", topAppliedVolts)
-      topCurrent = table.get("Top Current", topCurrent)
-      topTemp = table.get("Top Temp", topTemp)
+      topRPS = table.get("Top/1.RPS", topRPS)
+      topAppliedVolts = table.get("Top/2.AppliedVolts", topAppliedVolts)
+      topCurrent = table.get("Top/3.Current", topCurrent)
+      topTemp = table.get("Top/4.Temp", topTemp)
     }
   }
 
