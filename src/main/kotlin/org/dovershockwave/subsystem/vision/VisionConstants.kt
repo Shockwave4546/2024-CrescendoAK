@@ -36,7 +36,7 @@ class VisionConstants {
     val ROBOT_TO_FRONT_CAMERA = FRONT_CAMERA_TO_ROBOT.inverse()
 
     const val MAXIMUM_AMBIGUITY = 0.5
-    const val FRONT_CAMERA_NAME = "OV9281"
+    const val FRONT_CAMERA_NAME = "FrontCamera"
 
     const val FIELD_LENGTH = 16.54175
     const val FIELD_WIDTH = 8.0137

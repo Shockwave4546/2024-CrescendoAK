@@ -135,6 +135,7 @@ object RobotContainer {
   fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
 
   private fun configureBindings() {
+    driverController.a().onTrue(InstantCommand({ swerve.toggleAutoAlign() }))
     driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, vision!!))
     driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
@@ -149,7 +150,7 @@ object RobotContainer {
     operatorController.rightTrigger().onTrue(InstantCommand({ wrist.setDesiredState(WristState.SPIT) }, wrist))
     operatorController.rightBumper().onTrue(FullSpitCommand(intake, shooter, arm, wrist))
     operatorController.a().toggleOnTrue(FullShootCloseCommand(intake, shooter, arm, wrist))
-    operatorController.b().toggleOnTrue(FullSpitCommand(intake, shooter, arm, wrist))
+    operatorController.b().toggleOnTrue(FullShootInterpolatedCommand(intake, shooter, arm, wrist, swerve, vision))
     operatorController.x().toggleOnTrue(FullShootAmpCommand(intake, shooter, arm, wrist))
     operatorController.y().toggleOnTrue(FullIntakeCommand(arm, intake))
   }

@@ -97,6 +97,8 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
 
   fun isAutoAlign() = autoAlign.get()
 
+  fun toggleAutoAlign() = autoAlign.set(!autoAlign.get())
+
   /**
    * Method to drive the robot using joystick info.
    *

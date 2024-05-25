@@ -26,6 +26,7 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.subsystem.vision.VisionSubsystem
+import org.dovershockwave.utils.LoggedTunableBoolean
 import org.dovershockwave.utils.LoggedTunableNumber
 import org.dovershockwave.utils.PolynomialRegression
 import org.littletonrobotics.junction.Logger
@@ -34,14 +35,25 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
   private val inputs = ShooterWristIO.ShooterWristIOInputs()
   private var desiredState = WristState.STARTING
 
+  // DCMP
+//  private val anglePredictor = PolynomialRegression(
+//    doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
+//    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 40.0, 42.0, 45.0, 47.0, 47.0, 47.0, 47.0, 47.0),
+//    3,
+//    "x"
+//  )
+
   private val anglePredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
-    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 40.0, 42.0, 45.0, 47.0, 47.0, 47.0, 47.0, 47.0),
+    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
+    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 36.0, 43.0, 48.0, 54.0, 62.0),
     3,
     "x"
   )
 
   private val key = "ShooterWrist"
+  private val useManualAngle = LoggedTunableBoolean("$key/5.UseManualAngle", false)
+  private val manualAngle = LoggedTunableNumber("$key/6.ManualAngle", WristState.HOME.angle)
+
   private val p = LoggedTunableNumber("$key/1.P", WristConstants.GAINS.p)
   private val i = LoggedTunableNumber("$key/2.I", WristConstants.GAINS.i)
   private val d = LoggedTunableNumber("$key/3.D", WristConstants.GAINS.d)
@@ -58,6 +70,12 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
       wrist.setFF(values[3])
     }, p, i, d, ff)
 
+    LoggedTunableNumber.ifChanged(manualAngle.hashCode(), { values ->
+      if (!useManualAngle.get()) return@ifChanged
+      val clamped = MathUtil.clamp(values[0], WristConstants.MIN_ANGLE, WristConstants.MAX_ANGLE)
+      wrist.setAngleSetpoint(clamped)
+    }, manualAngle)
+
     if (shouldStopWrist()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the wrist: " + inputs.angle, false)
     }
@@ -69,6 +87,7 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
   }
 
   fun setDesiredState(state: WristState) {
+    if (useManualAngle.get()) return
     if (shouldStopWrist()) return
     if (state === WristState.INTERPOLATED) {
       val distance = poseEstimator.getToSpeakerFromVision().distance
@@ -95,11 +114,12 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
 
 fun main() {
   val anglePredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 4.0),
-    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 40.0, 42.0, 45.0, 47.0, 47.0, 47.0, 47.0, 47.0),
+    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
+    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 36.0, 43.0, 48.0, 54.0, 62.0),
     3,
     "x"
   )
+
 
   println(anglePredictor)
 }

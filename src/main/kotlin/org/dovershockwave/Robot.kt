@@ -100,7 +100,8 @@ object Robot : LoggedRobot() {
     RobotContainer.swerve.defaultCommand = SwerveDriveCommand(
       RobotContainer.driverController,
       RobotContainer.swerve,
-      RobotContainer.vision!!
+      RobotContainer.vision!!,
+      RobotContainer.intake
     )
   }
 

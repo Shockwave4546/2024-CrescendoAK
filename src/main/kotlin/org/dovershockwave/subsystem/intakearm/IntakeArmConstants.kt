@@ -34,7 +34,7 @@ class IntakeArmConstants {
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
     const val ANGLE_TOLERANCE = 5.0 // degrees
-    const val ANGLE_OFFSET = 5.0 // degrees
+    const val ANGLE_OFFSET = 1.0 // degrees
     const val MIN_ANGLE = 5.0 // degrees
     const val MAX_ANGLE = 198.0 // degrees
   }
