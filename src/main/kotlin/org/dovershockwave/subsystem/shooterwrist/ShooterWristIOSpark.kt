@@ -52,7 +52,7 @@ class ShooterWristIOSpark(id: Int) : ShooterWristIO {
 
   override fun updateInputs(inputs: ShooterWristIO.ShooterWristIOInputs) {
     inputs.angle = encoder.position
-    inputs.appliedVolts = motor.get() * motor.busVoltage
+    inputs.appliedVolts = motor.appliedOutput * motor.busVoltage
     inputs.current = motor.outputCurrent
     inputs.temp = motor.motorTemperature
   }

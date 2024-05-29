@@ -9,9 +9,7 @@ class TrackSpeakerCommand(private val swerve: SwerveSubsystem, private val visio
     addRequirements(swerve, vision)
   }
 
-  override fun initialize() {
-    swerve.stop()
-  }
+  override fun initialize() = swerve.stop()
 
   override fun execute() {
     val rot = vision.getToSpeakerFromVision().rotation2d
@@ -20,11 +18,7 @@ class TrackSpeakerCommand(private val swerve: SwerveSubsystem, private val visio
     swerve.drive(0.0, 0.0, rotSpeed, fieldRelative = true, useDefaultSpeeds = false)
   }
 
-  override fun isFinished(): Boolean {
-    return vision.isHeadingAlignedWithSpeaker().isPresent && vision.isHeadingAlignedWithSpeaker().get()
-  }
+  override fun isFinished() = vision.isHeadingAlignedWithSpeaker().isPresent && vision.isHeadingAlignedWithSpeaker().get()
 
-  override fun end(interrupted: Boolean) {
-    swerve.stop()
-  }
+  override fun end(interrupted: Boolean) = swerve.stop()
 }

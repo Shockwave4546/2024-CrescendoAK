@@ -72,12 +72,12 @@ class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
 
   override fun updateInputs(inputs: ShooterIO.ShooterIOInputs) {
     inputs.bottomRPS = bottomEncoder.velocity
-    inputs.bottomAppliedVolts = bottomMotor.get() * bottomMotor.busVoltage
+    inputs.bottomAppliedVolts = bottomMotor.appliedOutput * bottomMotor.busVoltage
     inputs.bottomCurrent = bottomMotor.outputCurrent
     inputs.bottomTemp = bottomMotor.motorTemperature
 
     inputs.topRPS = topEncoder.velocity
-    inputs.topAppliedVolts = topMotor.get() * topMotor.busVoltage
+    inputs.topAppliedVolts = topMotor.appliedOutput * topMotor.busVoltage
     inputs.topCurrent = topMotor.outputCurrent
     inputs.topTemp = topMotor.motorTemperature
   }

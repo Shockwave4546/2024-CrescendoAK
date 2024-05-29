@@ -90,13 +90,13 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
   override fun updateInputs(inputs: ModuleIO.ModuleIOInputs) {
     inputs.drivePosition = driveEncoder.position
     inputs.driveVelocity = driveEncoder.velocity
-    inputs.driveAppliedVolts = drivingMotor.get() * drivingMotor.busVoltage
+    inputs.driveAppliedVolts = drivingMotor.appliedOutput * drivingMotor.busVoltage
     inputs.driveCurrent = drivingMotor.outputCurrent
     inputs.driveTemp = drivingMotor.motorTemperature
 
     inputs.rotPosition = Rotation2d(turnEncoder.position)
     inputs.rotVelocity = turnEncoder.velocity
-    inputs.rotAppliedVolts = turnMotor.get() * turnMotor.busVoltage
+    inputs.rotAppliedVolts = turnMotor.appliedOutput * turnMotor.busVoltage
     inputs.rotCurrent = turnMotor.outputCurrent
     inputs.rotTemp = turnMotor.motorTemperature
   }
