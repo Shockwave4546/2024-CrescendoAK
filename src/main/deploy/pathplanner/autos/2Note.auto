@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Double"
+                  "pathName": "2Note"
                 }
               },
               {
@@ -57,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Double Back"
+            "pathName": "2NoteBack"
           }
         },
         {

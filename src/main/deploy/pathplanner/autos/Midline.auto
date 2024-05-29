@@ -2,32 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2,
-      "y": 5.57
+      "x": 0.9421010613040912,
+      "y": 4.670046978734387
     },
-    "rotation": 0.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Double"
-                }
-              }
-            ]
+            "name": "RampClose"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Double Back"
+            "name": "ShootClose"
           }
         },
         {
@@ -37,7 +30,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Triple"
+                  "pathName": "Midline 1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
                 }
               }
             ]
@@ -46,7 +45,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Triple Back"
+            "pathName": "Midline 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootClose"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Midline 3"
           }
         }
       ]

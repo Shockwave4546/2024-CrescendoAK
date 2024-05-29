@@ -14,6 +14,12 @@
         {
           "type": "named",
           "data": {
+            "name": "WristHome"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "RampClose"
           }
         },
@@ -30,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Double"
+                  "pathName": "2Note"
                 }
               },
               {
@@ -49,9 +55,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "2NoteBack"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "ShootInterpolated"
+            "name": "ShootClose"
           }
         },
         {
@@ -61,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TripleNew"
+                  "pathName": "3Note"
                 }
               },
               {
@@ -80,21 +92,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 1.5
+            "pathName": "3NoteBack"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootInterpolated"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
+            "name": "ShootClose"
           }
         },
         {
