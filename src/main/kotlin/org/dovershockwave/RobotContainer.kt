@@ -53,12 +53,13 @@ import org.dovershockwave.subsystem.vision.VisionSubsystem
 
 object RobotContainer {
   val swerve: SwerveSubsystem
-  val vision: VisionSubsystem? // TODO: 4/14/2024
+  val vision: VisionSubsystem
   val wrist: ShooterWristSubsystem
   val arm: IntakeArmSubsystem
   val shooter: ShooterSubsystem
   val intake: IntakeSubsystem
-  val led: LEDSubsystem? // TODO: 4/13/2024 idk 
+  val led: LEDSubsystem?
+
   val driverController = CommandXboxController(GlobalConstants.DRIVER_CONTROLLER_PORT)
   val operatorController = CommandXboxController(GlobalConstants.OPERATOR_CONTROLLER_PORT)
   val autoManager: AutoManager?
@@ -114,13 +115,13 @@ object RobotContainer {
             ModuleIOSim(SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
             "BR"
           ),
-          GyroIOSim() // TODO: This is fake for now.
+          GyroIOSim()
         )
 
-        vision = null
-        wrist = ShooterWristSubsystem(ShooterWristIOSim(), vision!!)
+        vision = VisionSubsystem(VisionIOReal(), swerve)
+        wrist = ShooterWristSubsystem(ShooterWristIOSim(), vision)
         arm = IntakeArmSubsystem(IntakeArmIOSim())
-        shooter = ShooterSubsystem(ShooterIOSim(), vision!!)
+        shooter = ShooterSubsystem(ShooterIOSim(), vision)
         intake = IntakeSubsystem(IntakeIOSim())
         led = null
         autoManager = null
