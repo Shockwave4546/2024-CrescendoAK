@@ -3,12 +3,13 @@
   "robotLength": 0.635,
   "holonomicMode": true,
   "pathFolders": [
-    "Midline"
+    "Midline",
+    "4NoteShootInPlace"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
-  "defaultMaxAngAccel": 1000.0,
+  "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.65
 }

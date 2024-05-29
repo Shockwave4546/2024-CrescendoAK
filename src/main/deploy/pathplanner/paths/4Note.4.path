@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.53,
-        "y": 6.77
+        "x": 2.5265038449539983,
+        "y": 6.769914747883187
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.48,
-        "y": 6.77
+        "x": 2.4765038449539984,
+        "y": 6.769914747883187
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "4Note.3"
     },
     {
       "anchor": {
@@ -35,7 +35,7 @@
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 1000.0
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0.0,

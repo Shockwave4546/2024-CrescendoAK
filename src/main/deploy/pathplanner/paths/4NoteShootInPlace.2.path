@@ -3,49 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2,
-        "y": 5.567041069031117
+        "x": 2.58848678771183,
+        "y": 6.790575728802464
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1499999999999997,
-        "y": 5.567041069031117
+        "x": 0.27445692475277494,
+        "y": 5.957249498391614
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": "4NoteShootInPlace.1"
     },
     {
       "anchor": {
-        "x": 2.48,
-        "y": 5.57
+        "x": 2.533390838593757,
+        "y": 5.550916873645828
       },
       "prevControl": {
-        "x": 2.53,
-        "y": 5.57
+        "x": 2.583390838593757,
+        "y": 5.550916873645828
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "4NoteShootInPlace.2"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Near Note",
-      "minWaypointRelativePos": 0.65,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Get Note",
-      "waypointRelativePos": 0.85,
+      "name": "IntakeHome",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -65,15 +53,18 @@
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 1000.0
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
+  "folder": "4NoteShootInPlace",
+  "previewStartingState": {
+    "rotation": 30.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

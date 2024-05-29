@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.533390838593757,
+        "y": 5.550916873645828
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.1766530915612161,
+        "y": 4.572963776800037
+      },
+      "isLocked": false,
+      "linkedName": "4NoteShootInPlace.2"
+    },
+    {
+      "anchor": {
+        "x": 2.5678258067925523,
+        "y": 4.283710043930155
+      },
+      "prevControl": {
+        "x": 2.617825806792552,
+        "y": 4.283710043930155
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "4NoteShootInPlace.3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -30.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeHome",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeHome"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -30.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "4NoteShootInPlace",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

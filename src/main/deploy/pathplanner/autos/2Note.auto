@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2Note"
+                  "pathName": "4Note.1"
                 }
               },
               {
@@ -57,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteBack"
+            "pathName": "4Note.2"
           }
         },
         {

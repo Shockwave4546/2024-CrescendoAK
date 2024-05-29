@@ -39,6 +39,7 @@ class AutoShootCloseCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, 
       InstantCommand({ wrist.setDesiredState(WristState.SUBWOOFER) }, wrist),
       InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
       WaitUntilCommand(shooter::atDesiredState),
+      WaitUntilCommand(arm::atDesiredState),
       FeedShooterCommand(intake).withTimeout(0.25)
     )
 

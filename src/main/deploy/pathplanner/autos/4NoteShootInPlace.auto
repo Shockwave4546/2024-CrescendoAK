@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.2,
-      "y": 5.57
+      "y": 5.567041069031117
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -18,25 +18,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "RampClose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootClose"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4Note.1"
+                  "pathName": "4NoteShootInPlace.1"
                 }
               },
               {
@@ -49,15 +37,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4Note.2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "ShootClose"
+            "name": "AimAndShoot"
           }
         },
         {
@@ -67,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4Note.3"
+                  "pathName": "4NoteShootInPlace.2"
                 }
               },
               {
@@ -80,15 +62,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4Note.4"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "ShootClose"
+            "name": "AimAndShoot"
           }
         },
         {
@@ -98,7 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4Note.5"
+                  "pathName": "4NoteShootInPlace.3"
                 }
               },
               {
@@ -111,15 +87,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "4Note.6"
+            "name": "AimAndShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootClose"
+            "name": "StopShooter"
           }
         }
       ]

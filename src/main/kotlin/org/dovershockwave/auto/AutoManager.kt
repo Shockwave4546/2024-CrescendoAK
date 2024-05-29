@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import org.dovershockwave.Tab
+import org.dovershockwave.commands.AimAndShootCommand
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
@@ -72,6 +73,7 @@ class AutoManager(private val swerve: SwerveSubsystem, private val shooter: Shoo
     NamedCommands.registerCommand("IntakeHome", InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
     NamedCommands.registerCommand("ShootInterpolated", InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter))
     NamedCommands.registerCommand("WristHome", InstantCommand({ wrist.setDesiredState(WristState.HOME) }, wrist))
+    NamedCommands.registerCommand("AimAndShoot", AimAndShootCommand(intake, shooter, arm, wrist, swerve, vision))
 
     this.chooser = LoggedDashboardChooser("Autonomous", AutoBuilder.buildAutoChooser())
     Tab.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3).withPosition(12, 0)

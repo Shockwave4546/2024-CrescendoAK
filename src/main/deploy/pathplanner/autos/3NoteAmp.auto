@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2Note"
+                  "pathName": "4Note.1"
                 }
               },
               {
@@ -57,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteBack"
+            "pathName": "4Note.2"
           }
         },
         {
@@ -73,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3Note"
+                  "pathName": "4Note.3"
                 }
               },
               {
@@ -94,7 +94,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3NoteBack"
+            "pathName": "4Note.4"
           }
         },
         {
