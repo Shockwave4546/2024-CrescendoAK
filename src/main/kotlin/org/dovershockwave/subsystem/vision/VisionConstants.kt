@@ -45,5 +45,7 @@ class VisionConstants {
     const val BLUE_SPEAKER_ID = 7
 
     val HEADING_TOLERANCE = Units.degreesToRadians(2.0)
+
+    val SHOOTABLE_DISTANCE = 3.1
   }
 }

@@ -33,6 +33,8 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import org.dovershockwave.RobotContainer
+import org.dovershockwave.Tab
+import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.utils.LoggedTunableBoolean
@@ -56,6 +58,7 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
   private val swervePoseEstimator: SwerveDrivePoseEstimator
   private val key = "Vision"
   private val useVisionMeasurement = LoggedTunableBoolean("$key/Use Vision Measurement", false)
+  private val canShoot = ShuffleboardBoolean(Tab.MATCH, "Can Shoot", false).withSize(3, 3)
 
   init {
     photonPoseEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY)
@@ -73,6 +76,9 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
       STATE_STD_DEVS,
       VISION_MEASUREMENT_STD_DEVS
     )
+
+    Logger.recordOutput("$key/2.SpeakerTagPose3d", getSpeakerTagPose3d())
+    Logger.recordOutput("$key/3.SpeakerTagPose2d", getSpeakerTagPose3d().toPose2d())
   }
 
   override fun periodic() {
@@ -89,20 +95,22 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
       }
     }
 
-    Logger.recordOutput("$key/EstimatedPose2d", getPose2d())
+    val speakerDistance = getToSpeakerFromVision().distance
+    val canShoot = speakerDistance.isPresent && speakerDistance.get() < VisionConstants.SHOOTABLE_DISTANCE
+    this.canShoot.set(canShoot)
 
-    Logger.recordOutput("$key/SpeakerTagPose3d", getSpeakerTagPose3d())
-    Logger.recordOutput("$key/SpeakerTagPose2d", getSpeakerTagPose3d().toPose2d())
+    Logger.recordOutput("$key/1.EstimatedPose2d", getPose2d())
 
-    Logger.recordOutput("$key/(Vision)SpeakerDistance", getToSpeakerFromVision().distance.getOrDefault(-1.0))
-    Logger.recordOutput("$key/(Vision)SpeakerRot", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()))
-    Logger.recordOutput("$key/(Vision)SpeakerRotDegrees", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()).degrees)
+    Logger.recordOutput("$key/Vision/1.CanSeeSpeaker", getToSpeakerFromVision().distance.isPresent)
+    Logger.recordOutput("$key/Vision/2,SpeakerDistance", getToSpeakerFromVision().distance.getOrDefault(-1.0))
+    Logger.recordOutput("$key/Vision/3.SpeakerRot", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()))
+    Logger.recordOutput("$key/Vision/4.SpeakerRotDegrees", getToSpeakerFromVision().rotation2d.getOrDefault(Rotation2d()).degrees)
 
-    Logger.recordOutput("$key/(Pose)SpeakerDistance", getToSpeakerFromPose().distance.getOrDefault(-1.0))
-    Logger.recordOutput("$key/(Pose)SpeakerRot", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()))
-    Logger.recordOutput("$key/(Pose)SpeakerRotDegrees", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()).degrees)
+    Logger.recordOutput("$key/Pose/1.SpeakerDistance", getToSpeakerFromPose().distance.getOrDefault(-1.0))
+    Logger.recordOutput("$key/Pose/2.SpeakerRot", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()))
+    Logger.recordOutput("$key/Pose/3.SpeakerRotDegrees", getToSpeakerFromPose().rotation2d.getOrDefault(Rotation2d()).degrees)
 
-    Logger.recordOutput("$key/IsHeadingTowardSpeaker", isHeadingAlignedWithSpeaker().getOrDefault(false))
+    Logger.recordOutput("$key/4.IsHeadingTowardSpeaker", isHeadingAlignedWithSpeaker().getOrDefault(false))
   }
 
   fun getDistanceToTags() = buildMap {
