@@ -40,12 +40,6 @@ class ShuffleboardBoolean(tab: ShuffleboardTab, private val name: String, privat
    * @param name the name of the widget
    * @param def  the default value for the widget
    */
-  /**
-   * Constructs a new ShuffleboardBoolean object with the given parameters. The default value for the widget is set to false.
-   *
-   * @param tab  the ShuffleboardTab to add the widget to
-   * @param name the name of the widget
-   */
   init {
     widget.withWidget(BuiltInWidgets.kToggleButton)
   }

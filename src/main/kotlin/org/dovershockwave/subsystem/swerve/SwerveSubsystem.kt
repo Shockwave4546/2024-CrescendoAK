@@ -169,7 +169,7 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
     frontRight.getState(),
     backLeft.getState(),
     backRight.getState()
-  )
+  )!!
 
   /**
    * @return the SwerveModulePositions of the SwerveModules.

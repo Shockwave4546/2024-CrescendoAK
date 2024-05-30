@@ -33,7 +33,7 @@ class VisionConstants {
      * Physical location of the camera on the robot, relative to the center of the robot.
      */
     val FRONT_CAMERA_TO_ROBOT = Transform3d(Translation3d(0.08, 0.15, 0.0), Rotation3d(0.0, 0.0, 55.0))
-    val ROBOT_TO_FRONT_CAMERA = FRONT_CAMERA_TO_ROBOT.inverse()
+    val ROBOT_TO_FRONT_CAMERA = FRONT_CAMERA_TO_ROBOT.inverse()!!
 
     const val MAXIMUM_AMBIGUITY = 0.5
     const val FRONT_CAMERA_NAME = "FrontCamera"

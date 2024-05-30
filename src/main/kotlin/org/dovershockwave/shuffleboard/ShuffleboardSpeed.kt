@@ -36,13 +36,6 @@ class ShuffleboardSpeed(tab: ShuffleboardTab, name: String, def: Double = DEFAUL
    * @param name the name of the ShuffleboardSpeed widget
    * @param def the default value of the ShuffleboardSpeed widget
    */
-  /**
-   * Creates a ShuffleboardSpeed widget with the given name and a default value,
-   * and adds it to the specified Shuffleboard tab.
-   *
-   * @param tab the Shuffleboard tab to add the widget to
-   * @param name the name of the ShuffleboardSpeed widget
-   */
   init {
     withMinMax(-1.0, 1.0)
   }

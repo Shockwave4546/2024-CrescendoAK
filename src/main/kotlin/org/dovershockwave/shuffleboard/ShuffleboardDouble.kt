@@ -99,7 +99,7 @@ open class ShuffleboardDouble(tab: ShuffleboardTab, private val name: String, pr
    *
    * @return the Raw GenericEntry object
    */
-  override fun getRaw() = widget.entry
+  override fun getRaw() = widget.entry!!
 
   companion object {
     private const val DEFAULT_VALUE = 0.0

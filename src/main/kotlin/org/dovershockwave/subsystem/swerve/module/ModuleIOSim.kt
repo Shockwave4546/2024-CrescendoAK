@@ -35,7 +35,7 @@ class ModuleIOSim(private val chassisAngularOffset: Double) : ModuleIO {
   private var driveAppliedVoltage = 0.0
 
   private val turnSim = DCMotorSim(DCMotor.getNeo550(1), 1.0, 0.004) // idk the jKhMeterSquared or the reduction
-  private val turnPID = PIDController(ModuleConstants.TURNING_GAINS.p.toDouble(), ModuleConstants.TURNING_GAINS.i.toDouble(), ModuleConstants.TURNING_GAINS.d.toDouble())
+  private val turnPID = PIDController(ModuleConstants.TURNING_GAINS.p, ModuleConstants.TURNING_GAINS.i, ModuleConstants.TURNING_GAINS.d)
   private var turnAppliedVoltage = 0.0
 
   private var desiredState = SwerveModuleState(0.0, Rotation2d())

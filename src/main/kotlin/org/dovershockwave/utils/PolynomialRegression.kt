@@ -72,29 +72,29 @@ class PolynomialRegression(x: DoubleArray, y: DoubleArray, private var degree: I
       if (qr.isFullRank()) break
 
       // decrease degree and try again
-      this.degree--;
+      this.degree--
     }
 
     // create matrix from vector
-    val matrixY = Matrix(y, n);
+    val matrixY = Matrix(y, n)
 
     // linear regression coefficients
-    beta = qr.solve(matrixY);
+    beta = qr.solve(matrixY)
 
     // mean of y[] values
     var sum = 0.0
-    for (i in 0 until n) sum += y[i];
-    val mean = sum / n;
+    for (i in 0 until n) sum += y[i]
+    val mean = sum / n
 
     // total variation to be accounted for
     for (i in 0 until n) {
-      val dev = y[i] - mean;
-      sst += dev * dev;
+      val dev = y[i] - mean
+      sst += dev * dev
     }
 
     // variation not accounted for
-    val residuals = matrixX.times(beta).minus(matrixY);
-    sse = residuals.norm2() * residuals.norm2();
+    val residuals = matrixX.times(beta).minus(matrixY)
+    sse = residuals.norm2() * residuals.norm2()
   }
 
   /**
@@ -124,7 +124,7 @@ class PolynomialRegression(x: DoubleArray, y: DoubleArray, private var degree: I
    * @return the coefficient of determination <em>R</em><sup>2</sup>, which is a real number between
    *     0 and 1
    */
-  fun R2(): Double {
+  fun r2(): Double {
     if (sst == 0.0) return 1.0 // constant function
     return 1.0 - sse / sst
   }
@@ -137,7 +137,7 @@ class PolynomialRegression(x: DoubleArray, y: DoubleArray, private var degree: I
    */
   fun predict(x: Double): Double {
     // Horner's method
-    var y = 0.0;
+    var y = 0.0
     for (j in degree downTo 0) y = beta(j) + x * y
     return y
   }
@@ -169,15 +169,15 @@ class PolynomialRegression(x: DoubleArray, y: DoubleArray, private var degree: I
 
   /** Compare lexicographically. */
   override fun compareTo(other: PolynomialRegression): Int {
-    val EPSILON = 1E-5
+    val epsilon = 1E-5
     val maxDegree = this.degree().coerceAtLeast(other.degree())
     for (j in maxDegree downTo 0) {
       var term1 = 0.0
       var term2 = 0.0
       if (this.degree() >= j) term1 = this.beta(j)
       if (other.degree() >= j) term2 = other.beta(j)
-      if (abs(term1) < EPSILON) term1 = 0.0
-      if (abs(term2) < EPSILON) term2 = 0.0
+      if (abs(term1) < epsilon) term1 = 0.0
+      if (abs(term2) < epsilon) term2 = 0.0
       if (term1 < term2) return -1
       else if (term1 > term2) return 1
     }

@@ -41,12 +41,12 @@ class PositionConversionFactor(private val oneRev: Double) {
   /**
    * @param encoder the SparkMaxRelativeEncoder to perform the transformation.
    */
-  fun apply(encoder: RelativeEncoder) = encoder.setPositionConversionFactor(toSparkMaxRelativeEncoder())
+  fun apply(encoder: RelativeEncoder) = encoder.setPositionConversionFactor(toSparkMaxRelativeEncoder())!!
 
   /**
    * @param encoder the SparkMaxAbsoluteEncoder to perform the transformation.
    */
-  fun apply(encoder: AbsoluteEncoder) = encoder.setPositionConversionFactor(toSparkMaxRelativeEncoder())
+  fun apply(encoder: AbsoluteEncoder) = encoder.setPositionConversionFactor(toSparkMaxRelativeEncoder())!!
 
   /**
    * @param encoder the Encoder to perform the transformation.

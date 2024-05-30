@@ -146,7 +146,7 @@ fun main() {
     "x"
   )
 
-  println("bottomRPSPredictor = ${bottomRPSPredictor}")
+  println("bottomRPSPredictor = $bottomRPSPredictor")
 
-  println("topRPSPredictor = ${topRPSPredictor}")
+  println("topRPSPredictor = $topRPSPredictor")
 }
