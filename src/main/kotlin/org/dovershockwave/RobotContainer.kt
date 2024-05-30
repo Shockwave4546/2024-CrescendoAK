@@ -38,7 +38,10 @@ import org.dovershockwave.subsystem.shooter.ShooterConstants
 import org.dovershockwave.subsystem.shooter.ShooterIOSim
 import org.dovershockwave.subsystem.shooter.ShooterIOSpark
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
-import org.dovershockwave.subsystem.shooterwrist.*
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSim
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSpark
+import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
+import org.dovershockwave.subsystem.shooterwrist.WristConstants
 import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.subsystem.swerve.commands.ResetFieldCentricDriveCommand
@@ -148,10 +151,10 @@ object RobotContainer {
 
     operatorController.leftBumper().onTrue(ResetRobotStateCommand(shooter, intake, arm, wrist))
 
-    operatorController.rightTrigger().onTrue(InstantCommand({ wrist.setDesiredState(WristState.SPIT) }, wrist))
+    operatorController.b().toggleOnTrue(FullShootInterpolatedCommand(intake, shooter, arm, wrist))
     operatorController.rightBumper().onTrue(FullSpitCommand(intake, shooter, arm, wrist))
     operatorController.a().toggleOnTrue(FullShootCloseCommand(intake, shooter, arm, wrist))
-    operatorController.b().toggleOnTrue(FullShootInterpolatedCommand(intake, shooter, arm, wrist, swerve, vision))
+    operatorController.b().toggleOnTrue(AimAndShootCommand(intake, shooter, arm, wrist, swerve, vision))
     operatorController.x().toggleOnTrue(FullShootAmpCommand(intake, shooter, arm, wrist))
     operatorController.y().toggleOnTrue(FullIntakeCommand(arm, intake))
   }

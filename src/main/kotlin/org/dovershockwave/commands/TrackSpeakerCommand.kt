@@ -15,7 +15,7 @@ class TrackSpeakerCommand(private val swerve: SwerveSubsystem, private val visio
     val rot = vision.getToSpeakerFromVision().rotation2d
     if (rot.isEmpty) return
     val rotSpeed = -swerve.calculateSpeedForDesiredHeading(rot.get().radians)
-    swerve.drive(0.0, 0.0, rotSpeed, fieldRelative = true, useDefaultSpeeds = false)
+    swerve.drive(0.0, 0.0, rotSpeed, fieldRelative = true, useConstDriveSpeed = true, useConstRotSpeed = true)
   }
 
   override fun isFinished() = vision.isHeadingAlignedWithSpeaker().isPresent && vision.isHeadingAlignedWithSpeaker().get()

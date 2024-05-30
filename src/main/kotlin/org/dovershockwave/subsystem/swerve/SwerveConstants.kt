@@ -29,8 +29,6 @@ import org.dovershockwave.utils.PIDGains
 
 class SwerveConstants {
   companion object {
-    const val INVERT_DRIVING_DIRECTION = false
-
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     const val MAX_SPEED_METERS_PER_SECOND = 4.65
@@ -79,6 +77,6 @@ class SwerveConstants {
     const val DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.85
     const val DEFAULT_ROT_SPEED_MULTIPLIER = 0.85
 
-    val HEADING_GAINS = PIDGains(1.5, 0.0, 0.08)
+    val HEADING_GAINS = PIDGains(0.85, 0.0, 0.05)
   }
 }

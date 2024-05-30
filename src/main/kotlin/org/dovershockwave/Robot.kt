@@ -63,17 +63,9 @@ object Robot : LoggedRobot() {
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
     RobotContainer.swerve.resetDriveEncoders()
 
-    CommandScheduler.getInstance().onCommandInitialize { command ->
-      Logger.recordOutput("/ActiveCommands/${command.name}", true)
-    }
-
-    CommandScheduler.getInstance().onCommandFinish { command ->
-      Logger.recordOutput("/ActiveCommands/${command.name}", false)
-    }
-
-    CommandScheduler.getInstance().onCommandInterrupt { command ->
-      Logger.recordOutput("/ActiveCommands/${command.name}", false)
-    }
+    CommandScheduler.getInstance().onCommandInitialize { command -> Logger.recordOutput("/ActiveCommands/${command.name}", true) }
+    CommandScheduler.getInstance().onCommandFinish { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
+    CommandScheduler.getInstance().onCommandInterrupt { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
   }
 
   override fun robotPeriodic() {
@@ -89,7 +81,7 @@ object Robot : LoggedRobot() {
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
     RobotContainer.swerve.resetDriveEncoders()
     Thread.sleep(50)
-    RobotContainer.autoManager!!.executeRoutine()
+    RobotContainer.autoManager!!.scheduleRoutine()
   }
 
   override fun autonomousPeriodic() {
@@ -100,8 +92,7 @@ object Robot : LoggedRobot() {
     RobotContainer.swerve.defaultCommand = SwerveDriveCommand(
       RobotContainer.driverController,
       RobotContainer.swerve,
-      RobotContainer.vision,
-      RobotContainer.intake
+      RobotContainer.vision
     )
   }
 

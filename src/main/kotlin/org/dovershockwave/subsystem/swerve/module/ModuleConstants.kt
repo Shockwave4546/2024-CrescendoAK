@@ -35,6 +35,7 @@ class ModuleConstants {
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
     const val TURNING_ENCODER_INVERTED = true
+    const val DRIVE_DIRECTION_INVERTED = true
 
     // Calculations required for driving motor conversion factors and feed forward
     const val DRIVING_MOTOR_FREE_SPEED_RPS = org.dovershockwave.MotorConstants.NEO_FREE_SPEED_RPM / 60

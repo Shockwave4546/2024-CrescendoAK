@@ -32,15 +32,11 @@ import org.dovershockwave.subsystem.shooter.ShooterState
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
 import org.dovershockwave.subsystem.shooterwrist.WristState
-import org.dovershockwave.subsystem.swerve.SwerveSubsystem
-import org.dovershockwave.subsystem.vision.VisionSubsystem
-
 import org.dovershockwave.utils.EndActionSequentialCommandGroup
 
-class FullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem, swerve: SwerveSubsystem, vision: VisionSubsystem) : EndActionSequentialCommandGroup(ResetRobotStateCommand(shooter, intake, arm, wrist)) {
+class FullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : EndActionSequentialCommandGroup(ResetRobotStateCommand(shooter, intake, arm, wrist)) {
   init {
     addCommands(
-      TrackSpeakerCommand(swerve, vision),
       InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
       InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter),
       InstantCommand({ wrist.setDesiredState(WristState.INTERPOLATED) }, wrist),

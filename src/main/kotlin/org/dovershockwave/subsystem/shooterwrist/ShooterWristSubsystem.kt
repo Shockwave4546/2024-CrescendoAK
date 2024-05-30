@@ -45,7 +45,7 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
 
   private val anglePredictor = PolynomialRegression(
     doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
-    doubleArrayOf(30.0, 30.0, 32.0, 32.0, 34.0, 36.0, 43.0, 48.0, 54.0, 62.0),
+    doubleArrayOf(31.0, 31.0, 33.0, 33.0, 35.0, 37.0, 44.0, 49.0, 55.0, 63.0),
     3,
     "x"
   )

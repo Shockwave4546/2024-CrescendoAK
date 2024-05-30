@@ -55,7 +55,7 @@ class VisionSubsystem(private val vision: VisionIO, private val swerve: SwerveSu
     VisionConstants.FRONT_CAMERA_TO_ROBOT)
   private val swervePoseEstimator: SwerveDrivePoseEstimator
   private val key = "Vision"
-  private val useVisionMeasurement = LoggedTunableBoolean("$key/Use Vision Measurement", true)
+  private val useVisionMeasurement = LoggedTunableBoolean("$key/Use Vision Measurement", false)
 
   init {
     photonPoseEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY)

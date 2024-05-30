@@ -44,7 +44,7 @@ import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.subsystem.vision.VisionSubsystem
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
-class AutoManager(private val swerve: SwerveSubsystem, private val shooter: ShooterSubsystem, private val wrist: ShooterWristSubsystem, private val arm: IntakeArmSubsystem, private val intake: IntakeSubsystem, private val vision: VisionSubsystem) {
+class AutoManager(swerve: SwerveSubsystem, shooter: ShooterSubsystem, wrist: ShooterWristSubsystem, arm: IntakeArmSubsystem, intake: IntakeSubsystem, vision: VisionSubsystem) {
   private val chooser: LoggedDashboardChooser<Command>
 
   init {
@@ -76,7 +76,7 @@ class AutoManager(private val swerve: SwerveSubsystem, private val shooter: Shoo
     NamedCommands.registerCommand("AimAndShoot", AimAndShootCommand(intake, shooter, arm, wrist, swerve, vision))
 
     this.chooser = LoggedDashboardChooser("Autonomous", AutoBuilder.buildAutoChooser())
-    Tab.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3).withPosition(12, 0)
+    Tab.MATCH.add("Autonomous", chooser.sendableChooser).withSize(3, 3)
   }
 
   /**
@@ -84,10 +84,10 @@ class AutoManager(private val swerve: SwerveSubsystem, private val shooter: Shoo
    *
    * @return whether the autonomous path should be flipped dependent on the alliance color.
    */
-  private fun shouldFlipPath() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+  private fun shouldFlipPath() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
 
   /**
    * Schedules the selected autonomous mode.
    */
-  fun executeRoutine() = chooser.get().execute()
+  fun scheduleRoutine() = chooser.get().schedule()
 }

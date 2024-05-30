@@ -30,7 +30,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import org.dovershockwave.MotorConstants
-import org.dovershockwave.subsystem.swerve.SwerveConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
@@ -51,7 +50,7 @@ class ModuleIOSpark(driveID: Int, rotID: Int, private val chassisAngularOffset: 
 
   init {
     drivingMotor.configureRel(linkedSetOf(
-      RelSparkAction("$driveID Set Drive Inverted") { spark, _, _ -> spark.inverted = SwerveConstants.INVERT_DRIVING_DIRECTION; REVLibError.kOk },
+      RelSparkAction("$driveID Set Drive Inverted") { spark, _, _ -> spark.inverted = ModuleConstants.DRIVE_DIRECTION_INVERTED; REVLibError.kOk },
       RelSparkAction("$driveID Set Feedback Device") { _, encoder, pid -> pid.setFeedbackDevice(encoder) },
       RelSparkAction("$driveID Set Position Conversion Factor") { _, encoder, _ -> ModuleConstants.DRIVING_ENCODER_POSITION_FACTOR.apply(encoder) },
       RelSparkAction("$driveID Set Velocity Conversion Factor") { _, encoder, _ -> encoder.setVelocityConversionFactor(ModuleConstants.DRIVING_ENCODER_VELOCITY_FACTOR) },

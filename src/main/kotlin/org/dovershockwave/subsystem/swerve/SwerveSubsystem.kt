@@ -108,16 +108,16 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    * field.
    */
-  fun drive(xSpeed: Double, ySpeed: Double, rotSpeed: Double, fieldRelative: Boolean, useDefaultSpeeds: Boolean) {
+  fun drive(xSpeed: Double, ySpeed: Double, rotSpeed: Double, fieldRelative: Boolean, useConstDriveSpeed: Boolean, useConstRotSpeed: Boolean) {
     if (isX.get()) {
       setX()
       return
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    val xSpeedDelivered = xSpeed * SwerveConstants.MAX_SPEED_METERS_PER_SECOND * (if (useDefaultSpeeds) SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER else driveSpeedMultiplier.get())
-    val ySpeedDelivered = ySpeed * SwerveConstants.MAX_SPEED_METERS_PER_SECOND * (if (useDefaultSpeeds) SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER else driveSpeedMultiplier.get())
-    val rotDelivered = rotSpeed * SwerveConstants.MAX_ANGULAR_SPEED * (if (useDefaultSpeeds) SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER else rotSpeedMultiplier.get())
+    val xSpeedDelivered = xSpeed * SwerveConstants.MAX_SPEED_METERS_PER_SECOND * (if (useConstDriveSpeed) SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER else driveSpeedMultiplier.get())
+    val ySpeedDelivered = ySpeed * SwerveConstants.MAX_SPEED_METERS_PER_SECOND * (if (useConstDriveSpeed) SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER else driveSpeedMultiplier.get())
+    val rotDelivered = rotSpeed * SwerveConstants.MAX_ANGULAR_SPEED * (if (useConstRotSpeed) SwerveConstants.DEFAULT_ROT_SPEED_MULTIPLIER else rotSpeedMultiplier.get())
 
     val swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
       if (fieldRelative) ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -157,7 +157,7 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
   /**
    * Stops the robot.
    */
-  fun stop() = drive(0.0, 0.0, 0.0, fieldRelative = false, useDefaultSpeeds = false)
+  fun stop() = drive(0.0, 0.0, 0.0, fieldRelative = false, useConstDriveSpeed = true, useConstRotSpeed = true)
 
   /**
    * It's important the SwerveModules are passed in with respect to the Kinematics construction.
