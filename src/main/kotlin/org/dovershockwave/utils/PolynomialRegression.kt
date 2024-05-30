@@ -164,7 +164,7 @@ class PolynomialRegression(x: DoubleArray, y: DoubleArray, private var degree: I
       j--
     }
 
-    append("  (R^2 = " + String.format("%.3f", R2()) + ")")
+    append("  (R^2 = " + String.format("%.3f", r2()) + ")")
   }.replace("+ -", "- ")
 
   /** Compare lexicographically. */
