@@ -84,7 +84,7 @@ class AutoManager(swerve: SwerveSubsystem, shooter: ShooterSubsystem, wrist: Sho
    *
    * @return whether the autonomous path should be flipped dependent on the alliance color.
    */
-  private fun shouldFlipPath() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
+  private fun shouldFlipPath() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
 
   /**
    * Schedules the selected autonomous mode.
