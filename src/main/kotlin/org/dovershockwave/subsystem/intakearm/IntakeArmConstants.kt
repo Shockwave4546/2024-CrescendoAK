@@ -30,12 +30,12 @@ class IntakeArmConstants {
     const val ENCODER_INVERTED = false
     const val MOTOR_CAN_ID = 33
     val ANGLE_CONVERSION_FACTOR = PositionConversionFactor(PositionConversionFactor.ConversionType.DEGREES)
-    val GAINS = PIDGains(0.006, 0.0, 0.005)
+    val GAINS = PIDGains(0.015, 0.0, 0.005)
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
     const val ANGLE_TOLERANCE = 5.0 // degrees
     const val ANGLE_OFFSET = 1.0 // degrees
     const val MIN_ANGLE = 5.0 // degrees
-    const val MAX_ANGLE = 198.0 // degrees
+    const val MAX_ANGLE = 205.0 // degrees
   }
 }

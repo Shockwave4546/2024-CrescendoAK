@@ -5,7 +5,7 @@
       "x": 1.2,
       "y": 5.567041069031117
     },
-    "rotation": 0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,24 @@
           "type": "named",
           "data": {
             "name": "WristHome"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForIntake"
           }
         },
         {
@@ -43,6 +61,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "DropIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForIntake"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -65,6 +95,18 @@
           "type": "named",
           "data": {
             "name": "AimAndShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForIntake"
           }
         },
         {

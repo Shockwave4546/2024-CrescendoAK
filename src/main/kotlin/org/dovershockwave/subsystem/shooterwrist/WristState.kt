@@ -26,7 +26,7 @@ data class WristState(val name: String, val angle: Double) {
   companion object {
     val STARTING = WristState("Starting", 2.5)
     val HOME = WristState("Home", 40.0)
-    val SUBWOOFER = WristState("Subwoofer", 30.0)
+    val SUBWOOFER = WristState("Subwoofer", 31.0)
     val SPIT = WristState("Spit", 30.0)
     val AMP = WristState("Amp", 25.0)
     val INTERPOLATED = WristState("Interpolated", -1.0)

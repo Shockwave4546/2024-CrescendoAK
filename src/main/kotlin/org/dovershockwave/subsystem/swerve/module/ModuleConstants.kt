@@ -44,16 +44,12 @@ class ModuleConstants {
 
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
     const val DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15)
-    const val DRIVE_WHEEL_FREE_SPEED_RPS =
-      ((DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS) / DRIVING_MOTOR_REDUCTION)
+    const val DRIVE_WHEEL_FREE_SPEED_RPS = ((DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS) / DRIVING_MOTOR_REDUCTION)
 
-    val DRIVING_ENCODER_POSITION_FACTOR =
-      PositionConversionFactor((WHEEL_DIAMETER_METERS * Math.PI) / DRIVING_MOTOR_REDUCTION) // Meters
-    const val DRIVING_ENCODER_VELOCITY_FACTOR =
-      ((WHEEL_DIAMETER_METERS * Math.PI) / DRIVING_MOTOR_REDUCTION) / 60.0 // Meters per second
+    val DRIVING_ENCODER_POSITION_FACTOR = PositionConversionFactor((WHEEL_DIAMETER_METERS * Math.PI) / DRIVING_MOTOR_REDUCTION) // Meters
+    const val DRIVING_ENCODER_VELOCITY_FACTOR = ((WHEEL_DIAMETER_METERS * Math.PI) / DRIVING_MOTOR_REDUCTION) / 60.0 // Meters per second
 
-    val TURNING_ENCODER_POSITION_FACTOR =
-      PositionConversionFactor(PositionConversionFactor.ConversionType.RADIANS) // Radians
+    val TURNING_ENCODER_POSITION_FACTOR = PositionConversionFactor(PositionConversionFactor.ConversionType.RADIANS) // Radians
     const val TURNING_ENCODER_VELOCITY_FACTOR = (2 * Math.PI) / 60.0 // Radians per second
 
     const val TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0.0 // Radians

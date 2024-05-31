@@ -40,7 +40,7 @@ class SwerveDriveCommand(private val controller: CommandXboxController, private 
     if (swerve.isAutoAlign()) {
       val rot = vision.getToSpeakerFromVision().rotation2d
       if (rot.isPresent) {
-        rotSpeed = -swerve.calculateSpeedForDesiredHeading(rot.get().radians)
+        rotSpeed = swerve.calculateSpeedForDesiredHeading(rot.get().radians)
       }
     }
 

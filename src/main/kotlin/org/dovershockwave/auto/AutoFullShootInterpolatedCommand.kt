@@ -29,20 +29,23 @@ import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
+import org.dovershockwave.subsystem.shooter.ShooterState
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
 import org.dovershockwave.subsystem.shooterwrist.WristState
+import org.dovershockwave.utils.EndActionSequentialCommandGroup
 
-class AutoShootCloseCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : SequentialCommandGroup() {
+class AutoFullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : SequentialCommandGroup() {
   init {
     addCommands(
-      InstantCommand({ wrist.setDesiredState(WristState.SUBWOOFER) }, wrist),
       InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
+      InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter),
+      InstantCommand({ wrist.setDesiredState(WristState.INTERPOLATED) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
-      WaitUntilCommand(arm::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.35)
+      WaitUntilCommand(wrist::atDesiredState),
+      FeedShooterCommand(intake).withTimeout(0.5)
     )
 
-    addRequirements(intake, arm, wrist)
+    addRequirements(shooter, intake, arm, wrist)
   }
 }

@@ -30,6 +30,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "DropIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForIntake"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -64,6 +76,18 @@
           "type": "named",
           "data": {
             "name": "ShootClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForIntake"
           }
         },
         {
