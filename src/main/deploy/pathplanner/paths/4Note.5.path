@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.5436428141374803,
-        "y": 4.273834302298234
+        "x": 2.5490208547109203,
+        "y": 4.313710292887813
       },
       "prevControl": {
-        "x": 2.59364281413748,
-        "y": 4.273834302298234
+        "x": 2.59902085471092,
+        "y": 4.313710292887813
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,7 +51,7 @@
   "eventMarkers": [
     {
       "name": "Get Note",
-      "waypointRelativePos": 0.85,
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {

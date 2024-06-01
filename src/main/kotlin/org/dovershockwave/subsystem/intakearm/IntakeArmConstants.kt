@@ -33,7 +33,7 @@ class IntakeArmConstants {
     val GAINS = PIDGains(0.015, 0.0, 0.005)
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
-    const val ANGLE_TOLERANCE = 5.0 // degrees
+    const val ANGLE_TOLERANCE = 10.0 // degrees
     const val ANGLE_OFFSET = 1.0 // degrees
     const val MIN_ANGLE = 5.0 // degrees
     const val MAX_ANGLE = 205.0 // degrees

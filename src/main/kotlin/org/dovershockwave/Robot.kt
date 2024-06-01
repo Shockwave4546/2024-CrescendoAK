@@ -80,7 +80,6 @@ object Robot : LoggedRobot() {
     CommandScheduler.getInstance().removeDefaultCommand(RobotContainer.swerve)
     RobotContainer.swerve.zeroGyro() // Reset field orientation drive.
     RobotContainer.swerve.resetDriveEncoders()
-    Thread.sleep(50)
     RobotContainer.autoManager!!.scheduleRoutine()
   }
 
