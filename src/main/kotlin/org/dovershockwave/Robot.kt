@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
+import org.dovershockwave.utils.Alert
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
@@ -34,6 +35,10 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 object Robot : LoggedRobot() {
+  private val testAlert = Alert(text="This is a test alert", type=Alert.AlertType.INFO)
+  private val test2Alert = Alert(text="This is a test dsadsa", type=Alert.AlertType.WARNING)
+  private val test3Alert = Alert(text="This is a test dsadsa", type=Alert.AlertType.ERROR)
+
   override fun robotInit() {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
@@ -72,6 +77,10 @@ object Robot : LoggedRobot() {
     CommandScheduler.getInstance().onCommandInitialize { command -> Logger.recordOutput("/ActiveCommands/${command.name}", true) }
     CommandScheduler.getInstance().onCommandFinish { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
     CommandScheduler.getInstance().onCommandInterrupt { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
+
+    testAlert.set(true)
+    test2Alert.set(true)
+    test3Alert.set(true)
   }
 
   override fun robotPeriodic() {

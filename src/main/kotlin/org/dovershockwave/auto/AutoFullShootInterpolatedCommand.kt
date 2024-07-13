@@ -33,7 +33,6 @@ import org.dovershockwave.subsystem.shooter.ShooterState
 import org.dovershockwave.subsystem.shooter.ShooterSubsystem
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
 import org.dovershockwave.subsystem.shooterwrist.WristState
-import org.dovershockwave.utils.EndActionSequentialCommandGroup
 
 class AutoFullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : SequentialCommandGroup() {
   init {
