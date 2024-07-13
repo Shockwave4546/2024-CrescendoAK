@@ -22,23 +22,27 @@
 
 package org.dovershockwave
 
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
+import java.nio.file.Files
+import java.nio.file.Paths
 
 object Robot : LoggedRobot() {
   override fun robotInit() {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
-//        Logger.addDataReceiver(WPILOGWriter())
-//        if (Files.exists(Paths.get(GlobalConstants.LOG_FOLDER_PATH))) {
-//        } else {
-//          DriverStation.reportError("Log folder does not exist!", false)
-//        }
+        if (Files.exists(Paths.get(GlobalConstants.LOG_FOLDER_PATH))) {
+          Logger.addDataReceiver(WPILOGWriter())
+        } else {
+          DriverStation.reportError("Log folder does not exist!", false)
+        }
 
         PowerDistribution() // Enables power distribution logging.
       }
