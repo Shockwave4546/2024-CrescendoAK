@@ -38,13 +38,15 @@ object Robot : LoggedRobot() {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
         Logger.addDataReceiver(NT4Publisher())
-        if (Files.exists(Paths.get(GlobalConstants.LOG_FOLDER_PATH))) {
+        PowerDistribution() // Enables power distribution logging.
+
+        val logFolderPath = Paths.get(GlobalConstants.LOG_FOLDER_PATH)
+        if (Files.notExists(logFolderPath)) Files.createDirectories(logFolderPath) // Create /log folder if it's a new RIO
+        if (Files.exists(logFolderPath)) {
           Logger.addDataReceiver(WPILOGWriter())
         } else {
           DriverStation.reportError("Log folder does not exist!", false)
         }
-
-        PowerDistribution() // Enables power distribution logging.
       }
 
       RobotType.SIM -> {
