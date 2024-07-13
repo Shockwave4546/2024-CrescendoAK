@@ -151,7 +151,6 @@ object RobotContainer {
 
     operatorController.leftBumper().onTrue(ResetRobotStateCommand(shooter, intake, arm, wrist))
 
-    operatorController.b().toggleOnTrue(FullShootInterpolatedCommand(intake, shooter, arm, wrist))
     operatorController.rightBumper().onTrue(FullSpitCommand(intake, shooter, arm, wrist))
     operatorController.a().toggleOnTrue(FullShootCloseCommand(intake, shooter, arm, wrist))
     operatorController.b().toggleOnTrue(AimAndShootCommand(intake, shooter, arm, wrist, swerve, vision))
