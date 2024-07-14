@@ -10,3 +10,6 @@
 
 ## PhotonVision
 - All calibration configurations are found in ``res/photonvision``
+
+## Advantage Scope
+- All advantage scope configurations are found in ``res/advantagescope``
