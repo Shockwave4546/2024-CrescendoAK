@@ -178,7 +178,7 @@ class SwerveSubsystem(private val io: SwerveIO, private val gyro: GyroIO) : Subs
    *
    * @param desiredStates The desired SwerveModule states.
    */
-  fun setDesiredModuleStates(vararg desiredStates: SwerveModuleState) {
+  private fun setDesiredModuleStates(vararg desiredStates: SwerveModuleState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND)
     io.getModules().forEachIndexed { index, module -> module.setDesiredState(desiredStates[index]) }
   }
