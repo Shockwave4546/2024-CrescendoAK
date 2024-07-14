@@ -136,8 +136,6 @@ object RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true)
   }
 
-  fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
-
   private fun configureBindings() {
     driverController.a().onTrue(InstantCommand({ swerve.toggleAutoAlign() }))
     driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, vision))
@@ -157,4 +155,8 @@ object RobotContainer {
     operatorController.x().toggleOnTrue(FullShootAmpCommand(intake, shooter, arm, wrist))
     operatorController.y().toggleOnTrue(FullIntakeCommand(arm, intake))
   }
+
+  fun isRedAlliance() = DriverStation.getAlliance().isPresent && DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+
+  fun isCompMatch() = DriverStation.isFMSAttached() || DriverStation.getMatchType() != DriverStation.MatchType.None
 }

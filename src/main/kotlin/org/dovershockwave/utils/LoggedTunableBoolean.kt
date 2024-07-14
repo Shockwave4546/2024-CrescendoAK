@@ -23,6 +23,7 @@
 package org.dovershockwave.utils
 
 import org.dovershockwave.GlobalConstants
+import org.dovershockwave.RobotContainer
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 
 class LoggedTunableBoolean(dashboardKey: String, private val defaultValue: Boolean = false) {
@@ -31,7 +32,7 @@ class LoggedTunableBoolean(dashboardKey: String, private val defaultValue: Boole
   private val lastHasChangedValues = hashMapOf<Int, Boolean>()
 
   init {
-    if (GlobalConstants.TUNING_MODE) {
+    if (GlobalConstants.TUNING_MODE && !RobotContainer.isCompMatch()) {
       dashboardBoolean = LoggedDashboardBoolean(key, defaultValue)
     }
   }
@@ -52,10 +53,8 @@ class LoggedTunableBoolean(dashboardKey: String, private val defaultValue: Boole
   companion object {
     private const val TABLE_KEY = "Tuning"
 
-    fun ifChanged(id: Int, action: (BooleanArray) -> Unit, vararg tunableBooleans: LoggedTunableBoolean) {
-      tunableBooleans.filter { it.hasChanged(id) }.forEach { _ ->
-        action(tunableBooleans.map { it.get() }.toBooleanArray())
-      }
+    fun ifChanged(id: Int, action: (BooleanArray) -> Unit, vararg tunableBooleans: LoggedTunableBoolean) = tunableBooleans.filter { it.hasChanged(id) }.forEach { _ ->
+      action(tunableBooleans.map { it.get() }.toBooleanArray())
     }
 
     fun ifChanged(id: Int, action: Runnable, vararg tunableBooleans: LoggedTunableBoolean) = ifChanged(id, { _: BooleanArray -> action.run() }, *tunableBooleans)
