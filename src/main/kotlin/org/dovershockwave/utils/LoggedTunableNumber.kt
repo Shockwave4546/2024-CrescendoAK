@@ -23,6 +23,7 @@
 package org.dovershockwave.utils
 
 import org.dovershockwave.GlobalConstants
+import org.dovershockwave.RobotContainer
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber
 
 class LoggedTunableNumber(dashboardKey: String, private val defaultValue: Double = 0.0) {
@@ -31,7 +32,7 @@ class LoggedTunableNumber(dashboardKey: String, private val defaultValue: Double
   private val lastHasChangedValues = hashMapOf<Int, Double>()
 
   init {
-    if (GlobalConstants.TUNING_MODE) {
+    if (GlobalConstants.TUNING_MODE && !RobotContainer.isCompMatch()) {
       dashboardNumber = LoggedDashboardNumber(key, defaultValue)
     }
   }
@@ -52,10 +53,8 @@ class LoggedTunableNumber(dashboardKey: String, private val defaultValue: Double
   companion object {
     private const val TABLE_KEY = "Tuning"
 
-    fun ifChanged(id: Int, action: (DoubleArray) -> Unit, vararg tunableNumbers: LoggedTunableNumber) {
-      tunableNumbers.filter { it.hasChanged(id) }.forEach { _ ->
-        action(tunableNumbers.map { it.get() }.toDoubleArray())
-      }
+    fun ifChanged(id: Int, action: (DoubleArray) -> Unit, vararg tunableNumbers: LoggedTunableNumber) = tunableNumbers.filter { it.hasChanged(id) }.forEach { _ ->
+      action(tunableNumbers.map { it.get() }.toDoubleArray())
     }
 
     fun ifChanged(id: Int, action: Runnable, vararg tunableNumbers: LoggedTunableNumber) = ifChanged(id, { _: DoubleArray -> action.run() }, *tunableNumbers)

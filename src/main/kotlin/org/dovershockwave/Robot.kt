@@ -22,7 +22,6 @@
 
 package org.dovershockwave
 
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
@@ -35,9 +34,10 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 object Robot : LoggedRobot() {
-  private val testAlert = Alert(text="This is a test alert", type=Alert.AlertType.INFO)
-  private val test2Alert = Alert(text="This is a test dsadsa", type=Alert.AlertType.WARNING)
-  private val test3Alert = Alert(text="This is a test dsadsa", type=Alert.AlertType.ERROR)
+  private val logFolderFound = Alert(text="Logging is enabled.", type=Alert.AlertType.INFO)
+  private val logFolderNotFound = Alert(text="Logging is disabled as the log folder doesn't exist!", type=Alert.AlertType.WARNING)
+  private val tuningMode = Alert(text="Tuning mode is enabled.", type=Alert.AlertType.INFO)
+  private val tuningModeAtComp = Alert(text="Tuning mode is enabled in competition round!", type=Alert.AlertType.WARNING)
 
   override fun robotInit() {
     when (GlobalConstants.ROBOT_TYPE) {
@@ -48,9 +48,10 @@ object Robot : LoggedRobot() {
         val logFolderPath = Paths.get(GlobalConstants.LOG_FOLDER_PATH)
         if (Files.notExists(logFolderPath)) Files.createDirectories(logFolderPath) // Create /log folder if it's a new RIO
         if (Files.exists(logFolderPath)) {
+          logFolderFound.set(true)
           Logger.addDataReceiver(WPILOGWriter())
         } else {
-          DriverStation.reportError("Log folder does not exist!", false)
+          logFolderNotFound.set(true)
         }
       }
 
@@ -78,9 +79,9 @@ object Robot : LoggedRobot() {
     CommandScheduler.getInstance().onCommandFinish { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
     CommandScheduler.getInstance().onCommandInterrupt { command -> Logger.recordOutput("/ActiveCommands/${command.name}", false) }
 
-    testAlert.set(true)
-    test2Alert.set(true)
-    test3Alert.set(true)
+    // Theoretically, this will never happen, but just in case...
+    if (RobotContainer.isCompMatch() && GlobalConstants.TUNING_MODE) tuningModeAtComp.set(true)
+    else tuningMode.set(GlobalConstants.TUNING_MODE)
   }
 
   override fun robotPeriodic() {
