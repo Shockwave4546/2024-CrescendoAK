@@ -42,15 +42,13 @@ import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSim
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristIOSpark
 import org.dovershockwave.subsystem.shooterwrist.ShooterWristSubsystem
 import org.dovershockwave.subsystem.shooterwrist.WristConstants
-import org.dovershockwave.subsystem.swerve.SwerveConstants
+import org.dovershockwave.subsystem.swerve.SwerveIOSim
+import org.dovershockwave.subsystem.swerve.SwerveIOSpark
 import org.dovershockwave.subsystem.swerve.SwerveSubsystem
 import org.dovershockwave.subsystem.swerve.commands.ResetFieldCentricDriveCommand
 import org.dovershockwave.subsystem.swerve.commands.SetMaxSpeedCommand
 import org.dovershockwave.subsystem.swerve.gyro.GyroIONavX
 import org.dovershockwave.subsystem.swerve.gyro.GyroIOSim
-import org.dovershockwave.subsystem.swerve.module.Module
-import org.dovershockwave.subsystem.swerve.module.ModuleIOSim
-import org.dovershockwave.subsystem.swerve.module.ModuleIOSpark
 import org.dovershockwave.subsystem.vision.VisionIOReal
 import org.dovershockwave.subsystem.vision.VisionSubsystem
 
@@ -70,27 +68,7 @@ object RobotContainer {
   init {
     when (GlobalConstants.ROBOT_TYPE) {
       RobotType.REAL -> {
-        swerve = SwerveSubsystem(
-          Module(
-            ModuleIOSpark(
-              SwerveConstants.FRONT_LEFT_DRIVING_CAN_ID, SwerveConstants.FRONT_LEFT_TURNING_CAN_ID, SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
-            "FL"
-          ),
-          Module(
-            ModuleIOSpark(SwerveConstants.FRONT_RIGHT_DRIVING_CAN_ID, SwerveConstants.FRONT_RIGHT_TURNING_CAN_ID, SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
-          "FR"
-          ),
-          Module(
-            ModuleIOSpark(SwerveConstants.BACK_LEFT_DRIVING_CAN_ID, SwerveConstants.BACK_LEFT_TURNING_CAN_ID, SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
-            "BL"
-          ),
-          Module(
-            ModuleIOSpark(SwerveConstants.BACK_RIGHT_DRIVING_CAN_ID, SwerveConstants.BACK_RIGHT_TURNING_CAN_ID, SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
-            "BR"
-          ),
-          GyroIONavX()
-        )
-
+        swerve = SwerveSubsystem(SwerveIOSpark(), GyroIONavX())
         vision = VisionSubsystem(VisionIOReal(), swerve)
         wrist = ShooterWristSubsystem(ShooterWristIOSpark(WristConstants.MOTOR_CAN_ID), vision)
         arm = IntakeArmSubsystem(IntakeArmIOSpark(IntakeArmConstants.MOTOR_CAN_ID))
@@ -101,26 +79,7 @@ object RobotContainer {
       }
 
       RobotType.SIM -> {
-        swerve = SwerveSubsystem(
-          Module(
-            ModuleIOSim(SwerveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET),
-            "FL"
-          ),
-          Module(
-            ModuleIOSim(SwerveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET),
-            "FR"
-          ),
-          Module(
-            ModuleIOSim(SwerveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET),
-            "BL"
-          ),
-          Module(
-            ModuleIOSim(SwerveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET),
-            "BR"
-          ),
-          GyroIOSim()
-        )
-
+        swerve = SwerveSubsystem(SwerveIOSim(), GyroIOSim())
         vision = VisionSubsystem(VisionIOReal(), swerve)
         wrist = ShooterWristSubsystem(ShooterWristIOSim(), vision)
         arm = IntakeArmSubsystem(IntakeArmIOSim())

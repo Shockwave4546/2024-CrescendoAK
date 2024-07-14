@@ -39,7 +39,7 @@ import org.dovershockwave.subsystem.vision.VisionConstants
 import org.dovershockwave.utils.LoggedTunableNumber
 import org.littletonrobotics.junction.Logger
 
-class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Module, private val backLeft: Module, private val backRight: Module, private val gyro: GyroIO) : SubsystemBase() {
+class SwerveSubsystem(private val io: SwerveIO, private val gyro: GyroIO) : SubsystemBase() {
   private val isX = ShuffleboardBoolean(Tab.MATCH, "Is X?", false).withSize(3, 3)
 
   private val driveSpeedMultiplier = ShuffleboardSpeed(Tab.MATCH, "Drive Speed Multiplier", SwerveConstants.DEFAULT_DRIVE_SPEED_MULTIPLIER).withSize(5, 2)
@@ -72,11 +72,7 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
   }
 
   override fun periodic() {
-    frontLeft.periodic()
-    frontRight.periodic()
-    backLeft.periodic()
-    backRight.periodic()
-
+    io.getModules().forEach(Module::periodic)
     gyro.updateInputs(gyroInputs)
     Logger.processInputs("Gyro", gyroInputs)
 
@@ -164,36 +160,18 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
    *
    * @return chassis speed relative to the robot.
    */
-  fun getRelativeChassisSpeed() = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
-    frontLeft.getState(),
-    frontRight.getState(),
-    backLeft.getState(),
-    backRight.getState()
-  )!!
+  fun getRelativeChassisSpeed(): ChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+    *(io.getModules().map { it.getState() }.toTypedArray())
+  )
 
   /**
    * @return the SwerveModulePositions of the SwerveModules.
    */
-  fun getEstimatedPositions() = arrayOf(
-    frontLeft.getPosition(),
-    frontRight.getPosition(),
-    backLeft.getPosition(),
-    backRight.getPosition()
-  )
+  fun getEstimatedPositions() = io.getModules().map { it.getPosition() }.toTypedArray()
 
-  fun getDesiredStates() = arrayOf(
-    frontLeft.getDesiredState(),
-    frontRight.getDesiredState(),
-    backLeft.getDesiredState(),
-    backRight.getDesiredState()
-  )
+  private fun getDesiredStates() = io.getModules().map { it.getDesiredState() }.toTypedArray()
 
-  fun getEstimatedStates() = arrayOf(
-    frontLeft.getState(),
-    frontRight.getState(),
-    backLeft.getState(),
-    backRight.getState()
-  )
+  private fun getEstimatedStates() = io.getModules().map { it.getState() }.toTypedArray()
 
   /**
    * Sets the swerve ModuleStates. (FL, FR, BL, BR)
@@ -202,10 +180,7 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
    */
   fun setDesiredModuleStates(vararg desiredStates: SwerveModuleState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND)
-    frontLeft.setDesiredState(desiredStates[0])
-    frontRight.setDesiredState(desiredStates[1])
-    backLeft.setDesiredState(desiredStates[2])
-    backRight.setDesiredState(desiredStates[3])
+    io.getModules().forEachIndexed { index, module -> module.setDesiredState(desiredStates[index]) }
   }
 
   private fun setX() {
@@ -223,12 +198,7 @@ class SwerveSubsystem(private val frontLeft: Module, private val frontRight: Mod
 
   fun isFieldRelative() = isFieldRelative.get()
 
-  fun resetDriveEncoders() {
-    frontLeft.resetDriveEncoder()
-    frontRight.resetDriveEncoder()
-    backLeft.resetDriveEncoder()
-    backRight.resetDriveEncoder()
-  }
+  fun resetDriveEncoders() = io.getModules().forEach(Module::resetDriveEncoder)
 
   /**
    * Zeroes the gyro of the robot.
