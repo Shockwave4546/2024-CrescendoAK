@@ -102,6 +102,7 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
       val topClamped = MathUtil.clamp(values[1], ShooterConstants.MIN_RPS, ShooterConstants.MAX_RPS)
       shooter.setBottomVelocitySetpoint(botClamped)
       shooter.setTopVelocitySetpoint(topClamped)
+      this.desiredState = ShooterState("Manual", botClamped, topClamped)
     }, botManualSpeed, topManualSpeed)
 
     Logger.recordOutput("$key/DesiredState/1.Name", desiredState.name)
@@ -112,6 +113,7 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
 
   fun setDesiredState(state: ShooterState) {
     if (useManualSpeed.get()) return
+
     if (state === ShooterState.INTERPOLATED) {
       val distance = vision.getToSpeakerFromVision().distance
       if (distance.isEmpty) return
@@ -126,9 +128,11 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
     shooter.setTopVelocitySetpoint(topClamped)
   }
 
-  fun atDesiredState() =
-    inputs.bottomRPS in desiredState.bottomRPS - ShooterConstants.RPS_TOLERANCE ..desiredState.bottomRPS + ShooterConstants.RPS_TOLERANCE &&
-            inputs.topRPS in desiredState.topRPS - ShooterConstants.RPS_TOLERANCE ..desiredState.topRPS + ShooterConstants.RPS_TOLERANCE
+  private fun bottomAtDesiredState() = inputs.bottomRPS in desiredState.bottomRPS - ShooterConstants.RPS_TOLERANCE ..desiredState.bottomRPS + ShooterConstants.RPS_TOLERANCE
+
+  private fun topAtDesiredState() = inputs.topRPS in desiredState.topRPS - ShooterConstants.RPS_TOLERANCE ..desiredState.topRPS + ShooterConstants.RPS_TOLERANCE
+
+  fun atDesiredState() = bottomAtDesiredState() && topAtDesiredState()
 }
 
 fun main() {

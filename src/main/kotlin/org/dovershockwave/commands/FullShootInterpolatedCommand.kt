@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
+import org.dovershockwave.subsystem.intakearm.commands.SetIntakeStateCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterState
@@ -37,7 +38,7 @@ import org.dovershockwave.utils.EndActionSequentialCommandGroup
 class FullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : EndActionSequentialCommandGroup(ResetRobotStateCommand(shooter, intake, arm, wrist)) {
   init {
     addCommands(
-      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
+      SetIntakeStateCommand(arm, ArmState.HOME),
       InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter),
       InstantCommand({ wrist.setDesiredState(WristState.INTERPOLATED) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),

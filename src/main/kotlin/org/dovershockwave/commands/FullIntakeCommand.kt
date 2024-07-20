@@ -22,19 +22,24 @@
 
 package org.dovershockwave.commands
 
-import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.IntakeNoteCommand
+import org.dovershockwave.subsystem.intakearm.commands.SetIntakeStateCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
 
-class FullIntakeCommand(arm: IntakeArmSubsystem, intake: IntakeSubsystem) : SequentialCommandGroup() {
+class FullIntakeCommand(arm: IntakeArmSubsystem, intake: IntakeSubsystem) : ParallelCommandGroup() {
   init {
     addCommands(
-      InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm),
-      IntakeNoteCommand(intake).until(intake::hasNote),
-      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm)
+      IntakeNoteCommand(intake),
+      SequentialCommandGroup(
+        SetIntakeStateCommand(arm, ArmState.FLOOR),
+        WaitUntilCommand(intake::hasNote),
+        SetIntakeStateCommand(arm, ArmState.HOME)
+      )
     )
 
     addRequirements(intake, arm)

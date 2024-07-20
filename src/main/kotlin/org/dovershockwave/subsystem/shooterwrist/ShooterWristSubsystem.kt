@@ -52,12 +52,14 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
 
   private val key = "ShooterWrist"
   private val useManualAngle = LoggedTunableBoolean("$key/5.UseManualAngle", false)
-  private val manualAngle = LoggedTunableNumber("$key/6.ManualAngle", WristState.HOME.angle)
+  private val manualAngle = LoggedTunableNumber("$key/6.ManualAngle", WristState.STARTING.angle)
 
   private val p = LoggedTunableNumber("$key/1.P", WristConstants.GAINS.p)
   private val i = LoggedTunableNumber("$key/2.I", WristConstants.GAINS.i)
   private val d = LoggedTunableNumber("$key/3.D", WristConstants.GAINS.d)
   private val ff = LoggedTunableNumber("$key/4.FF", WristConstants.GAINS.ff)
+
+  private val angleOffset = LoggedTunableNumber("$key/7.AngleOffset", WristConstants.ANGLE_OFFSET)
 
   override fun periodic() {
     wrist.updateInputs(inputs)
@@ -74,7 +76,12 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
       if (!useManualAngle.get()) return@ifChanged
       val clamped = MathUtil.clamp(values[0], WristConstants.MIN_ANGLE, WristConstants.MAX_ANGLE)
       wrist.setAngleSetpoint(clamped)
+      this.desiredState = WristState("Manual", clamped)
     }, manualAngle)
+
+    LoggedTunableNumber.ifChanged(angleOffset.hashCode(), { values ->
+      wrist.setAngleOffset(values[0])
+    }, angleOffset)
 
     if (shouldStopWrist()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the wrist: " + inputs.angle, false)
@@ -89,6 +96,7 @@ class ShooterWristSubsystem(private val wrist: ShooterWristIO, private val poseE
   fun setDesiredState(state: WristState) {
     if (useManualAngle.get()) return
     if (shouldStopWrist()) return
+
     if (state === WristState.INTERPOLATED) {
       val distance = poseEstimator.getToSpeakerFromVision().distance
       if (distance.isEmpty) return

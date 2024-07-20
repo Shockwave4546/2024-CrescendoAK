@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import org.dovershockwave.subsystem.intake.IntakeState
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
+import org.dovershockwave.subsystem.intakearm.commands.SetIntakeStateCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
 import org.dovershockwave.subsystem.intakearm.IntakeArmSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterState
@@ -36,7 +37,7 @@ import org.dovershockwave.subsystem.shooterwrist.WristState
 class ResetRobotStateCommand(shooter: ShooterSubsystem, intake: IntakeSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem) : ParallelCommandGroup() {
   init {
     addCommands(
-      InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
+      SetIntakeStateCommand(arm, ArmState.HOME),
       InstantCommand({ shooter.setDesiredState(ShooterState.STOPPED) }, shooter),
       InstantCommand({ intake.setDesiredState(IntakeState.STOPPED) }, intake),
       InstantCommand({ wrist.setDesiredState(WristState.HOME) }, wrist)

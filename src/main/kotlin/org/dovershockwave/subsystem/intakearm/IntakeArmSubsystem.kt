@@ -25,6 +25,7 @@ package org.dovershockwave.subsystem.intakearm
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import org.dovershockwave.utils.LoggedTunableBoolean
 import org.dovershockwave.utils.LoggedTunableNumber
 import org.littletonrobotics.junction.Logger
 
@@ -38,6 +39,11 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
   private val d = LoggedTunableNumber("$key/3.D", IntakeArmConstants.GAINS.d)
   private val ff = LoggedTunableNumber("$key/4.FF", IntakeArmConstants.GAINS.ff)
 
+  private val useManualAngle = LoggedTunableBoolean("$key/5.UseManualAngle", false)
+  private val manualAngle = LoggedTunableNumber("$key/6.ManualAngle", ArmState.HOME.angle)
+
+  private val angleOffset = LoggedTunableNumber("$key/7.AngleOffset", IntakeArmConstants.ANGLE_OFFSET)
+
   override fun periodic() {
     intakeArm.updateInputs(inputs)
     Logger.processInputs(key, inputs)
@@ -48,6 +54,17 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
       intakeArm.setD(values[2])
       intakeArm.setFF(values[3])
     }, p, i, d, ff)
+
+    LoggedTunableNumber.ifChanged(manualAngle.hashCode(), { values ->
+      if (!useManualAngle.get()) return@ifChanged
+      val clamped = MathUtil.clamp(values[0], IntakeArmConstants.MIN_ANGLE, IntakeArmConstants.MAX_ANGLE)
+      intakeArm.setAngleSetpoint(clamped)
+      this.desiredState = ArmState("Manual", clamped, null)
+    }, manualAngle)
+
+    LoggedTunableNumber.ifChanged(angleOffset.hashCode(), { values ->
+      intakeArm.setAngleOffset(values[0])
+    }, angleOffset)
 
     if (shouldStopArm()) {
       DriverStation.reportError("The encoder is reporting an angle that will break the arm: " + inputs.angle, false)
@@ -60,6 +77,7 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
   }
 
   fun setDesiredState(desiredState: ArmState) {
+    if (useManualAngle.get()) return
     if (shouldStopArm()) return
 
     val clamped = MathUtil.clamp(desiredState.angle, IntakeArmConstants.MIN_ANGLE, IntakeArmConstants.MAX_ANGLE)
@@ -67,7 +85,9 @@ class IntakeArmSubsystem(private val intakeArm: IntakeArmIO) : SubsystemBase() {
     this.desiredState = desiredState
   }
 
-  fun atDesiredState() = inputs.angle in desiredState.angle - IntakeArmConstants.ANGLE_TOLERANCE ..desiredState.angle + IntakeArmConstants.ANGLE_TOLERANCE
+  fun atDesiredState() = atDesiredState(desiredState)
+
+  fun atDesiredState(state: ArmState) = inputs.angle in state.angle - IntakeArmConstants.ANGLE_TOLERANCE ..state.angle + IntakeArmConstants.ANGLE_TOLERANCE
 
   /**
    * If the Encoder is reading an angle that causes the arm to go into the robot, it should stop.

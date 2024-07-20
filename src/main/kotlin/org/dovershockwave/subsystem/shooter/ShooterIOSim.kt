@@ -22,49 +22,59 @@
 
 package org.dovershockwave.subsystem.shooter
 
+import com.revrobotics.REVLibError
+
 // TODO:
 class ShooterIOSim : ShooterIO {
   override fun updateInputs(inputs: ShooterIO.ShooterIOInputs) {
     TODO("Not yet implemented")
   }
 
-  override fun setBottomVelocitySetpoint(rps: Double) {
+  override fun setBottomVelocitySetpoint(rps: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setBotP(p: Double) {
+  override fun setBotP(p: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setBotI(i: Double) {
+  override fun setBotI(i: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setBotD(d: Double) {
+  override fun setBotD(d: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setBotFF(ff: Double) {
+  override fun setBotFF(ff: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setTopVelocitySetpoint(rps: Double) {
+  override fun stopBot() {
     TODO("Not yet implemented")
   }
 
-  override fun setTopP(p: Double) {
+  override fun setTopVelocitySetpoint(rps: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setTopI(i: Double) {
+  override fun setTopP(p: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setTopD(d: Double) {
+  override fun setTopI(i: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setTopFF(ff: Double) {
+  override fun setTopD(d: Double): REVLibError {
+    TODO("Not yet implemented")
+  }
+
+  override fun setTopFF(ff: Double): REVLibError {
+    TODO("Not yet implemented")
+  }
+
+  override fun stopTop() {
     TODO("Not yet implemented")
   }
 }

@@ -22,6 +22,7 @@
 
 package org.dovershockwave.subsystem.intakearm
 
+import com.revrobotics.REVLibError
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -49,13 +50,19 @@ interface IntakeArmIO {
 
   fun updateInputs(inputs: IntakeArmIOInputs)
 
-  fun setAngleSetpoint(angle: Double)
+  fun setAngleSetpoint(angle: Double): REVLibError
 
-  fun setP(p: Double)
+  fun setP(p: Double): REVLibError
 
-  fun setI(i: Double)
+  fun setI(i: Double): REVLibError
 
-  fun setD(d: Double)
+  fun setD(d: Double): REVLibError
 
-  fun setFF(ff: Double)
+  fun setFF(ff: Double): REVLibError
+
+  fun getAngleOffset(): Double
+
+  fun setAngleOffset(angleOffset: Double): REVLibError
+
+  fun stop()
 }

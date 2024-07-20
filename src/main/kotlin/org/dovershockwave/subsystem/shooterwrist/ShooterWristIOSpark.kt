@@ -25,6 +25,7 @@ package org.dovershockwave.subsystem.shooterwrist
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
+import com.revrobotics.REVLibError
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.AbsSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureAbs
@@ -57,23 +58,19 @@ class ShooterWristIOSpark(id: Int) : ShooterWristIO {
     inputs.temp = motor.motorTemperature
   }
 
-  override fun setAngleSetpoint(angle: Double) {
-    pid.setReference(angle, CANSparkBase.ControlType.kPosition)
-  }
+  override fun setAngleSetpoint(angle: Double): REVLibError = pid.setReference(angle, CANSparkBase.ControlType.kPosition)
 
-  override fun setP(p: Double) {
-    pid.setP(p)
-  }
+  override fun setP(p: Double): REVLibError = pid.setP(p)
 
-  override fun setI(i: Double) {
-    pid.setI(i)
-  }
+  override fun setI(i: Double): REVLibError = pid.setI(i)
 
-  override fun setD(d: Double) {
-    pid.setD(d)
-  }
+  override fun setD(d: Double): REVLibError = pid.setD(d)
 
-  override fun setFF(ff: Double) {
-    pid.setFF(ff)
-  }
+  override fun setFF(ff: Double): REVLibError = pid.setFF(ff)
+
+  override fun getAngleOffset() = encoder.zeroOffset
+
+  override fun setAngleOffset(offsetAngle: Double): REVLibError = encoder.setZeroOffset(offsetAngle)
+
+  override fun stop() = motor.stopMotor()
 }

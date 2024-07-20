@@ -22,6 +22,7 @@
 
 package org.dovershockwave.subsystem.shooter
 
+import com.revrobotics.REVLibError
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -64,23 +65,33 @@ interface ShooterIO {
 
   fun updateInputs(inputs: ShooterIOInputs)
 
-  fun setBottomVelocitySetpoint(rps: Double)
+  /**
+   * Bottom motor
+   */
+  fun setBottomVelocitySetpoint(rps: Double): REVLibError
 
-  fun setBotP(p: Double)
+  fun setBotP(p: Double): REVLibError
 
-  fun setBotI(i: Double)
+  fun setBotI(i: Double): REVLibError
 
-  fun setBotD(d: Double)
+  fun setBotD(d: Double): REVLibError
 
-  fun setBotFF(ff: Double)
+  fun setBotFF(ff: Double): REVLibError
 
-  fun setTopVelocitySetpoint(rps: Double)
+  fun stopBot()
 
-  fun setTopP(p: Double)
+  /**
+   * Top motor
+   */
+  fun setTopVelocitySetpoint(rps: Double): REVLibError
 
-  fun setTopI(i: Double)
+  fun setTopP(p: Double): REVLibError
 
-  fun setTopD(d: Double)
+  fun setTopI(i: Double): REVLibError
 
-  fun setTopFF(ff: Double)
+  fun setTopD(d: Double): REVLibError
+
+  fun setTopFF(ff: Double): REVLibError
+
+  fun stopTop()
 }

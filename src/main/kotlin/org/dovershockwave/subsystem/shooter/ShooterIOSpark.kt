@@ -29,7 +29,6 @@ import com.revrobotics.REVLibError
 import org.dovershockwave.MotorConstants
 import org.dovershockwave.utils.RelSparkAction
 import org.dovershockwave.utils.SparkUtils.Companion.configureRel
-import org.dovershockwave.utils.SparkUtils.Companion.runBlockingRel
 
 class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
   private val bottomMotor = CANSparkMax(bottomID, CANSparkLowLevel.MotorType.kBrushless)
@@ -82,47 +81,33 @@ class ShooterIOSpark(bottomID: Int, topID: Int) : ShooterIO {
     inputs.topTemp = topMotor.motorTemperature
   }
 
-  override fun setBottomVelocitySetpoint(rps: Double) {
-    bottomMotor.runBlockingRel(linkedSetOf(
-      RelSparkAction("a") { _, _, pid -> pid.setReference(rps, CANSparkBase.ControlType.kVelocity)}
-    ))
-  }
+  /**
+   * Bottom motor
+   */
+  override fun setBottomVelocitySetpoint(rps: Double): REVLibError = bottomPID.setReference(rps, CANSparkBase.ControlType.kVelocity)
 
-  override fun setBotP(p: Double) {
-    bottomPID.setP(p)
-  }
+  override fun setBotP(p: Double): REVLibError = bottomPID.setP(p)
 
-  override fun setBotI(i: Double) {
-    bottomPID.setI(i)
-  }
+  override fun setBotI(i: Double): REVLibError = bottomPID.setI(i)
 
-  override fun setBotD(d: Double) {
-    bottomPID.setD(d)
-  }
+  override fun setBotD(d: Double): REVLibError = bottomPID.setD(d)
 
-  override fun setBotFF(ff: Double) {
-    bottomPID.setFF(ff)
-  }
+  override fun setBotFF(ff: Double): REVLibError = bottomPID.setFF(ff)
 
-  override fun setTopVelocitySetpoint(rps: Double) {
-    topMotor.runBlockingRel(linkedSetOf(
-      RelSparkAction("b") { _, _, pid -> pid.setReference(rps, CANSparkBase.ControlType.kVelocity)}
-    ))
-  }
+  override fun stopBot() = bottomMotor.stopMotor()
 
-  override fun setTopP(p: Double) {
-    topPID.setP(p)
-  }
+  /**
+   * Top motor
+   */
+  override fun setTopVelocitySetpoint(rps: Double): REVLibError = topPID.setReference(rps, CANSparkBase.ControlType.kVelocity)
 
-  override fun setTopI(i: Double) {
-    topPID.setI(i)
-  }
+  override fun setTopP(p: Double): REVLibError = topPID.setP(p)
 
-  override fun setTopD(d: Double) {
-    topPID.setD(d)
-  }
+  override fun setTopI(i: Double): REVLibError = topPID.setI(i)
 
-  override fun setTopFF(ff: Double) {
-    topPID.setFF(ff)
-  }
+  override fun setTopD(d: Double): REVLibError = topPID.setD(d)
+
+  override fun setTopFF(ff: Double): REVLibError = topPID.setFF(ff)
+
+  override fun stopTop() = topMotor.stopMotor()
 }

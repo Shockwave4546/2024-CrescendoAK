@@ -33,6 +33,7 @@ import org.dovershockwave.subsystem.intake.IntakeIOSpark
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.*
+import org.dovershockwave.subsystem.intakearm.commands.SetIntakeStateCommand
 import org.dovershockwave.subsystem.led.LEDSubsystem
 import org.dovershockwave.subsystem.shooter.ShooterConstants
 import org.dovershockwave.subsystem.shooter.ShooterIOSim
@@ -102,8 +103,11 @@ object RobotContainer {
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
     driverController.rightBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.4, 0.4))
 
-    operatorController.povUp().onTrue(InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
-    operatorController.povDown().onTrue(InstantCommand({ arm.setDesiredState(ArmState.FLOOR) }, arm))
+//    driverController.povDown().onTrue(SetIntakeStateCommand(arm, ArmState.FLOOR))
+//    driverController.povUp().onTrue(SetIntakeStateCommand(arm, ArmState.HOME))
+
+    operatorController.povUp().onTrue(SetIntakeStateCommand(arm, ArmState.HOME))
+    operatorController.povDown().onTrue(SetIntakeStateCommand(arm, ArmState.FLOOR))
     operatorController.povRight().onTrue(FeedShooterCommand(intake).withTimeout(0.25))
 
     operatorController.leftBumper().onTrue(ResetRobotStateCommand(shooter, intake, arm, wrist))

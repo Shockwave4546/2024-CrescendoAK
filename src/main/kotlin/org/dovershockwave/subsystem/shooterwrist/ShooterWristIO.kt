@@ -22,6 +22,7 @@
 
 package org.dovershockwave.subsystem.shooterwrist
 
+import com.revrobotics.REVLibError
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -49,13 +50,19 @@ interface ShooterWristIO {
 
   fun updateInputs(inputs: ShooterWristIOInputs)
 
-  fun setAngleSetpoint(angle: Double)
+  fun setAngleSetpoint(angle: Double): REVLibError
 
-  fun setP(p: Double)
+  fun setP(p: Double): REVLibError
 
-  fun setI(i: Double)
+  fun setI(i: Double): REVLibError
 
-  fun setD(d: Double)
+  fun setD(d: Double): REVLibError
 
-  fun setFF(ff: Double)
+  fun setFF(ff: Double): REVLibError
+
+  fun getAngleOffset(): Double
+
+  fun setAngleOffset(offsetAngle: Double): REVLibError
+
+  fun stop()
 }

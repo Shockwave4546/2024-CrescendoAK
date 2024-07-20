@@ -29,12 +29,18 @@ class WristConstants {
   companion object {
     const val MOTOR_CAN_ID = 36
     val ANGLE_CONVERSION_FACTOR = PositionConversionFactor(PositionConversionFactor.ConversionType.DEGREES)
-    val GAINS = PIDGains(0.02, 0.0, 0.005)
+
+    // 7/20: val GAINS = PIDGains(0.02, 0.0, 0.005)
+    val GAINS = PIDGains(0.043, 0.0, 0.007, 0.0005)
+
     const val ENCODER_INVERTED = false
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
-    const val ANGLE_TOLERANCE = 1.0 // degrees
-    const val ANGLE_OFFSET = 113.5 // degrees
+    const val ANGLE_TOLERANCE = 0.5 // degrees
+
+    // 7/20 - 113.5 to 120
+    const val ANGLE_OFFSET = 120.0 // degrees
+
     const val MIN_ANGLE = 2.5 // degrees
     const val MAX_ANGLE = 80.0 // degrees
   }

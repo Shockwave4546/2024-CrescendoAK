@@ -22,11 +22,6 @@
 
 package org.dovershockwave.utils
 
-/**
- * A class to store PID gains. The types to the SparkMAX should be floats because the Rev API uses float32 for PID gains.
- * [...](https://docs.revrobotics.com/sparkmax/software-resources/configuration-parameters#:~:text=of%20the%20controller.-,kP_1,-21)
- */
-@JvmRecord
 data class PIDGains(val p: Double, val i: Double, val d: Double, val ff: Double) {
   constructor(p: Double, i: Double, d: Double) : this(p, i, d, 0.0)
   constructor(p: Double) : this(p, 0.0, 0.0, 0.0)

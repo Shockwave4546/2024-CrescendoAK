@@ -22,29 +22,43 @@
 
 package org.dovershockwave.subsystem.shooterwrist
 
+import com.revrobotics.REVLibError
+
+// TODO:  
 class ShooterWristIOSim : ShooterWristIO {
-  // TODO:  
   override fun updateInputs(inputs: ShooterWristIO.ShooterWristIOInputs) {
     TODO("Not yet implemented")
   }
 
-  override fun setAngleSetpoint(angle: Double) {
+  override fun setAngleSetpoint(angle: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setP(p: Double) {
+  override fun setP(p: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setI(i: Double) {
+  override fun setI(i: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setD(d: Double) {
+  override fun setD(d: Double): REVLibError {
     TODO("Not yet implemented")
   }
 
-  override fun setFF(ff: Double) {
+  override fun setFF(ff: Double): REVLibError {
+    TODO("Not yet implemented")
+  }
+
+  override fun getAngleOffset(): Double {
+    TODO("Not yet implemented")
+  }
+
+  override fun setAngleOffset(offsetAngle: Double): REVLibError {
+    TODO("Not yet implemented")
+  }
+
+  override fun stop() {
     TODO("Not yet implemented")
   }
 }
