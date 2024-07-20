@@ -103,9 +103,6 @@ object RobotContainer {
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))
     driverController.rightBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.4, 0.4))
 
-//    driverController.povDown().onTrue(SetIntakeStateCommand(arm, ArmState.FLOOR))
-//    driverController.povUp().onTrue(SetIntakeStateCommand(arm, ArmState.HOME))
-
     operatorController.povUp().onTrue(SetIntakeStateCommand(arm, ArmState.HOME))
     operatorController.povDown().onTrue(SetIntakeStateCommand(arm, ArmState.FLOOR))
     operatorController.povRight().onTrue(FeedShooterCommand(intake).withTimeout(0.25))
