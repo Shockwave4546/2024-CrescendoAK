@@ -23,6 +23,7 @@
 package org.dovershockwave
 
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.dovershockwave.subsystem.swerve.commands.SwerveDriveCommand
 import org.dovershockwave.utils.Alert
@@ -38,6 +39,7 @@ object Robot : LoggedRobot() {
   private val logFolderNotFound = Alert(text="Logging is disabled as the log folder doesn't exist!", type=Alert.AlertType.WARNING)
   private val tuningMode = Alert(text="Tuning mode is enabled.", type=Alert.AlertType.INFO)
   private val tuningModeAtComp = Alert(text="Tuning mode is enabled in competition round!", type=Alert.AlertType.WARNING)
+  private val garbageCollectorTimer = Timer()
 
   override fun robotInit() {
     when (GlobalConstants.ROBOT_TYPE) {
@@ -85,6 +87,10 @@ object Robot : LoggedRobot() {
   }
 
   override fun robotPeriodic() {
+    if (garbageCollectorTimer.advanceIfElapsed(5.0)) {
+      System.gc()
+    }
+
     CommandScheduler.getInstance().run()
   }
 

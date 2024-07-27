@@ -50,16 +50,16 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
 //  )
 
   private val bottomRPSPredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
-    doubleArrayOf(61.0, 61.0, 61.0, 41.0, 41.0, 41.0, 46.0, 51.0, 61.0, 61.0),
-    7,
+    doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
+    doubleArrayOf(60.0, 60.0, 55.0, 55.0, 55.0, 55.0, 50.0, 50.0),
+    1,
     "x"
   )
 
   private val topRPSPredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
-    doubleArrayOf(27.0, 27.0, 39.0, 44.0, 54.0, 49.0, 54.0, 54.0, 64.0, 69.0),
-    3,
+    doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
+    doubleArrayOf(30.0, 40.0, 45.0, 45.0, 45.0, 50.0, 55.0, 55.0),
+    1,
     "x"
   )
 
@@ -137,16 +137,16 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
 
 fun main() {
   val bottomRPSPredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
-    doubleArrayOf(60.0, 60.0, 60.0, 40.0, 40.0, 40.0, 45.0, 50.0, 60.0, 60.0),
-    7,
+    doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
+    doubleArrayOf(60.0, 60.0, 55.0, 55.0, 55.0, 55.0, 50.0, 50.0),
+    1,
     "x"
   )
 
   val topRPSPredictor = PolynomialRegression(
-    doubleArrayOf(1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2),
-    doubleArrayOf(30.0, 30.0, 45.0, 50.0, 60.0, 55.0, 60.0, 60.0, 70.0, 75.0),
-    3,
+    doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
+    doubleArrayOf(30.0, 40.0, 45.0, 45.0, 45.0, 50.0, 55.0, 55.0),
+    1,
     "x"
   )
 

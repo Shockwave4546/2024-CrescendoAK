@@ -36,7 +36,7 @@ class WristConstants {
     const val ENCODER_INVERTED = false
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
-    const val ANGLE_TOLERANCE = 0.5 // degrees
+    const val ANGLE_TOLERANCE = 1.0 // degrees
 
     // 7/20 - 113.5 to 120
     const val ANGLE_OFFSET = 120.0 // degrees
