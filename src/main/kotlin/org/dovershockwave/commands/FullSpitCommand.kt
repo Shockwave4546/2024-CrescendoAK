@@ -44,7 +44,7 @@ class FullSpitCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: I
       InstantCommand({ wrist.setDesiredState(WristState.SPIT) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(wrist::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.5)
+      FeedShooterCommand(intake).withTimeout(1.5)
     )
 
     addRequirements(shooter, intake, arm, wrist)

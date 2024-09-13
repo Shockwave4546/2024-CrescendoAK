@@ -2,6 +2,7 @@ package org.dovershockwave.commands
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import org.dovershockwave.Tab
 import org.dovershockwave.shuffleboard.ShuffleboardBoolean
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
@@ -15,8 +16,10 @@ import org.dovershockwave.utils.EndActionSequentialCommandGroup
 class AimAndShootCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm: IntakeArmSubsystem, wrist: ShooterWristSubsystem, swerve: SwerveSubsystem, vision: VisionSubsystem) : EndActionSequentialCommandGroup(ResetRobotStateCommand(shooter, intake, arm, wrist)){
   init {
     addCommands(
-      ConditionalCommand(TrackSpeakerCommand(swerve, vision), InstantCommand()) { AUTO_AIM_ON_SHOOT.get() },
-      FullShootInterpolatedCommand(intake, shooter, arm, wrist)
+      ParallelCommandGroup(
+        ConditionalCommand(TrackSpeakerCommand(swerve, vision), InstantCommand()) { AUTO_AIM_ON_SHOOT.get() },
+        FullShootInterpolatedCommand(intake, shooter, arm, wrist)
+      )
     )
 
     addRequirements(shooter, intake, arm, wrist, swerve, vision)

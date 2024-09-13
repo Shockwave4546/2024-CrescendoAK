@@ -44,7 +44,7 @@ class FullShootAmpCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, ar
       InstantCommand({ wrist.setDesiredState(WristState.AMP) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(wrist::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.5)
+      FeedShooterCommand(intake).withTimeout(1.5)
     )
 
     addRequirements(shooter, intake, arm, wrist)

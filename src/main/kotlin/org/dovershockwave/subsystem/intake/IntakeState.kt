@@ -28,6 +28,6 @@ data class IntakeState(val name: String, val dutyCycle: Double) {
     val STOPPED = IntakeState("Stopped", 0.0)
     val INTAKE = IntakeState("Intake", -1.0)
     val FEED = IntakeState("Feed", 1.0)
-    val IDLE = IntakeState("Idle", -0.3)
+    val IDLE = IntakeState("Idle", -0.5)
   }
 }

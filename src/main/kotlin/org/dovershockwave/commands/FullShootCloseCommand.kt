@@ -44,7 +44,7 @@ class FullShootCloseCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, 
       InstantCommand({ wrist.setDesiredState(WristState.SUBWOOFER) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(wrist::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.5)
+      FeedShooterCommand(intake).withTimeout(1.5)
     )
 
     addRequirements(shooter, intake, arm, wrist)

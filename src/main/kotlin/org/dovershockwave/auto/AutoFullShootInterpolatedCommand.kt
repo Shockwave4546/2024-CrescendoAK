@@ -42,7 +42,7 @@ class AutoFullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: Shooter
       InstantCommand({ wrist.setDesiredState(WristState.INTERPOLATED) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(wrist::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.5)
+      FeedShooterCommand(intake).withTimeout(1.5)
     )
 
     addRequirements(shooter, intake, arm, wrist)

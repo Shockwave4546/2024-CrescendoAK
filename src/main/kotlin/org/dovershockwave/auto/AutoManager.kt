@@ -68,7 +68,7 @@ class AutoManager(swerve: SwerveSubsystem, shooter: ShooterSubsystem, wrist: Sho
     // Note: Named commands must be registered before the creation of any PathPlanner Autos or Paths.
     NamedCommands.registerCommand("RampClose", InstantCommand({ shooter.setDesiredState(ShooterState.SUBWOOFER) }, shooter))
     NamedCommands.registerCommand("IntakeNote", AutoIntakeCommand(arm, intake))
-    NamedCommands.registerCommand("ShootClose", AutoShootCloseCommand(intake, shooter, arm, wrist))
+    NamedCommands.registerCommand("ShootClose", AutoAimAndShootCloseCommand(intake, shooter, arm, wrist, swerve, vision))
     NamedCommands.registerCommand("StopShooter", InstantCommand({ shooter.setDesiredState(ShooterState.STOPPED) }, shooter))
     NamedCommands.registerCommand("IntakeHome", InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm))
     NamedCommands.registerCommand("ShootInterpolated", InstantCommand({ shooter.setDesiredState(ShooterState.INTERPOLATED) }, shooter))
