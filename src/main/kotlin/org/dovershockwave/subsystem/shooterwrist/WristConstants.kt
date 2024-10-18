@@ -39,7 +39,8 @@ class WristConstants {
     const val ANGLE_TOLERANCE = 1.0 // degrees
 
     // 7/20 - 113.5 to 120
-    const val ANGLE_OFFSET = 120.0 // degrees
+    // 10/12 - 120.0
+    const val ANGLE_OFFSET = 291.0 // degrees
 
     const val MIN_ANGLE = 2.5 // degrees
     const val MAX_ANGLE = 80.0 // degrees

@@ -97,7 +97,7 @@ object RobotContainer {
   }
 
   private fun configureBindings() {
-    driverController.a().onTrue(InstantCommand({ swerve.toggleAutoAlign() }))
+//    driverController.a().onTrue(InstantCommand({ swerve.toggleAutoAlign() }))
     driverController.b().onTrue(ResetFieldCentricDriveCommand(swerve, vision))
     driverController.x().onTrue(InstantCommand({ swerve.toggleX() }, swerve))
     driverController.leftBumper().whileTrue(SetMaxSpeedCommand(swerve, 0.2, 0.2))

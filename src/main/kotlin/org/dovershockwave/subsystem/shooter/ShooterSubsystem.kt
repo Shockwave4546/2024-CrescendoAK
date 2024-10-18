@@ -52,14 +52,14 @@ class ShooterSubsystem(private val shooter: ShooterIO, private val vision: Visio
   private val bottomRPSPredictor = PolynomialRegression(
     doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
     doubleArrayOf(60.0, 60.0, 55.0, 55.0, 55.0, 55.0, 50.0, 50.0),
-    1,
+    2,
     "x"
   )
 
   private val topRPSPredictor = PolynomialRegression(
     doubleArrayOf(1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9),
     doubleArrayOf(30.0, 40.0, 45.0, 45.0, 45.0, 50.0, 55.0, 55.0),
-    1,
+    2,
     "x"
   )
 

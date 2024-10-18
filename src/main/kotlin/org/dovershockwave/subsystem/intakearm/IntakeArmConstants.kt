@@ -41,7 +41,8 @@ class IntakeArmConstants {
 
     // 7/20: 1.0
     // 7/27: 7.5
-    const val ANGLE_OFFSET = 1.5 // degrees
+    // 10/12
+    const val ANGLE_OFFSET = 73.0 // degrees
     const val MIN_ANGLE = 2.5 // degrees
     const val MAX_ANGLE = 205.0 // degrees
   }

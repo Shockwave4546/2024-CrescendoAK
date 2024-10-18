@@ -25,6 +25,7 @@ package org.dovershockwave.auto
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
+import org.dovershockwave.subsystem.intake.IntakeConstants
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
@@ -42,7 +43,7 @@ class AutoFullShootInterpolatedCommand(intake: IntakeSubsystem, shooter: Shooter
       InstantCommand({ wrist.setDesiredState(WristState.INTERPOLATED) }, wrist),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(wrist::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(1.5)
+      FeedShooterCommand(intake).withTimeout(IntakeConstants.INTAKE_FEED_SECONDS)
     )
 
     addRequirements(shooter, intake, arm, wrist)

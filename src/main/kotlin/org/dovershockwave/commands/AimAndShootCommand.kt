@@ -26,6 +26,6 @@ class AimAndShootCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, arm
   }
 
   companion object {
-    val AUTO_AIM_ON_SHOOT = ShuffleboardBoolean(Tab.MATCH, "Auto Aim on Shoot", true).withSize(3, 3)
+    val AUTO_AIM_ON_SHOOT = ShuffleboardBoolean(Tab.MATCH, "Auto Aim on Shoot", false).withSize(3, 3)
   }
 }

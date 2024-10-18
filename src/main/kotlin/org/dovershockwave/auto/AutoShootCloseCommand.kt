@@ -25,6 +25,7 @@ package org.dovershockwave.auto
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
+import org.dovershockwave.subsystem.intake.IntakeConstants
 import org.dovershockwave.subsystem.intake.IntakeSubsystem
 import org.dovershockwave.subsystem.intake.commands.FeedShooterCommand
 import org.dovershockwave.subsystem.intakearm.ArmState
@@ -40,7 +41,7 @@ class AutoShootCloseCommand(intake: IntakeSubsystem, shooter: ShooterSubsystem, 
       InstantCommand({ arm.setDesiredState(ArmState.HOME) }, arm),
       WaitUntilCommand(shooter::atDesiredState),
       WaitUntilCommand(arm::atDesiredState),
-      FeedShooterCommand(intake).withTimeout(0.5)
+      FeedShooterCommand(intake).withTimeout(IntakeConstants.INTAKE_FEED_SECONDS)
     )
 
     addRequirements(intake, arm, wrist)

@@ -13,3 +13,7 @@
 
 ## Advantage Scope
 - All advantage scope configurations are found in ``res/advantagescope``
+
+## Starting Configuration
+- Intake pivot: 3 degrees
+- Shooter pivot: 3 degrees

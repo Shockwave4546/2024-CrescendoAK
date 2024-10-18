@@ -24,6 +24,8 @@ package org.dovershockwave.subsystem.intake
 
 class IntakeConstants {
   companion object {
+    const val INTAKE_FEED_SECONDS = 0.5;
+
     const val LIMIT_SWITCH_DIO_PORT = 4
     const val MOTOR_CAN_ID = 32
   }
