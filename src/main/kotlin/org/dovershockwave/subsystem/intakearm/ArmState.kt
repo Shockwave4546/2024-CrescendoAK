@@ -27,10 +27,10 @@ package org.dovershockwave.subsystem.intakearm
  */
 data class ArmState(val name: String, val angle: Double, val intermediateState: ArmState?) {
   companion object {
-    private val HOME_INTERMEDIATE = ArmState("Home Intermediate", 10.0, null)
-    val HOME = ArmState("Home", 2.5, HOME_INTERMEDIATE)
+    private val HOME_INTERMEDIATE = ArmState("Home Intermediate", 20.0, null)
+    val HOME = ArmState("Home", 10.0, HOME_INTERMEDIATE)
 
-    private val FLOOR_INTERMEDIATE = ArmState("Floor Intermediate", 175.0, null)
-    val FLOOR = ArmState("Floor", 185.0, FLOOR_INTERMEDIATE)
+    private val FLOOR_INTERMEDIATE = ArmState("Floor Intermediate", 185.0, null)
+    val FLOOR = ArmState("Floor", 196.0, FLOOR_INTERMEDIATE)
   }
 }

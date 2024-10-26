@@ -31,12 +31,12 @@ class WristConstants {
     val ANGLE_CONVERSION_FACTOR = PositionConversionFactor(PositionConversionFactor.ConversionType.DEGREES)
 
     // 7/20: val GAINS = PIDGains(0.02, 0.0, 0.005)
-    val GAINS = PIDGains(0.043, 0.0, 0.007, 0.0005)
+    val GAINS = PIDGains(0.03, 0.0, 0.007)
 
     const val ENCODER_INVERTED = false
     const val MIN_OUTPUT = -1.0
     const val MAX_OUTPUT = 1.0
-    const val ANGLE_TOLERANCE = 1.0 // degrees
+    const val ANGLE_TOLERANCE = 2.0 // degrees
 
     // 7/20 - 113.5 to 120
     // 10/12 - 120.0
